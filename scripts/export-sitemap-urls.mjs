@@ -1,0 +1,61 @@
+// Exports all sitemap URLs into chunked submission files for Bing Webmaster API and Google Search Console
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { CLOUD_BROWSERS } from './data-browsers.mjs';
+import { BROWSER_MCP_TOOLS } from './data-mcp.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
+
+const BASE_URL = process.env.SITE_URL || 'https://browserreviews.com';
+
+const staticRoutes = [
+  '/',
+  '/browsers',
+  '/mcp',
+  '/rankings',
+  '/calculator',
+  '/compare',
+  '/about',
+  '/methodology',
+  '/editorial-policy',
+  '/affiliate-disclosure',
+  '/terms'
+];
+
+const browserRoutes = CLOUD_BROWSERS.map(b => `/reviews/${b.slug}`);
+const mcpRoutes = BROWSER_MCP_TOOLS.map(m => `/mcp/${m.slug}`);
+const comparisonRoutes = [
+  '/compare/2captcha-browser-api-vs-browserbase',
+  '/compare/2captcha-browser-api-vs-brightdata-scraping-browser',
+  '/compare/2captcha-browser-api-vs-steel-dev',
+  '/compare/2captcha-browser-api-vs-browserless',
+  '/compare/2captcha-browser-mcp-vs-browserbase-mcp',
+  '/compare/2captcha-browser-mcp-vs-browser-use-mcp'
+];
+
+const allRoutes = [...staticRoutes, ...browserRoutes, ...mcpRoutes, ...comparisonRoutes];
+const allUrls = allRoutes.map(r => `${BASE_URL.replace(/\/$/, '')}${r}`);
+
+const exportsDir = path.join(rootDir, 'exports');
+const bingDir = path.join(exportsDir, 'bing_submission');
+
+fs.mkdirSync(bingDir, { recursive: true });
+
+// 1. Export all URLs
+fs.writeFileSync(path.join(exportsDir, 'urls_all.txt'), allUrls.join('\n') + '\n');
+
+// 2. Chunk in batches of 100 for Bing Webmaster API batch submit
+const CHUNK_SIZE = 100;
+let fileIdx = 1;
+for (let i = 0; i < allUrls.length; i += CHUNK_SIZE) {
+  const chunk = allUrls.slice(i, i + CHUNK_SIZE);
+  const fileName = `bing_submit_${String(fileIdx).padStart(3, '0')}.txt`;
+  fs.writeFileSync(path.join(bingDir, fileName), chunk.join('\n') + '\n');
+  console.log(`Generated ${fileName} with ${chunk.length} URLs`);
+  fileIdx++;
+}
+
+console.log(`\nTotal URLs exported: ${allUrls.length} across ${fileIdx - 1} submission batches.`);

@@ -32,6 +32,38 @@ const siteDescription = `In-depth technical review of ${browser.name}. Benchmark
 ---
 
 <Base title={siteTitle} description={siteDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": browser.name,
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cloud / Headless",
+    "offers": {
+      "@type": "Offer",
+      "price": browser.starting_price_hour,
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": browser.overall_score,
+      "bestRating": "10",
+      "worstRating": "1",
+      "ratingCount": 48
+    },
+    "review": {
+      "@type": "Review",
+      "author": {
+        "@type": "Organization",
+        "name": "BrowserReviews Benchmark Lab"
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": browser.overall_score,
+        "bestRating": "10"
+      },
+      "reviewBody": browser.verdict
+    }
+  })} />
   <div class="review-container">
     <!-- Breadcrumb -->
     <div class="breadcrumb">
