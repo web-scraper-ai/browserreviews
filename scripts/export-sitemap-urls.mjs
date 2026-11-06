@@ -70,6 +70,17 @@ const guideRoutes = [
   '/guides/how-to-bypass-cloudflare-turnstile-cloud-browsers'
 ];
 
+const topicRoutes = [
+  '/what-is-a-headless-browser',
+  '/topics',
+  '/topics/headless-browser-api',
+  '/topics/headless-chrome-docker-aws-lambda',
+  '/topics/selenium-headless-chrome-python',
+  '/topics/headless-browser-node-js',
+  '/topics/phantomjs-alternatives',
+  '/topics/browser-for-ai-agents'
+];
+
 const allRoutes = [
   ...staticRoutes,
   ...browserRoutes,
@@ -77,7 +88,8 @@ const allRoutes = [
   ...comparisonRoutes,
   ...alternativeRoutes,
   ...bestForRoutes,
-  ...guideRoutes
+  ...guideRoutes,
+  ...topicRoutes
 ];
 const allUrls = allRoutes.map(r => `${BASE_URL.replace(/\/$/, '')}${r}`);
 

@@ -130,3 +130,11 @@ https://browserreviews.com/guides/how-to-connect-puppeteer-cloud-browser
 https://browserreviews.com/guides/how-to-connect-playwright-cloud-browser
 https://browserreviews.com/guides/how-to-configure-claude-desktop-browser-mcp
 https://browserreviews.com/guides/how-to-bypass-cloudflare-turnstile-cloud-browsers
+https://browserreviews.com/what-is-a-headless-browser
+https://browserreviews.com/topics
+https://browserreviews.com/topics/headless-browser-api
+https://browserreviews.com/topics/headless-chrome-docker-aws-lambda
+https://browserreviews.com/topics/selenium-headless-chrome-python
+https://browserreviews.com/topics/headless-browser-node-js
+https://browserreviews.com/topics/phantomjs-alternatives
+https://browserreviews.com/topics/browser-for-ai-agents
