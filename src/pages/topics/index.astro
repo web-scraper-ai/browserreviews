@@ -1,0 +1,215 @@
+---
+import Base from "../../layouts/Base.astro";
+import { TOPIC_CLUSTERS } from "../../../scripts/data-topics.mjs";
+
+const siteTitle = "Headless Browser Topics & Architecture Hub (2026) • BrowserReviews";
+const siteDescription = "Explore deep-dive technical topic hubs on Headless Browser APIs, Docker & AWS Lambda Chromium, Selenium Python, Node.js libraries, PhantomJS alternatives, and AI Agent browsers.";
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Topic Hubs</span>
+    </div>
+    <h1 class="page-title">Headless Browser Architecture & Topics Directory</h1>
+    <p class="page-subtitle">
+      Comprehensive technical topic clusters covering modern headless Chrome infrastructure, serverless deployments (Docker / AWS Lambda), language ecosystems (Node.js, Python), and AI Agent tooling.
+    </p>
+  </div>
+
+  <div class="featured-banner">
+    <span class="badge-gold">Core Pillar Resource</span>
+    <h2>New to Headless Browsers?</h2>
+    <p>
+      Read our comprehensive foundational guide on what a headless browser is, how the Chrome DevTools Protocol operates, and why modern cloud browser APIs outperform self-hosted instances.
+    </p>
+    <a href="/what-is-a-headless-browser" class="btn btn-primary">Read "What is a Headless Browser?" Pillar Guide →</a>
+  </div>
+
+  <div class="topics-grid">
+    {TOPIC_CLUSTERS.map((t) => (
+      <article class="topic-card">
+        <div class="topic-meta">
+          <span class="topic-badge">{t.badge}</span>
+          <span class="topic-pick">Top Pick: <strong>{t.topPickName}</strong></span>
+        </div>
+        <h2 class="topic-title">
+          <a href={`/topics/${t.slug}/`}>{t.title}</a>
+        </h2>
+        <p class="topic-summary">{t.summary}</p>
+        
+        <div class="topic-keywords">
+          <span class="kw-label">Target Queries:</span>
+          {t.targetKeywords.slice(0, 4).map((kw) => (
+            <span class="kw-tag">{kw}</span>
+          ))}
+        </div>
+
+        <div class="topic-footer">
+          <a href={`/topics/${t.slug}/`} class="topic-link">Explore Topic Cluster →</a>
+        </div>
+      </article>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .page-header {
+    margin-bottom: 2rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-ink-muted);
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .breadcrumb a {
+    color: var(--color-ink-muted);
+    text-decoration: none;
+  }
+  .breadcrumb a:hover {
+    color: var(--color-ink);
+  }
+  .page-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin: 0 0 0.75rem 0;
+    letter-spacing: -0.02em;
+  }
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-ink-muted);
+    max-width: 820px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .featured-banner {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.02) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 12px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .badge-gold {
+    display: inline-block;
+    background: #f59e0b;
+    color: #000;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .featured-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+  }
+  .featured-banner p {
+    font-size: 0.95rem;
+    color: var(--color-ink-muted);
+    line-height: 1.6;
+    margin: 0 0 1.25rem 0;
+    max-width: 800px;
+  }
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+    gap: 1.5rem;
+  }
+  @media (max-width: 640px) {
+    .topics-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .topic-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .topic-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
+  }
+  .topic-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+  }
+  .topic-badge {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    color: var(--color-primary);
+  }
+  .topic-pick {
+    color: var(--color-ink-muted);
+  }
+  .topic-pick strong {
+    color: var(--color-ink);
+  }
+  .topic-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0 0 0.75rem 0;
+  }
+  .topic-title a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .topic-title a:hover {
+    color: var(--color-primary);
+  }
+  .topic-summary {
+    font-size: 0.95rem;
+    color: var(--color-ink-muted);
+    line-height: 1.6;
+    margin: 0 0 1.25rem 0;
+    flex-grow: 1;
+  }
+  .topic-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+    align-items: center;
+  }
+  .kw-label {
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+    margin-right: 0.2rem;
+  }
+  .kw-tag {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border);
+    font-size: 0.75rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    color: var(--color-ink-muted);
+    font-family: monospace;
+  }
+  .topic-footer {
+    border-top: 1px solid var(--color-border);
+    padding-top: 1rem;
+  }
+  .topic-link {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+  .topic-link:hover {
+    text-decoration: underline;
+  }
+</style>
