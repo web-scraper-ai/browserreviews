@@ -12,7 +12,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "start": "node ./dist/server/entry.mjs",
-    "typecheck": "astro check"
+    "typecheck": "astro check",
+    "seed:build": "node scripts/build-seed.mjs",
+    "verify": "node scripts/verify-local.mjs",
+    "export:urls": "node scripts/export-sitemap-urls.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.5",
