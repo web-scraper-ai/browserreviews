@@ -1,0 +1,582 @@
+---
+import { decodeSlug } from "emdash";
+import { PortableText } from "emdash/ui";
+import Base from "../../layouts/Base.astro";
+import { fetchAllMcpTools, fetchMcpToolBySlug, fetchBrowserBySlug } from "../../utils/browser-data";
+
+const rawSlug = decodeSlug(Astro.params.slug);
+
+if (!rawSlug) {
+  return Astro.redirect("/404");
+}
+
+const { tool: mcp } = await fetchMcpToolBySlug(rawSlug);
+
+if (!mcp) {
+  return Astro.redirect("/404");
+}
+
+const { tools: allTools } = await fetchAllMcpTools();
+
+// Related cloud browser if applicable
+let parentBrowser = null;
+if (mcp.provider_slug) {
+  const { browser } = await fetchBrowserBySlug(mcp.provider_slug);
+  parentBrowser = browser;
+}
+
+const competitors = allTools.filter(t => t.slug !== mcp.slug).slice(0, 3);
+
+const siteTitle = `${mcp.name} Setup Guide & Tool Review (2026) • BrowserReviews`;
+const siteDescription = `Configuration guide and technical evaluation of ${mcp.name}. Learn how to configure Claude Desktop, Cursor, and autonomous AI agents with automated CAPTCHA solving.`;
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="mcp-detail-container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span>
+      <a href="/mcp">Browser MCP</a> <span>/</span>
+      <span>{mcp.name}</span>
+    </div>
+
+    <!-- Header -->
+    <div class="mcp-header">
+      <div class="header-main">
+        <div class="badge-row">
+          <span class={`rank-badge rank-${mcp.demo_rank}`}>#{mcp.demo_rank} Browser MCP</span>
+          {mcp.status_badge && <span class="badge-accent">{mcp.status_badge}</span>}
+          {mcp.github_url && <span class="badge-gh">Open Source</span>}
+        </div>
+        <h1 class="mcp-title">{mcp.name}</h1>
+        <p class="mcp-tagline">{mcp.tagline}</p>
+      </div>
+
+      <!-- Score Card -->
+      <div class="score-card">
+        <div class="score-num">★ {mcp.overall_score.toFixed(1)}</div>
+        <div class="score-label">Agent MCP Score</div>
+        <div class="score-pricing">{mcp.pricing_tier.split(';')[0]}</div>
+        <a href={mcp.website_url} target="_blank" rel="noopener noreferrer" class="btn btn-purple btn-cta">
+          Official Documentation ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- Claude Desktop Config Box -->
+    <div class="config-section">
+      <div class="config-header">
+        <div>
+          <h2 class="section-title">Claude Desktop Configuration</h2>
+          <p class="section-desc">Add this snippet to your <code>claude_desktop_config.json</code> to enable full browser capabilities:</p>
+        </div>
+      </div>
+      <div class="code-block">
+        <pre><code>{mcp.config_snippet}</code></pre>
+      </div>
+      <div class="install-row">
+        <span class="install-k">Direct CLI Install:</span>
+        <code>{mcp.install_command}</code>
+      </div>
+    </div>
+
+    <!-- Tools Exposed to AI Agents -->
+    <div class="tools-section">
+      <h2 class="section-title">Exposed Tools & Primitives ({mcp.tools_provided.length})</h2>
+      <p class="section-desc">These functions are invoked autonomously by Claude, Cursor, or your AI agent loop:</p>
+      <div class="tools-grid">
+        {mcp.tools_provided.map((toolName) => (
+          <div class="tool-pill">
+            <span class="tool-icon">⚡</span>
+            <code>{toolName}</code>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Capabilities Specs Table -->
+    <div class="specs-section">
+      <h2 class="section-title">AI Compatibility & Anti-Bot Specifications</h2>
+      <div class="specs-table-wrap">
+        <table class="specs-table">
+          <tbody>
+            <tr>
+              <th>Claude Desktop Integration</th>
+              <td>{mcp.supports_claude_desktop ? "✔ Yes — Fully Tested with Claude 3.5 Sonnet / Haiku" : "✖ No"}</td>
+            </tr>
+            <tr>
+              <th>Cursor IDE / Windsurf</th>
+              <td>{mcp.supports_cursor ? "✔ Yes — Standard Stdio / SSE Transport" : "✖ No"}</td>
+            </tr>
+            <tr>
+              <th>Custom Agent Frameworks</th>
+              <td>{mcp.supports_custom_agents ? "✔ Supported (LangChain, LlamaIndex, CrewAI)" : "✖ No"}</td>
+            </tr>
+            <tr>
+              <th>Automated CAPTCHA Solving</th>
+              <td><span class={mcp.captcha_solving.includes("Native") ? "text-green" : ""}>{mcp.captcha_solving}</span></td>
+            </tr>
+            <tr>
+              <th>Stealth & Evasion Engine</th>
+              <td>{mcp.stealth_bypass}</td>
+            </tr>
+            <tr>
+              <th>Pricing & Licensing</th>
+              <td>{mcp.pricing_tier}</td>
+            </tr>
+            {mcp.github_url && (
+              <tr>
+                <th>Source Code Repository</th>
+                <td><a href={mcp.github_url} target="_blank" rel="noopener noreferrer" class="link-gh">{mcp.github_url} ↗</a></td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pros & Cons -->
+    <div class="pros-cons-grid">
+      <div class="pros-card">
+        <h3>Strengths for AI Agents</h3>
+        <ul>
+          {mcp.pros.map((p) => (
+            <li>✔ {p.text}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="cons-card">
+        <h3>Considerations</h3>
+        <ul>
+          {mcp.cons.map((c) => (
+            <li>✖ {c.text}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Review Content -->
+    <div class="review-body">
+      {mcp.content && Array.isArray(mcp.content) ? (
+        <PortableText value={mcp.content} />
+      ) : (
+        <div>
+          <h2>Evaluation & Benchmark Verdict</h2>
+          <p>{mcp.summary}</p>
+          <h3>Our Verdict</h3>
+          <p>{mcp.verdict}</p>
+          <h3>Ideal Use Case</h3>
+          <p>{mcp.ideal_use_case}</p>
+          <h3>Avoid If</h3>
+          <p>{mcp.avoid_if}</p>
+        </div>
+      )}
+    </div>
+
+    <!-- Linked Cloud Browser -->
+    {parentBrowser && (
+      <div class="linked-browser-box">
+        <div class="linked-text">
+          <span class="badge-accent">Underlying Cloud Infrastructure</span>
+          <h3>Powered by {parentBrowser.name}</h3>
+          <p>{parentBrowser.tagline}</p>
+        </div>
+        <a href={`/reviews/${parentBrowser.slug}`} class="btn btn-primary">Read Cloud Browser Review →</a>
+      </div>
+    )}
+
+    <!-- Alternative MCP Tools -->
+    <div class="competitors-section">
+      <h2 class="section-title">Alternative Browser MCP Servers</h2>
+      <div class="competitors-grid">
+        {competitors.map((c) => (
+          <div class="comp-card">
+            <span class="comp-rank">#{c.demo_rank} MCP</span>
+            <h4><a href={`/mcp/${c.slug}`}>{c.name}</a></h4>
+            <p>{c.tagline}</p>
+            <div class="comp-footer">
+              <span class="comp-tools">{c.tools_provided.length} Tools</span>
+              <a href={`/mcp/${c.slug}`} class="comp-link">Guide →</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .mcp-detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 0 4rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+
+  .mcp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .header-main {
+    flex: 1;
+    min-width: 300px;
+  }
+  .badge-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .rank-badge {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 4px;
+    background: #ede9fe;
+    color: #5b21b6;
+  }
+  .rank-1 {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .badge-accent {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+  .badge-gh {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+  .mcp-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    line-height: 1.15;
+  }
+  .mcp-tagline {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .score-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    min-width: 220px;
+  }
+  .score-num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #059669;
+  }
+  .score-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .score-pricing {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #8b5cf6;
+    margin-bottom: 1rem;
+  }
+  .btn-purple {
+    background: #8b5cf6;
+    color: #ffffff;
+  }
+  .btn-purple:hover {
+    background: #7c3aed;
+  }
+  .btn-cta {
+    display: block;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .config-section {
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .section-desc {
+    font-size: 0.92rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+  .code-block {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+  .code-block pre {
+    margin: 0;
+  }
+  .install-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+  }
+  .install-k {
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+  .install-row code {
+    background: #e2e8f0;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    color: #0f172a;
+    font-family: monospace;
+  }
+
+  .tools-section {
+    margin-bottom: 2.5rem;
+  }
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+  .tool-pill {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.6rem 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .tool-icon {
+    color: #f59e0b;
+  }
+  .tool-pill code {
+    font-family: monospace;
+    color: #334155;
+    font-weight: 600;
+  }
+
+  .specs-section {
+    margin-bottom: 2.5rem;
+  }
+  .specs-table-wrap {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow-x: auto;
+    background: var(--color-card-bg, #ffffff);
+  }
+  .specs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  .specs-table th {
+    width: 35%;
+    padding: 0.9rem 1.25rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .specs-table td {
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+  .text-green {
+    color: #059669;
+    font-weight: 600;
+  }
+  .link-gh {
+    color: var(--color-primary);
+    text-decoration: none;
+    word-break: break-all;
+  }
+
+  .pros-cons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .pros-card, .cons-card {
+    background: var(--color-card-bg, #ffffff);
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+  }
+  .pros-card {
+    border-top: 4px solid #10b981;
+  }
+  .cons-card {
+    border-top: 4px solid #ef4444;
+  }
+  .pros-card h3, .cons-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .pros-card ul, .cons-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .review-body {
+    line-height: 1.7;
+    font-size: 1rem;
+    color: var(--color-text);
+    margin-bottom: 3rem;
+  }
+  .review-body :global(h2) {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .review-body :global(h3) {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .review-body :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .linked-browser-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(245, 158, 11, 0.08));
+    border: 1px solid #3b82f6;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .linked-text h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0.35rem 0;
+  }
+  .linked-text p {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.65rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .competitors-section {
+    margin-bottom: 2rem;
+  }
+  .competitors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .comp-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .comp-rank {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #8b5cf6;
+  }
+  .comp-card h4 {
+    margin: 0.25rem 0 0.4rem;
+    font-size: 1.05rem;
+  }
+  .comp-card h4 a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .comp-card p {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+    line-height: 1.4;
+  }
+  .comp-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .comp-tools {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+  .comp-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #8b5cf6;
+    text-decoration: none;
+  }
+</style>

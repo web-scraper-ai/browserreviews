@@ -1,0 +1,270 @@
+---
+import Base from "../../layouts/Base.astro";
+import { fetchAllBrowsers, fetchAllMcpTools } from "../../utils/browser-data";
+
+const { browsers } = await fetchAllBrowsers();
+const { tools: mcpTools } = await fetchAllMcpTools();
+
+const POPULAR_COMPARISONS = [
+  {
+    slug: "2captcha-browser-api-vs-browserbase",
+    title: "2Captcha Browser API vs Browserbase",
+    badge: "Head-to-Head #1 vs #2",
+    desc: "Compare native CAPTCHA solving and residential proxy economics against visual session replay and agent debugging."
+  },
+  {
+    slug: "2captcha-browser-api-vs-brightdata-scraping-browser",
+    title: "2Captcha Browser API vs Bright Data Scraping Browser",
+    badge: "Unblocking Battle",
+    desc: "Evaluate 2Captcha's pay-as-you-go CAPTCHA decoding against Bright Data's massive 72M+ enterprise residential proxy network."
+  },
+  {
+    slug: "2captcha-browser-api-vs-steel-dev",
+    title: "2Captcha Browser API vs Steel.dev",
+    badge: "Managed vs Open Source",
+    desc: "Analyze turnkey cloud CAPTCHA solving versus Steel's open-source self-hostable stealth browser engine."
+  },
+  {
+    slug: "2captcha-browser-api-vs-browserless",
+    title: "2Captcha Browser API vs Browserless.io",
+    badge: "Anti-Bot vs Enterprise Scale",
+    desc: "Compare anti-bot residential rotation with Browserless's battle-tested PDF rendering and Docker infrastructure."
+  },
+  {
+    slug: "2captcha-browser-mcp-vs-browserbase-mcp",
+    title: "2Captcha Browser MCP vs Browserbase MCP",
+    badge: "Top MCP Tools",
+    desc: "Compare Model Context Protocol implementations for Claude Desktop: native CAPTCHA bypass vs visual replay URLs."
+  },
+  {
+    slug: "2captcha-browser-mcp-vs-browser-use-mcp",
+    title: "2Captcha Browser MCP vs Browser-Use MCP",
+    badge: "CDP Primitives vs Vision AI",
+    desc: "Standard CDP browser tool calling versus multi-step LLM vision agent navigation."
+  }
+];
+
+const siteTitle = "Compare Cloud Browsers & MCP Tools Side-by-Side • BrowserReviews";
+const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools side-by-side. Analyze anti-bot bypass rates, CAPTCHA auto-solving, CDP stability, and compute pricing.";
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Compare</span>
+    </div>
+    <h1 class="page-title">Compare Cloud Browsers & MCP Tools</h1>
+    <p class="page-subtitle">
+      Evaluate architectural trade-offs between leading headless browser platforms. Compare pricing per hour, anti-bot capabilities, CAPTCHA decoding, and AI agent compatibility.
+    </p>
+  </div>
+
+  <!-- Interactive Comparison Picker -->
+  <div class="picker-card">
+    <h2 class="picker-title">Create a Custom Side-by-Side Comparison</h2>
+    <div class="picker-row">
+      <div class="picker-select-group">
+        <label for="providerA">Select First Platform:</label>
+        <select id="providerA">
+          {browsers.map((b) => (
+            <option value={b.slug}>#{b.demo_rank} {b.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div class="picker-vs">VS</div>
+
+      <div class="picker-select-group">
+        <label for="providerB">Select Second Platform:</label>
+        <select id="providerB">
+          {browsers.map((b, idx) => (
+            <option value={b.slug} selected={idx === 1}>#{b.demo_rank} {b.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <button id="btnCompare" class="btn btn-compare">Compare Now →</button>
+    </div>
+  </div>
+
+  <!-- Popular Comparisons Grid -->
+  <div class="popular-section">
+    <h2 class="section-title">Popular Pre-Built Comparisons</h2>
+    <div class="comparisons-grid">
+      {POPULAR_COMPARISONS.map((comp) => (
+        <div class="comp-card">
+          <span class="badge-mini">{comp.badge}</span>
+          <h3 class="comp-title">
+            <a href={`/compare/${comp.slug}`}>{comp.title}</a>
+          </h3>
+          <p class="comp-desc">{comp.desc}</p>
+          <a href={`/compare/${comp.slug}`} class="comp-cta">View Full Comparison →</a>
+        </div>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<script>
+  const providerA = document.getElementById('providerA') as HTMLSelectElement;
+  const providerB = document.getElementById('providerB') as HTMLSelectElement;
+  const btnCompare = document.getElementById('btnCompare');
+
+  btnCompare?.addEventListener('click', () => {
+    const slugA = providerA?.value;
+    const slugB = providerB?.value;
+    if (slugA && slugB) {
+      if (slugA === slugB) {
+        alert('Please select two different platforms to compare.');
+        return;
+      }
+      window.location.href = `/compare/${slugA}-vs-${slugB}`;
+    }
+  });
+</script>
+
+<style>
+  .page-header {
+    padding: 2.5rem 0 1.5rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+  .page-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+  .page-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  .picker-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 3.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+  .picker-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+  }
+  .picker-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .picker-select-group {
+    flex: 1;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .picker-select-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+  .picker-select-group select {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: var(--color-card-bg, #ffffff);
+    color: var(--color-text);
+  }
+  .picker-vs {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    padding-bottom: 0.75rem;
+  }
+  .btn-compare {
+    background: var(--color-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .btn-compare:hover {
+    background: #2563eb;
+  }
+
+  .popular-section {
+    margin-bottom: 4rem;
+  }
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  .comparisons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .comp-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .badge-mini {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.15rem 0.45rem;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 4px;
+    width: fit-content;
+    margin-bottom: 0.6rem;
+  }
+  .comp-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .comp-title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .comp-title a:hover {
+    color: var(--color-primary);
+  }
+  .comp-desc {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    margin-bottom: 1.25rem;
+  }
+  .comp-cta {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+</style>

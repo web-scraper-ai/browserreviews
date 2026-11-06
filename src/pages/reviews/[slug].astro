@@ -1,0 +1,568 @@
+---
+import { decodeSlug } from "emdash";
+import { PortableText } from "emdash/ui";
+import Base from "../../layouts/Base.astro";
+import { fetchAllBrowsers, fetchBrowserBySlug, fetchMcpToolBySlug } from "../../utils/browser-data";
+
+const rawSlug = decodeSlug(Astro.params.slug);
+
+if (!rawSlug) {
+  return Astro.redirect("/404");
+}
+
+const { browser } = await fetchBrowserBySlug(rawSlug);
+
+if (!browser) {
+  return Astro.redirect("/404");
+}
+
+const { browsers: allBrowsers } = await fetchAllBrowsers();
+
+// Related MCP server if applicable
+let relatedMcp = null;
+if (browser.mcp_slug) {
+  const { tool } = await fetchMcpToolBySlug(browser.mcp_slug);
+  relatedMcp = tool;
+}
+
+const competitors = allBrowsers.filter(b => b.slug !== browser.slug).slice(0, 3);
+
+const siteTitle = `${browser.name} Review & Benchmarks (2026) • BrowserReviews`;
+const siteDescription = `In-depth technical review of ${browser.name}. Benchmarks for anti-bot bypass, automated CAPTCHA solving, CDP WebSocket stability, and compute pricing.`;
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="review-container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span>
+      <a href="/browsers">Cloud Browsers</a> <span>/</span>
+      <span>{browser.name}</span>
+    </div>
+
+    <!-- Review Header -->
+    <div class="review-header">
+      <div class="header-main">
+        <div class="badge-row">
+          <span class={`rank-badge rank-${browser.demo_rank}`}>Rank #{browser.demo_rank}</span>
+          {browser.status_badge && <span class="badge-accent">{browser.status_badge}</span>}
+          <span class="badge-verified">Verified Lab Review</span>
+        </div>
+        <h1 class="browser-title">{browser.name}</h1>
+        <p class="browser-tagline">{browser.tagline}</p>
+      </div>
+
+      <!-- Score Card -->
+      <div class="score-card">
+        <div class="score-num">★ {browser.overall_score.toFixed(1)}</div>
+        <div class="score-label">Editorial Lab Score</div>
+        <div class="score-pricing">${browser.starting_price_hour.toFixed(2)} / hour</div>
+        <a href={browser.affiliate_url} target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-cta">
+          Visit {browser.name} ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick Highlights Grid -->
+    <div class="highlights-grid">
+      <div class="highlight-item">
+        <span class="hl-k">Pricing Model</span>
+        <span class="hl-v">{browser.pricing_model.replace(/_/g, " ")}</span>
+      </div>
+      <div class="highlight-item">
+        <span class="hl-k">Base Hourly Rate</span>
+        <span class="hl-v">${browser.starting_price_hour.toFixed(2)} / hr</span>
+      </div>
+      <div class="highlight-item">
+        <span class="hl-k">Per 1,000 Requests</span>
+        <span class="hl-v">${browser.starting_price_request.toFixed(2)} / 1k</span>
+      </div>
+      <div class="highlight-item">
+        <span class="hl-k">Max Concurrency</span>
+        <span class="hl-v">{browser.max_concurrency}</span>
+      </div>
+    </div>
+
+    <!-- Pros & Cons -->
+    <div class="pros-cons-grid">
+      <div class="pros-card">
+        <h3>Advantages & Key Strengths</h3>
+        <ul>
+          {browser.pros.map((p) => (
+            <li>✔ {p.text}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="cons-card">
+        <h3>Limitations & Considerations</h3>
+        <ul>
+          {browser.cons.map((c) => (
+            <li>✖ {c.text}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Technical Specifications Table -->
+    <div class="specs-section">
+      <h2 class="section-title">Technical Specifications & Anti-Bot Capabilities</h2>
+      <div class="specs-table-wrap">
+        <table class="specs-table">
+          <tbody>
+            <tr>
+              <th>Standard CDP WebSocket Support</th>
+              <td>{browser.cdp_support ? "✔ Yes — Native Chrome DevTools Protocol (wss://)" : "✖ No"}</td>
+            </tr>
+            <tr>
+              <th>Supported Automation Frameworks</th>
+              <td>
+                {[
+                  browser.playwright_support ? "Playwright" : null,
+                  browser.puppeteer_support ? "Puppeteer" : null,
+                  browser.selenium_support ? "Selenium" : null
+                ].filter(Boolean).join(", ")}
+              </td>
+            </tr>
+            <tr>
+              <th>Automated CAPTCHA Solving</th>
+              <td><span class={browser.captcha_auto_solve.includes("Native") ? "text-green" : ""}>{browser.captcha_auto_solve}</span></td>
+            </tr>
+            <tr>
+              <th>Anti-Bot Bypass Architecture</th>
+              <td>{browser.antibot_bypass}</td>
+            </tr>
+            <tr>
+              <th>Stealth & Fingerprint Emulation</th>
+              <td>{browser.stealth_fingerprinting}</td>
+            </tr>
+            <tr>
+              <th>Residential & Proxy Integration</th>
+              <td>{browser.proxy_integration}</td>
+            </tr>
+            <tr>
+              <th>Model Context Protocol (MCP)</th>
+              <td>
+                {browser.mcp_support ? (
+                  <span>✔ Yes — Dedicated MCP Server Available {relatedMcp && <a href={`/mcp/${relatedMcp.slug}`} class="link-mcp">(View Setup Guide)</a>}</span>
+                ) : (
+                  <span>✖ No native MCP server</span>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <th>Free Tier & Trial</th>
+              <td>{browser.free_tier}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Code Example -->
+    <div class="code-example-section">
+      <h2 class="section-title">How to Connect with Playwright (Node.js)</h2>
+      <p class="section-desc">Connect directly to {browser.name}'s remote browser WebSocket endpoint without running Chromium locally:</p>
+      <div class="code-block">
+        <pre><code>{`import { chromium } from 'playwright';
+
+// Connect to ${browser.name} cloud browser instance
+const browser = await chromium.connectOverCDP(
+  'wss://${browser.slug}.example.com/cdp?token=YOUR_API_KEY'
+);
+
+const context = await browser.newContext();
+const page = await context.newPage();
+
+await page.goto('https://nowsecure.nl', { waitUntil: 'networkidle' });
+
+// Automated anti-bot bypass & CAPTCHA solving operates transparently
+const title = await page.title();
+console.log('Page Title:', title);
+
+await browser.close();`}</code></pre>
+      </div>
+    </div>
+
+    <!-- Editorial Content -->
+    <div class="review-body">
+      {browser.content && Array.isArray(browser.content) ? (
+        <PortableText value={browser.content} />
+      ) : (
+        <div>
+          <h2>Comprehensive Analysis: {browser.name}</h2>
+          <p>{browser.summary}</p>
+          <h3>Our Verdict</h3>
+          <p>{browser.verdict}</p>
+          <h3>Ideal Use Case</h3>
+          <p>{browser.ideal_use_case}</p>
+          <h3>Avoid If</h3>
+          <p>{browser.avoid_if}</p>
+        </div>
+      )}
+    </div>
+
+    <!-- Related MCP Block -->
+    {relatedMcp && (
+      <div class="related-mcp-box">
+        <div class="mcp-box-text">
+          <span class="badge-mini">AI Agent Tool</span>
+          <h3>Looking for Model Context Protocol integration?</h3>
+          <p>Check out our setup guide and tools documentation for <strong>{relatedMcp.name}</strong>.</p>
+        </div>
+        <a href={`/mcp/${relatedMcp.slug}`} class="btn btn-primary">View MCP Server Guide →</a>
+      </div>
+    )}
+
+    <!-- Competitors Comparison Box -->
+    <div class="competitors-section">
+      <h2 class="section-title">Alternative Cloud Browsers to Consider</h2>
+      <div class="competitors-grid">
+        {competitors.map((c) => (
+          <div class="comp-card">
+            <span class="comp-rank">#{c.demo_rank}</span>
+            <h4><a href={`/reviews/${c.slug}`}>{c.name}</a></h4>
+            <p>{c.tagline}</p>
+            <div class="comp-footer">
+              <span class="comp-price">${c.starting_price_hour.toFixed(2)}/hr</span>
+              <a href={`/reviews/${c.slug}`} class="comp-link">Compare →</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .review-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 0 4rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .header-main {
+    flex: 1;
+    min-width: 300px;
+  }
+  .badge-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .rank-badge {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 4px;
+    background: #e2e8f0;
+    color: #1e293b;
+  }
+  .rank-1 {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .badge-accent {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+  .badge-verified {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    background: #ecfdf5;
+    color: #065f46;
+  }
+  .browser-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    line-height: 1.15;
+  }
+  .browser-tagline {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .score-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    min-width: 220px;
+  }
+  .score-num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #059669;
+  }
+  .score-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .score-pricing {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+  .btn-cta {
+    display: block;
+    width: 100%;
+    padding: 0.65rem 1rem;
+  }
+
+  .highlights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .highlight-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .hl-k {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+  .hl-v {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-top: 0.2rem;
+    text-transform: capitalize;
+  }
+
+  .pros-cons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .pros-card, .cons-card {
+    background: var(--color-card-bg, #ffffff);
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+  }
+  .pros-card {
+    border-top: 4px solid #10b981;
+  }
+  .cons-card {
+    border-top: 4px solid #ef4444;
+  }
+  .pros-card h3, .cons-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .pros-card ul, .cons-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .section-desc {
+    font-size: 0.92rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .specs-section {
+    margin-bottom: 2.5rem;
+  }
+  .specs-table-wrap {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow-x: auto;
+    background: var(--color-card-bg, #ffffff);
+  }
+  .specs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  .specs-table th {
+    width: 35%;
+    padding: 0.9rem 1.25rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .specs-table td {
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+  .text-green {
+    color: #059669;
+    font-weight: 600;
+  }
+  .link-mcp {
+    color: #8b5cf6;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .code-example-section {
+    margin-bottom: 2.5rem;
+  }
+  .code-block {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 10px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .code-block pre {
+    margin: 0;
+  }
+
+  .review-body {
+    line-height: 1.7;
+    font-size: 1rem;
+    color: var(--color-text);
+    margin-bottom: 3rem;
+  }
+  .review-body :global(h2) {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .review-body :global(h3) {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .review-body :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .related-mcp-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(59, 130, 246, 0.08));
+    border: 1px solid #8b5cf6;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .mcp-box-text h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0.35rem 0;
+  }
+  .mcp-box-text p {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .competitors-section {
+    margin-bottom: 2rem;
+  }
+  .competitors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .comp-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .comp-rank {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+  .comp-card h4 {
+    margin: 0.25rem 0 0.4rem;
+    font-size: 1.05rem;
+  }
+  .comp-card h4 a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .comp-card p {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+    line-height: 1.4;
+  }
+  .comp-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .comp-price {
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .comp-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+</style>

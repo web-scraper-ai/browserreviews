@@ -1,0 +1,369 @@
+---
+import Base from "../layouts/Base.astro";
+
+const siteTitle = "Cloud Browser Cost Calculator • BrowserReviews";
+const siteDescription = "Calculate and compare monthly cloud browser compute costs based on active hours, page requests, and proxy bandwidth across top providers.";
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Cost Calculator</span>
+    </div>
+    <h1 class="page-title">Cloud Browser Cost Calculator</h1>
+    <p class="page-subtitle">
+      Estimate your real monthly infrastructure bill. Compare pay-as-you-go hourly compute, request volume, and proxy bandwidth across leading cloud browser platforms.
+    </p>
+  </div>
+
+  <div class="calc-grid">
+    <!-- Controls Panel -->
+    <div class="calc-panel">
+      <h2 class="panel-title">1. Your Monthly Usage Estimate</h2>
+
+      <div class="input-group">
+        <div class="input-label-row">
+          <label for="hoursInput">Active Browser Hours / Month:</label>
+          <span class="range-val" id="hoursVal">100 hrs</span>
+        </div>
+        <input type="range" id="hoursInput" min="10" max="2000" step="10" value="100" />
+        <span class="input-hint">Average runtime of concurrent headless Chromium sessions.</span>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label-row">
+          <label for="requestsInput">Total Page Requests / Month:</label>
+          <span class="range-val" id="requestsVal">50,000 reqs</span>
+        </div>
+        <input type="range" id="requestsInput" min="5000" max="1000000" step="5000" value="50000" />
+        <span class="input-hint">Pages loaded, forms filled, or screenshots rendered.</span>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label-row">
+          <label for="bandwidthInput">Residential Proxy Bandwidth (GB):</label>
+          <span class="range-val" id="bandwidthVal">10 GB</span>
+        </div>
+        <input type="range" id="bandwidthInput" min="1" max="200" step="1" value="10" />
+        <span class="input-hint">Bandwidth consumed when routing through residential IPs to bypass anti-bots.</span>
+      </div>
+    </div>
+
+    <!-- Results Comparison -->
+    <div class="calc-results">
+      <h2 class="panel-title">2. Estimated Monthly Provider Costs</h2>
+
+      <div class="provider-costs-list" id="costsList">
+        <!-- Rendered via JS -->
+      </div>
+
+      <div class="calc-notes">
+        <p><strong>💡 Benchmark Insight:</strong> <strong>2Captcha Browser API</strong> delivers the lowest total cost of ownership by including automated CAPTCHA solving and residential proxy rotation directly in its $0.15/hr rate without imposing mandatory $500/mo enterprise commitments.</p>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Cost modeling based on actual pricing structures
+  const PROVIDERS = [
+    {
+      name: "2Captcha Browser API (#1 Editor's Pick)",
+      slug: "2captcha-browser-api",
+      rank: 1,
+      isWinner: true,
+      baseHourly: 0.15,
+      proxyPerGb: 0.0, // Included with session rotation
+      reqMarkupPer1k: 0.0,
+      monthlyMin: 0,
+      notes: "Transparent pay-as-you-go with native CAPTCHA solving and residential IPs included."
+    },
+    {
+      name: "Browserbase",
+      slug: "browserbase",
+      rank: 2,
+      baseHourly: 0.20,
+      proxyPerGb: 5.0, // Additional proxy add-on fee
+      reqMarkupPer1k: 0.0,
+      monthlyMin: 20,
+      notes: "Live debugger and session replay. Proxies incur standard residential markup."
+    },
+    {
+      name: "Steel.dev (Managed Cloud)",
+      slug: "steel-dev",
+      rank: 5,
+      baseHourly: 0.17,
+      proxyPerGb: 3.5,
+      reqMarkupPer1k: 0.0,
+      monthlyMin: 0,
+      notes: "Open source engine with managed cloud sessions."
+    },
+    {
+      name: "ZenRows Scraping Browser",
+      slug: "zenrows-browser",
+      rank: 26,
+      baseHourly: 0.18,
+      proxyPerGb: 2.5,
+      reqMarkupPer1k: 0.20,
+      monthlyMin: 49,
+      notes: "Credit-based plan with built-in unblocking."
+    },
+    {
+      name: "Bright Data Scraping Browser",
+      slug: "brightdata-scraping-browser",
+      rank: 24,
+      baseHourly: 0.30,
+      proxyPerGb: 8.4, // Enterprise proxy bandwidth
+      reqMarkupPer1k: 0.0,
+      monthlyMin: 50,
+      notes: "Massive 72M+ IP network with premium enterprise per-GB bandwidth."
+    },
+    {
+      name: "Browserless.io",
+      slug: "browserless",
+      rank: 8,
+      baseHourly: 0.20,
+      proxyPerGb: 4.0, // BYO proxy or add-on
+      reqMarkupPer1k: 0.0,
+      monthlyMin: 25,
+      notes: "High reliability rendering; BYO proxy or third-party proxy provider."
+    }
+  ];
+
+  const hoursInput = document.getElementById('hoursInput') as HTMLInputElement;
+  const requestsInput = document.getElementById('requestsInput') as HTMLInputElement;
+  const bandwidthInput = document.getElementById('bandwidthInput') as HTMLInputElement;
+
+  const hoursVal = document.getElementById('hoursVal');
+  const requestsVal = document.getElementById('requestsVal');
+  const bandwidthVal = document.getElementById('bandwidthVal');
+  const costsList = document.getElementById('costsList');
+
+  function calculate() {
+    const hours = parseFloat(hoursInput?.value || '100');
+    const requests = parseFloat(requestsInput?.value || '50000');
+    const bandwidth = parseFloat(bandwidthInput?.value || '10');
+
+    if (hoursVal) hoursVal.textContent = `${hours.toLocaleString()} hrs`;
+    if (requestsVal) requestsVal.textContent = `${requests.toLocaleString()} reqs`;
+    if (bandwidthVal) bandwidthVal.textContent = `${bandwidth.toLocaleString()} GB`;
+
+    if (!costsList) return;
+
+    const results = PROVIDERS.map((p) => {
+      const computeCost = hours * p.baseHourly;
+      const proxyCost = bandwidth * p.proxyPerGb;
+      const reqCost = (requests / 1000) * p.reqMarkupPer1k;
+      const rawTotal = computeCost + proxyCost + reqCost;
+      const total = Math.max(rawTotal, p.monthlyMin);
+
+      return {
+        ...p,
+        computeCost,
+        proxyCost,
+        total
+      };
+    });
+
+    results.sort((a, b) => a.total - b.total);
+
+    costsList.innerHTML = results.map((r) => `
+      <div class="cost-card ${r.isWinner ? 'cost-winner' : ''}">
+        <div class="cost-card-header">
+          <div>
+            <span class="cost-rank">#${r.rank}</span>
+            <strong class="cost-name">${r.name}</strong>
+          </div>
+          <div class="cost-total-box">
+            <span class="cost-total">$${r.total.toFixed(2)}</span>
+            <span class="cost-mo">/ month</span>
+          </div>
+        </div>
+        <div class="cost-breakdown">
+          <span>Compute: $${r.computeCost.toFixed(2)}</span>
+          <span>Proxies: $${r.proxyCost.toFixed(2)}</span>
+          ${r.monthlyMin > 0 ? `<span>Min Commitment: $${r.monthlyMin}</span>` : `<span>No Min Commitment</span>`}
+        </div>
+        <p class="cost-notes">${r.notes}</p>
+        <div class="cost-action">
+          <a href="/reviews/${r.slug}" class="cost-link">Read Technical Review →</a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  hoursInput?.addEventListener('input', calculate);
+  requestsInput?.addEventListener('input', calculate);
+  bandwidthInput?.addEventListener('input', calculate);
+
+  calculate();
+</script>
+
+<style>
+  .page-header {
+    padding: 2.5rem 0 1.5rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+  .page-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+  .page-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+  @media (max-width: 850px) {
+    .calc-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .calc-panel, .calc-results {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+  .panel-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.75rem;
+  }
+
+  .input-group {
+    margin-bottom: 1.75rem;
+  }
+  .input-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .input-label-row label {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .range-val {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+  input[type="range"] {
+    width: 100%;
+    margin-bottom: 0.35rem;
+    accent-color: var(--color-primary);
+  }
+  .input-hint {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+
+  .provider-costs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  :global(.cost-card) {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    background: var(--color-bg-secondary, #f8fafc);
+  }
+  :global(.cost-winner) {
+    border: 2px solid #10b981;
+    background: rgba(16, 185, 129, 0.05);
+  }
+  :global(.cost-card-header) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  :global(.cost-rank) {
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: #e2e8f0;
+    color: #1e293b;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    margin-right: 0.4rem;
+  }
+  :global(.cost-name) {
+    font-size: 1rem;
+    color: var(--color-text);
+  }
+  :global(.cost-total-box) {
+    text-align: right;
+  }
+  :global(.cost-total) {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-text);
+  }
+  :global(.cost-winner .cost-total) {
+    color: #059669;
+  }
+  :global(.cost-mo) {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+  :global(.cost-breakdown) {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+  :global(.cost-notes) {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    margin: 0 0 0.75rem;
+    line-height: 1.4;
+  }
+  :global(.cost-action) {
+    border-top: 1px solid var(--color-border);
+    padding-top: 0.5rem;
+  }
+  :global(.cost-link) {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .calc-notes {
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+</style>

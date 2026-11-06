@@ -1,0 +1,390 @@
+---
+import Base from "../../layouts/Base.astro";
+import { fetchAllBrowsers } from "../../utils/browser-data";
+
+const { browsers } = await fetchAllBrowsers();
+
+const siteTitle = "60 Cloud Browsers & Scraping Browser APIs Directory (2026)";
+const siteDescription = "Comprehensive directory of 60 Cloud Browsers and Scraping Browser APIs benchmarked for anti-bot bypass, automated CAPTCHA solving, CDP stability, and pricing.";
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Cloud Browsers</span>
+    </div>
+    <h1 class="page-title">Cloud Browsers & Browser APIs Directory</h1>
+    <p class="page-subtitle">
+      Explore all 60 benchmarked cloud browser services. Compare Chrome DevTools Protocol (CDP) support, residential proxy integration, automated CAPTCHA solving, and compute pricing.
+    </p>
+  </div>
+
+  <!-- Filter & Search Controls -->
+  <div class="filter-bar">
+    <div class="search-box">
+      <input type="text" id="browserSearch" placeholder="Search 60 cloud browsers (e.g. 2Captcha, CDP, Playwright, residential)..." />
+    </div>
+    <div class="filter-pills">
+      <button class="pill active" data-filter="all">All (60)</button>
+      <button class="pill" data-filter="captcha">Auto CAPTCHA</button>
+      <button class="pill" data-filter="cdp">CDP WebSocket</button>
+      <button class="pill" data-filter="mcp">Has MCP Server</button>
+      <button class="pill" data-filter="payg">Pay-As-You-Go</button>
+    </div>
+  </div>
+
+  <!-- Browser Cards Grid -->
+  <div class="browsers-grid" id="browsersContainer">
+    {browsers.map((b) => (
+      <div 
+        class={`browser-card ${b.demo_rank === 1 ? "featured-card" : ""}`}
+        data-name={b.name.toLowerCase()}
+        data-tagline={b.tagline.toLowerCase()}
+        data-captcha={b.captcha_auto_solve.toLowerCase().includes("native") || b.captcha_auto_solve.toLowerCase().includes("auto") ? "true" : "false"}
+        data-cdp={b.cdp_support ? "true" : "false"}
+        data-mcp={b.mcp_support ? "true" : "false"}
+        data-payg={b.pricing_model.toLowerCase().includes("pay") ? "true" : "false"}
+      >
+        <div class="card-top">
+          <div class="rank-badge-wrap">
+            <span class={`rank-tag rank-${b.demo_rank}`}>#{b.demo_rank}</span>
+            {b.status_badge && <span class="badge-accent">{b.status_badge}</span>}
+          </div>
+          <div class="score-badge">★ {b.overall_score.toFixed(1)}</div>
+        </div>
+
+        <h2 class="card-title">
+          <a href={`/reviews/${b.slug}`}>{b.name}</a>
+        </h2>
+        <p class="card-tagline">{b.tagline}</p>
+
+        <!-- Technical Attributes Grid -->
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec-k">Starting Price:</span>
+            <span class="spec-v highlight-price">${b.starting_price_hour.toFixed(2)} / hr</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-k">CAPTCHA Solving:</span>
+            <span class={`spec-v ${b.captcha_auto_solve.toLowerCase().includes("native") ? "val-green" : ""}`}>
+              {b.captcha_auto_solve.length > 35 ? b.captcha_auto_solve.slice(0, 32) + "..." : b.captcha_auto_solve}
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-k">Anti-Bot Evasion:</span>
+            <span class="spec-v">{b.antibot_bypass.length > 35 ? b.antibot_bypass.slice(0, 32) + "..." : b.antibot_bypass}</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-k">Proxy Pool:</span>
+            <span class="spec-v">{b.proxy_integration.length > 35 ? b.proxy_integration.slice(0, 32) + "..." : b.proxy_integration}</span>
+          </div>
+        </div>
+
+        <!-- Protocol Support Tags -->
+        <div class="card-tags">
+          {b.cdp_support && <span class="tag">CDP WebSocket</span>}
+          {b.playwright_support && <span class="tag">Playwright</span>}
+          {b.puppeteer_support && <span class="tag">Puppeteer</span>}
+          {b.mcp_support && <span class="tag tag-purple">MCP Server</span>}
+        </div>
+
+        <!-- Actions -->
+        <div class="card-actions">
+          <a href={`/reviews/${b.slug}`} class="btn btn-detail">Read Review</a>
+          <a href={b.affiliate_url} target="_blank" rel="noopener noreferrer" class="btn btn-visit">Official Site ↗</a>
+        </div>
+      </div>
+    ))}
+  </div>
+</Base>
+
+<script>
+  // Client-side instant filtering and search
+  const searchInput = document.getElementById('browserSearch') as HTMLInputElement;
+  const pills = document.querySelectorAll('.filter-pills .pill');
+  const cards = document.querySelectorAll('.browser-card') as NodeListOf<HTMLElement>;
+
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const query = (searchInput?.value || '').toLowerCase().trim();
+
+    cards.forEach((card) => {
+      const name = card.dataset.name || '';
+      const tagline = card.dataset.tagline || '';
+      const isCaptcha = card.dataset.captcha === 'true';
+      const isCdp = card.dataset.cdp === 'true';
+      const isMcp = card.dataset.mcp === 'true';
+      const isPayg = card.dataset.payg === 'true';
+
+      const matchesSearch = !query || name.includes(query) || tagline.includes(query);
+
+      let matchesFilter = true;
+      if (activeFilter === 'captcha') matchesFilter = isCaptcha;
+      if (activeFilter === 'cdp') matchesFilter = isCdp;
+      if (activeFilter === 'mcp') matchesFilter = isMcp;
+      if (activeFilter === 'payg') matchesFilter = isPayg;
+
+      if (matchesSearch && matchesFilter) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  searchInput?.addEventListener('input', applyFilters);
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      pills.forEach((p) => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFilter = pill.getAttribute('data-filter') || 'all';
+      applyFilters();
+    });
+  });
+</script>
+
+<style>
+  .page-header {
+    padding: 2.5rem 0 1.5rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+  .page-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+  .page-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 280px;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 0.92rem;
+    background: var(--color-card-bg, #ffffff);
+    color: var(--color-text);
+  }
+  .search-box input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+  .filter-pills {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid var(--color-border);
+    background: var(--color-card-bg, #ffffff);
+    color: var(--color-text-muted);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .pill:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+  .pill.active {
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
+  }
+
+  .browsers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+  .browser-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .browser-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+  .featured-card {
+    border: 2px solid #f59e0b;
+    background: linear-gradient(to bottom, rgba(245, 158, 11, 0.03), var(--color-card-bg, #ffffff));
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .rank-badge-wrap {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .rank-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: #e2e8f0;
+    color: #1e293b;
+  }
+  .rank-1 {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .badge-accent {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+  .score-badge {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #059669;
+  }
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .card-title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .card-title a:hover {
+    color: var(--color-primary);
+  }
+  .card-tagline {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    margin-bottom: 1.25rem;
+  }
+  .card-specs {
+    background: var(--color-bg-secondary, #f8fafc);
+    border-radius: 8px;
+    padding: 0.85rem;
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .spec-k {
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+  .spec-v {
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: right;
+  }
+  .highlight-price {
+    font-size: 0.9rem;
+    color: var(--color-primary);
+  }
+  .val-green {
+    color: #059669;
+  }
+  .card-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .tag {
+    font-size: 0.72rem;
+    background: #f1f5f9;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    color: #334155;
+    font-weight: 500;
+  }
+  .tag-purple {
+    background: #ede9fe;
+    color: #6b21a8;
+  }
+  .card-actions {
+    display: flex;
+    gap: 0.75rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1rem;
+  }
+  .btn {
+    padding: 0.55rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+  }
+  .btn-detail {
+    background: var(--color-primary);
+    color: #ffffff;
+    flex: 1;
+  }
+  .btn-detail:hover {
+    background: #2563eb;
+  }
+  .btn-visit {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+  .btn-visit:hover {
+    background: var(--color-bg-secondary, #f8fafc);
+  }
+</style>

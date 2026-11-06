@@ -1,0 +1,414 @@
+---
+import Base from "../../layouts/Base.astro";
+import { fetchAllMcpTools } from "../../utils/browser-data";
+
+const { tools: mcpTools } = await fetchAllMcpTools();
+
+const siteTitle = "32 Browser MCP Tools & Servers for AI Agents (2026 Directory)";
+const siteDescription = "Explore 32 Model Context Protocol (MCP) browser servers for Claude Desktop, Cursor, and autonomous AI agents. Compare CAPTCHA solving, stealth proxies, and setup guides.";
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Browser MCP</span>
+    </div>
+    <h1 class="page-title">Browser Model Context Protocol (MCP) Tools Directory</h1>
+    <p class="page-subtitle">
+      Give your AI agents autonomous web browsing capabilities. Browse 32 MCP servers benchmarked for Claude Desktop, Cursor, and custom agent loops with automated CAPTCHA solving and stealth routing.
+    </p>
+  </div>
+
+  <!-- Filter & Search Controls -->
+  <div class="filter-bar">
+    <div class="search-box">
+      <input type="text" id="mcpSearch" placeholder="Search 32 Browser MCP tools (e.g. 2Captcha, Claude Desktop, Cursor, vision)..." />
+    </div>
+    <div class="filter-pills">
+      <button class="pill active" data-filter="all">All (32)</button>
+      <button class="pill" data-filter="claude">Claude Desktop</button>
+      <button class="pill" data-filter="cursor">Cursor IDE</button>
+      <button class="pill" data-filter="captcha">Auto CAPTCHA</button>
+      <button class="pill" data-filter="github">Open Source (GitHub)</button>
+    </div>
+  </div>
+
+  <!-- MCP Grid -->
+  <div class="mcp-grid" id="mcpContainer">
+    {mcpTools.map((m) => (
+      <div 
+        class={`mcp-card ${m.demo_rank === 1 ? "featured-mcp" : ""}`}
+        data-name={m.name.toLowerCase()}
+        data-tagline={m.tagline.toLowerCase()}
+        data-claude={m.supports_claude_desktop ? "true" : "false"}
+        data-cursor={m.supports_cursor ? "true" : "false"}
+        data-captcha={m.captcha_solving.toLowerCase().includes("native") || m.captcha_solving.toLowerCase().includes("automated") ? "true" : "false"}
+        data-github={m.github_url ? "true" : "false"}
+      >
+        <div class="card-top">
+          <div class="badge-group">
+            <span class={`rank-tag rank-${m.demo_rank}`}>#{m.demo_rank} MCP</span>
+            {m.status_badge && <span class="badge-accent">{m.status_badge}</span>}
+          </div>
+          <div class="score-badge">★ {m.overall_score.toFixed(1)}</div>
+        </div>
+
+        <h2 class="card-title">
+          <a href={`/mcp/${m.slug}`}>{m.name}</a>
+        </h2>
+        <p class="card-tagline">{m.tagline}</p>
+
+        <!-- Code Install Box -->
+        <div class="code-box">
+          <span class="code-label">CLI Install:</span>
+          <code>{m.install_command}</code>
+        </div>
+
+        <!-- Specs List -->
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec-k">Tools Provided:</span>
+            <span class="spec-v highlight-val">{m.tools_provided.length} AI Primitives</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-k">CAPTCHA Handling:</span>
+            <span class={`spec-v ${m.captcha_solving.toLowerCase().includes("native") ? "val-green" : ""}`}>
+              {m.captcha_solving.length > 30 ? m.captcha_solving.slice(0, 27) + "..." : m.captcha_solving}
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-k">Stealth Evasion:</span>
+            <span class="spec-v">{m.stealth_bypass.length > 30 ? m.stealth_bypass.slice(0, 27) + "..." : m.stealth_bypass}</span>
+          </div>
+        </div>
+
+        <!-- Capability Pills -->
+        <div class="card-tags">
+          {m.supports_claude_desktop && <span class="tag">Claude Desktop</span>}
+          {m.supports_cursor && <span class="tag">Cursor</span>}
+          {m.supports_custom_agents && <span class="tag">Custom SDK</span>}
+          {m.github_url && <span class="tag tag-gh">GitHub</span>}
+        </div>
+
+        <!-- Actions -->
+        <div class="card-actions">
+          <a href={`/mcp/${m.slug}`} class="btn btn-primary">Configuration Guide</a>
+          <a href={m.website_url} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Docs ↗</a>
+        </div>
+      </div>
+    ))}
+  </div>
+</Base>
+
+<script>
+  const searchInput = document.getElementById('mcpSearch') as HTMLInputElement;
+  const pills = document.querySelectorAll('.filter-pills .pill');
+  const cards = document.querySelectorAll('.mcp-card') as NodeListOf<HTMLElement>;
+
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const query = (searchInput?.value || '').toLowerCase().trim();
+
+    cards.forEach((card) => {
+      const name = card.dataset.name || '';
+      const tagline = card.dataset.tagline || '';
+      const isClaude = card.dataset.claude === 'true';
+      const isCursor = card.dataset.cursor === 'true';
+      const isCaptcha = card.dataset.captcha === 'true';
+      const isGh = card.dataset.github === 'true';
+
+      const matchesSearch = !query || name.includes(query) || tagline.includes(query);
+
+      let matchesFilter = true;
+      if (activeFilter === 'claude') matchesFilter = isClaude;
+      if (activeFilter === 'cursor') matchesFilter = isCursor;
+      if (activeFilter === 'captcha') matchesFilter = isCaptcha;
+      if (activeFilter === 'github') matchesFilter = isGh;
+
+      if (matchesSearch && matchesFilter) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  searchInput?.addEventListener('input', applyFilters);
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      pills.forEach((p) => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFilter = pill.getAttribute('data-filter') || 'all';
+      applyFilters();
+    });
+  });
+</script>
+
+<style>
+  .page-header {
+    padding: 2.5rem 0 1.5rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+  .page-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+  .page-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 280px;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 0.92rem;
+    background: var(--color-card-bg, #ffffff);
+    color: var(--color-text);
+  }
+  .search-box input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+  .filter-pills {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid var(--color-border);
+    background: var(--color-card-bg, #ffffff);
+    color: var(--color-text-muted);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .pill:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+  .pill.active {
+    background: #8b5cf6;
+    color: #ffffff;
+    border-color: #8b5cf6;
+  }
+
+  .mcp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+  .mcp-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .mcp-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+  .featured-mcp {
+    border: 2px solid #8b5cf6;
+    background: linear-gradient(to bottom, rgba(139, 92, 246, 0.03), var(--color-card-bg, #ffffff));
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .badge-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .rank-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: #ede9fe;
+    color: #5b21b6;
+  }
+  .rank-1 {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .badge-accent {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+  .score-badge {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #059669;
+  }
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .card-title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .card-title a:hover {
+    color: #8b5cf6;
+  }
+  .card-tagline {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    margin-bottom: 1rem;
+  }
+  .code-box {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 0.6rem 0.85rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.78rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow-x: auto;
+  }
+  .code-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  .code-box code {
+    white-space: nowrap;
+    font-family: monospace;
+    color: #38bdf8;
+  }
+  .card-specs {
+    background: var(--color-bg-secondary, #f8fafc);
+    border-radius: 8px;
+    padding: 0.85rem;
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .spec-k {
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+  .spec-v {
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: right;
+  }
+  .highlight-val {
+    color: #8b5cf6;
+  }
+  .val-green {
+    color: #059669;
+  }
+  .card-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .tag {
+    font-size: 0.72rem;
+    background: #f1f5f9;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    color: #334155;
+    font-weight: 500;
+  }
+  .tag-gh {
+    background: #e2e8f0;
+    color: #0f172a;
+    font-weight: 600;
+  }
+  .card-actions {
+    display: flex;
+    gap: 0.75rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1rem;
+  }
+  .btn {
+    padding: 0.55rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+  }
+  .btn-primary {
+    background: #8b5cf6;
+    color: #ffffff;
+    flex: 1;
+  }
+  .btn-primary:hover {
+    background: #7c3aed;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+  .btn-outline:hover {
+    background: var(--color-bg-secondary, #f8fafc);
+  }
+</style>

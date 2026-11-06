@@ -1,0 +1,217 @@
+---
+import { getMenuWithCacheHint, getSiteSettingsWithCacheHint } from "emdash";
+import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
+import { createPublicPageContext } from "emdash/page";
+import LiveSearch from "emdash/ui/search";
+import { toSiteUrl } from "../utils/site-url";
+import "../styles/theme.css";
+
+interface Props {
+	title: string;
+	pageTitle?: string | null;
+	description?: string | null;
+	image?: string | null;
+	imageWidth?: number | null;
+	imageHeight?: number | null;
+	imageType?: string | null;
+	imageAlt?: string | null;
+	canonical?: string | null;
+	/** Pass content reference for plugin page contributions on content pages */
+	content?: { collection: string; id: string; slug?: string | null };
+}
+
+const { title, pageTitle, description, image, imageWidth, imageHeight, imageType, imageAlt, canonical, content } =
+	Astro.props;
+const [settingsResult, menuResult] = await Promise.all([
+	getSiteSettingsWithCacheHint(),
+	getMenuWithCacheHint("primary"),
+]);
+if (Astro.cache?.enabled) {
+	Astro.cache.set(settingsResult.cacheHint);
+	Astro.cache.set(menuResult.cacheHint);
+}
+
+const brandName = "BrowserReviews";
+const fullTitle = title.includes(brandName) ? title : `${title} — ${brandName}`;
+const pageDescription = description ?? "Independent cloud browser & scraping browser API directory, verified compute pricing comparisons, and AI agent Browser MCP teardowns.";
+const canonicalUrl = toSiteUrl(canonical || Astro.url.pathname, Astro.url.origin);
+
+const siteOrigin = toSiteUrl("", Astro.url.origin);
+const isDefaultImage = !image;
+const defaultSocialImage = toSiteUrl("/images/social-preview.png", siteOrigin);
+const socialImage = image ? toSiteUrl(image, siteOrigin) : defaultSocialImage;
+const socialImageWidth = isDefaultImage ? 1200 : (imageWidth ?? null);
+const socialImageHeight = isDefaultImage ? 630 : (imageHeight ?? null);
+const socialImageType = isDefaultImage
+	? "image/png"
+	: (imageType ?? (socialImage.endsWith(".png") ? "image/png" : socialImage.endsWith(".jpg") || socialImage.endsWith(".jpeg") ? "image/jpeg" : socialImage.endsWith(".webp") ? "image/webp" : null));
+const socialImageAlt = imageAlt ?? (isDefaultImage ? "BrowserReviews — Cloud Browser & Browser MCP Reviews" : (pageTitle ?? title));
+
+const pageCtx = createPublicPageContext({
+	Astro,
+	kind: content ? "content" : "custom",
+	pageType: "website",
+	title: fullTitle,
+	pageTitle: pageTitle ?? title,
+	description: pageDescription,
+	canonical: canonicalUrl,
+	image: socialImage,
+	content,
+	siteName: brandName,
+	siteUrl: siteOrigin,
+});
+const organizationSchema = {
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	"name": "BrowserReviews",
+	"url": siteOrigin,
+	"description": "Cloud browser & scraping browser API review platform, verified hourly compute pricing comparisons, CDP specifications, and AI agent Browser MCP servers."
+};
+
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{fullTitle}</title>
+		<meta name="robots" content="index, follow" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+		<EmDashHead page={pageCtx} />
+		{socialImageWidth && <meta property="og:image:width" content={String(socialImageWidth)} />}
+		{socialImageHeight && <meta property="og:image:height" content={String(socialImageHeight)} />}
+		{socialImageType && <meta property="og:image:type" content={socialImageType} />}
+		{socialImageAlt && <meta property="og:image:alt" content={socialImageAlt} />}
+		{socialImageAlt && <meta name="twitter:image:alt" content={socialImageAlt} />}
+		<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+	</head>
+	<body>
+		<EmDashBodyStart page={pageCtx} />
+
+		<header class="site-header">
+			<div class="container header-inner">
+				<a href="/" class="brand-wrapper" aria-label="BrowserReviews">
+					<span class="brand-name">BrowserReviews</span>
+				</a>
+
+				<nav class="main-nav">
+					<a href="/" class="nav-link">Home</a>
+					<a href="/browsers" class="nav-link">Cloud Browsers</a>
+					<a href="/mcp" class="nav-link">Browser MCP</a>
+					<a href="/rankings" class="nav-link">Rankings</a>
+					<a href="/calculator" class="nav-link">Cost Calculator</a>
+					<a href="/compare" class="nav-link">Compare</a>
+					<a href="/methodology" class="nav-link">Methodology</a>
+					<a href="/about" class="nav-link">About</a>
+				</nav>
+
+				<div class="header-actions">
+					<div class="search-container">
+						<LiveSearch 
+							placeholder="Search browsers & MCP tools..." 
+							collections={["browsers", "mcp_tools", "pages"]}
+							routeMap={{
+								browsers: "/reviews/:slug",
+								mcp_tools: "/mcp/:slug",
+								pages: "/:slug"
+							}}
+						/>
+					</div>
+					<span class="badge badge-muted header-rank-badge">
+						⚡ Browser Leaderboard
+					</span>
+				</div>
+			</div>
+		</header>
+
+		<main class="site-main">
+			<slot />
+		</main>
+
+		<footer class="site-footer">
+			<div class="container">
+				<div class="footer-grid">
+					<div>
+						<div class="brand-wrapper" style="margin-bottom: 12px;">
+							<span class="brand-name">BrowserReviews</span>
+						</div>
+						<p style="font-size: 13px; color: var(--color-ink-muted); margin-bottom: 16px; max-width: 320px;">
+							Independent cloud browser & scraping browser API directory, verified compute pricing comparisons, CDP protocol documentation, and AI agent Browser MCP servers.
+						</p>
+					</div>
+
+					<div>
+						<h4 style="font-size: 14px; margin-bottom: 12px;">Cloud Browsers</h4>
+						<ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 2;">
+							<li><a href="/browsers">All Cloud Browsers</a></li>
+							<li><a href="/rankings">Browser Leaderboard</a></li>
+							<li><a href="/calculator">Browser Cost Calculator</a></li>
+							<li><a href="/compare">Comparison Hub</a></li>
+							<li><a href="/reviews/2captcha-browser-api/">2Captcha Browser API #1 Review</a></li>
+						</ul>
+					</div>
+
+					<div>
+						<h4 style="font-size: 14px; margin-bottom: 12px;">Browser MCP</h4>
+						<ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 2;">
+							<li><a href="/mcp">All Browser MCP Tools</a></li>
+							<li><a href="/mcp/2captcha-browser-mcp/">2Captcha Browser MCP #1</a></li>
+							<li><a href="/guides">Agent Integration Guides</a></li>
+							<li><a href="/methodology">Evaluation Methodology</a></li>
+							<li><a href="/editorial-policy">Editorial Policy</a></li>
+						</ul>
+					</div>
+
+					<div>
+						<h4 style="font-size: 14px; margin-bottom: 12px;">Trust & Legal</h4>
+						<ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 2;">
+							<li><a href="/about">About BrowserReviews</a></li>
+							<li><a href="/editorial-policy">Editorial Policy</a></li>
+							<li><a href="/affiliate-disclosure">Affiliate Disclosure</a></li>
+							<li><a href="/terms">Terms of Service</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="footer-disclosure">
+					<p style="margin: 0 0 8px 0;">
+						<strong>Editorial Rankings & FTC Disclosure:</strong> Product rankings on BrowserReviews (including 2Captcha Browser API & 2Captcha Browser MCP at #1) are editorially curated selections based on verified public documentation, anti-bot bypass capabilities, built-in CAPTCHA solving, protocol support, and published rate cards. We may earn an affiliate commission when you register with a provider through our links.
+					</p>
+					<p style="margin: 0; color: var(--color-ink-subtle); font-size: 11px;">
+						© {new Date().getFullYear()} BrowserReviews. All rights reserved. Verified cloud browser specifications and published pricing analysis.
+					</p>
+				</div>
+			</div>
+		</footer>
+
+		<!-- Outbound Telemetry Click Tracker -->
+		<script is:inline>
+			document.addEventListener("click", function(e) {
+				var link = e.target.closest("a[data-provider]");
+				if (!link) return;
+				var payload = {
+					provider: link.getAttribute("data-provider"),
+					source_page: window.location.pathname,
+					click_location: link.getAttribute("data-click-location") || "outbound_link",
+					event_type: "provider_outbound_click",
+					ts: Date.now()
+				};
+				if (navigator.sendBeacon) {
+					navigator.sendBeacon("/api/telemetry/click", JSON.stringify(payload));
+				} else {
+					fetch("/api/telemetry/click", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(payload),
+						keepalive: true
+					}).catch(function() {});
+				}
+			});
+		</script>
+
+		<EmDashBodyEnd page={pageCtx} />
+	</body>
+</html>

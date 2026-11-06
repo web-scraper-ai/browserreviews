@@ -1,0 +1,126 @@
+---
+import { decodeSlug } from "emdash";
+import { PortableText } from "emdash/ui";
+import Base from "../layouts/Base.astro";
+import { fetchTrustPage } from "../utils/browser-data";
+
+const rawSlug = decodeSlug(Astro.params.slug);
+
+if (!rawSlug) {
+  return Astro.redirect("/404");
+}
+
+const { page } = await fetchTrustPage(rawSlug);
+
+if (!page) {
+  return Astro.redirect("/404");
+}
+
+const siteTitle = `${page.title} • BrowserReviews`;
+const siteDescription = page.summary || `Read ${page.title} on BrowserReviews - the independent authority on Cloud Browsers and MCP tools.`;
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-container">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>{page.title}</span>
+    </div>
+
+    <div class="page-header">
+      <h1 class="page-title">{page.title}</h1>
+      {page.subtitle && <p class="page-subtitle">{page.subtitle}</p>}
+    </div>
+
+    <div class="page-content">
+      {page.content && Array.isArray(page.content) ? (
+        <PortableText value={page.content} />
+      ) : typeof page.content === "string" ? (
+        <div class="raw-markdown" set:html={page.content.replace(/\n\n/g, '<br/><br/>')} />
+      ) : (
+        <p>{page.summary}</p>
+      )}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2.5rem 0 4rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+
+  .page-header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1.5rem;
+  }
+  .page-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+  .page-subtitle {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .page-content {
+    line-height: 1.75;
+    font-size: 1.05rem;
+    color: var(--color-text);
+  }
+  .page-content :global(h1) {
+    display: none; /* Already rendered in page-header */
+  }
+  .page-content :global(h2) {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text);
+  }
+  .page-content :global(h3) {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+  .page-content :global(p) {
+    margin-bottom: 1.25rem;
+  }
+  .page-content :global(ul), .page-content :global(ol) {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+  .page-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+  .page-content :global(code) {
+    background: #f1f5f9;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: monospace;
+  }
+  .page-content :global(hr) {
+    margin: 2.5rem 0;
+    border: none;
+    border-top: 1px solid var(--color-border);
+  }
+</style>
