@@ -4,26 +4,22 @@ export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
 	try {
-		const text = await request.text();
-		if (!text) {
-			return new Response(JSON.stringify({ ok: false, error: "Empty body" }), {
-				status: 400,
-				headers: { "Content-Type": "application/json" }
-			});
-		}
-
 		let payload: any = {};
 		try {
-			payload = JSON.parse(text);
+			payload = await request.json();
 		} catch {
-			return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
-				status: 400,
-				headers: { "Content-Type": "application/json" }
-			});
+			try {
+				const text = await request.text();
+				if (text && text.trim()) {
+					payload = JSON.parse(text);
+				}
+			} catch {
+				payload = {};
+			}
 		}
 
-		const { provider, source_page, click_location, event_type, ts } = payload;
-		console.log(`[Telemetry] ${event_type || 'click'}: provider=${provider} page=${source_page} location=${click_location} ts=${ts || Date.now()}`);
+		const { provider, source_page, click_location, event_type, ts } = payload || {};
+		console.log(`[Telemetry] ${event_type || 'click'}: provider=${provider || 'unknown'} page=${source_page || '/'} location=${click_location || 'unknown'} ts=${ts || Date.now()}`);
 
 		return new Response(JSON.stringify({ ok: true }), {
 			status: 200,
