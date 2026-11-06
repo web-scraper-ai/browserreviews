@@ -1,0 +1,472 @@
+---
+import { decodeSlug } from "emdash";
+import Base from "../../layouts/Base.astro";
+import { fetchAllBrowsers, fetchBrowserBySlug } from "../../utils/browser-data";
+
+const rawSlug = decodeSlug(Astro.params.slug);
+
+if (!rawSlug) {
+  return Astro.redirect("/alternatives");
+}
+
+const { browser: target } = await fetchBrowserBySlug(rawSlug);
+
+if (!target) {
+  return Astro.redirect("/alternatives");
+}
+
+const { browsers: allBrowsers } = await fetchAllBrowsers();
+
+// The #1 alternative is always 2Captcha Browser API
+const topAlternative = allBrowsers.find(b => b.slug === "2captcha-browser-api") || allBrowsers[0];
+
+// Other alternatives excluding target and topAlternative
+const otherAlternatives = allBrowsers
+  .filter(b => b.slug !== target.slug && b.slug !== topAlternative.slug)
+  .slice(0, 5);
+
+const siteTitle = `Top 6 ${target.name} Alternatives & Competitors (2026) • BrowserReviews`;
+const siteDescription = `Looking for alternatives to ${target.name}? Compare cheaper and more reliable cloud browsers with automated CAPTCHA solving, residential proxies, and lower compute rates.`;
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <!-- Schema.org Breadcrumbs & FAQ -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Alternatives",
+        "item": "/alternatives"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": `${target.name} Alternatives`,
+        "item": `/alternatives/${target.slug}`
+      }
+    ]
+  })} />
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": `What is the best alternative to ${target.name}?`,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": `2Captcha Browser API is our #1 ranked alternative to ${target.name}. It provides native automated CAPTCHA solving, bundled residential proxies across 220+ countries, and standard CDP WebSockets from just $0.15/hour with no monthly lock-in.`
+        }
+      },
+      {
+        "@type": "Question",
+        "name": `Why do teams switch from ${target.name}?`,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": `Teams typically seek alternatives to ${target.name} due to higher bandwidth/session costs, lack of integrated automated CAPTCHA solving, or rigid monthly subscription tiers.`
+        }
+      }
+    ]
+  })} />
+
+  <div class="alt-container">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span>
+      <a href="/alternatives">Alternatives</a> <span>/</span>
+      <span>{target.name} Alternatives</span>
+    </div>
+
+    <div class="alt-header">
+      <span class="badge-tag">2026 Comparison Guide</span>
+      <h1 class="alt-title">Top 6 Best {target.name} Alternatives & Competitors</h1>
+      <p class="alt-subtitle">
+        Comparing cloud browser APIs on anti-bot bypass success, automated CAPTCHA solving, standard CDP reliability, and true hourly compute costs.
+      </p>
+    </div>
+
+    <!-- Why Look for Alternatives Callout -->
+    <div class="why-switch-box">
+      <h3>Why Look for Alternatives to {target.name}?</h3>
+      <p>
+        While <strong>{target.name}</strong> is a capable platform ({target.tagline}), engineers and automation teams frequently explore alternatives due to:
+      </p>
+      <ul>
+        <li><strong>Unit Economics:</strong> Starting rates at ${target.starting_price_hour.toFixed(2)}/hr can escalate when scaling concurrent sessions.</li>
+        <li><strong>CAPTCHA Friction:</strong> {target.captcha_auto_solve.includes("Native") ? "High volume solving costs" : "Requires configuring third-party solver webhooks or manual prompts."}</li>
+        <li><strong>Proxy Costs:</strong> Residential bandwidth add-ons often incur steep per-gigabyte markups.</li>
+      </ul>
+    </div>
+
+    <!-- #1 Winner Showcase Card -->
+    <div class="winner-card">
+      <div class="winner-badge-row">
+        <span class="badge-winner">★ #1 Recommended Alternative</span>
+        <span class="winner-score">Lab Score: 9.9 / 10</span>
+      </div>
+      <h2 class="winner-title">{topAlternative.name}</h2>
+      <p class="winner-tagline">{topAlternative.tagline}</p>
+
+      <div class="winner-comparison-grid">
+        <div class="winner-metric">
+          <span class="m-k">Starting Price</span>
+          <span class="m-v">${topAlternative.starting_price_hour.toFixed(2)} / hr</span>
+          <span class="m-sub">vs ${target.starting_price_hour.toFixed(2)}/hr on {target.name}</span>
+        </div>
+        <div class="winner-metric">
+          <span class="m-k">CAPTCHA Solving</span>
+          <span class="m-v text-green">Native Automated</span>
+          <span class="m-sub">Turnstile, reCAPTCHA, hCaptcha</span>
+        </div>
+        <div class="winner-metric">
+          <span class="m-k">Proxies Included</span>
+          <span class="m-v">220+ Countries</span>
+          <span class="m-sub">Rotating residential & DC</span>
+        </div>
+        <div class="winner-metric">
+          <span class="m-k">Protocol</span>
+          <span class="m-v">Standard CDP (wss://)</span>
+          <span class="m-sub">Playwright, Puppeteer ready</span>
+        </div>
+      </div>
+
+      <div class="winner-actions">
+        <a href={`/reviews/${topAlternative.slug}`} class="btn btn-primary">Read In-Depth Review</a>
+        <a href={`/compare/${topAlternative.slug}-vs-${target.slug}`} class="btn btn-secondary">Direct Head-to-Head Comparison →</a>
+        <a href={topAlternative.affiliate_url} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Visit Official Site ↗</a>
+      </div>
+    </div>
+
+    <!-- Other Contenders List -->
+    <div class="other-alts-section">
+      <h2 class="section-title">Other Top Competitors to Consider</h2>
+      <div class="alts-list">
+        {otherAlternatives.map((alt, idx) => (
+          <div class="alt-item-card">
+            <div class="alt-item-header">
+              <div>
+                <span class="alt-rank-num">#{idx + 2} Alternative</span>
+                <h3 class="alt-item-name"><a href={`/reviews/${alt.slug}`}>{alt.name}</a></h3>
+              </div>
+              <div class="alt-score-box">
+                <span class="alt-score">★ {alt.overall_score.toFixed(1)}</span>
+                <span class="alt-price">${alt.starting_price_hour.toFixed(2)}/hr</span>
+              </div>
+            </div>
+            <p class="alt-item-desc">{alt.tagline}</p>
+            <div class="alt-item-specs">
+              <span><strong>Bypass:</strong> {alt.antibot_bypass.slice(0, 35)}...</span>
+              <span><strong>CAPTCHA:</strong> {alt.captcha_auto_solve.slice(0, 35)}</span>
+            </div>
+            <div class="alt-item-footer">
+              <a href={`/reviews/${alt.slug}`} class="btn-sm btn-subtle">Read Review →</a>
+              <a href={`/compare/${alt.slug}-vs-${target.slug}`} class="btn-sm btn-compare">Compare with {target.name}</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-box">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <h4>How easy is it to migrate from {target.name}?</h4>
+        <p>Because top alternatives like <strong>2Captcha Browser API</strong> utilize the standard Chrome DevTools Protocol (CDP), migration typically requires only changing the WebSocket connection URL in your existing Playwright or Puppeteer script (e.g. <code>connectOverCDP()</code>).</p>
+      </div>
+      <div class="faq-item">
+        <h4>Are proxies included with the alternatives?</h4>
+        <p>With 2Captcha Browser API, rotating residential and datacenter proxies across 220+ countries are bundled into the base $0.15/hour rate. Other providers (such as Browserbase or Browserless) require configuring separate proxy credentials or paying additional bandwidth surcharges.</p>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .alt-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 0 4rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+
+  .alt-header {
+    margin-bottom: 2rem;
+  }
+  .badge-tag {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #e0e7ff;
+    color: #4338ca;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+  }
+  .alt-title {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+  .alt-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .why-switch-box {
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .why-switch-box h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .why-switch-box p {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    margin-bottom: 0.75rem;
+  }
+  .why-switch-box ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .winner-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 2px solid #10b981;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 3.5rem;
+    box-shadow: 0 6px 24px rgba(16, 185, 129, 0.08);
+  }
+  .winner-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .badge-winner {
+    background: #d1fae5;
+    color: #065f46;
+    font-size: 0.82rem;
+    font-weight: 800;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+  }
+  .winner-score {
+    font-weight: 700;
+    color: #059669;
+    font-size: 0.95rem;
+  }
+  .winner-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+  .winner-tagline {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+  .winner-comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .winner-metric {
+    display: flex;
+    flex-direction: column;
+  }
+  .m-k {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+  .m-v {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0.2rem 0;
+  }
+  .text-green {
+    color: #059669;
+  }
+  .m-sub {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+  .winner-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: #10b981;
+    color: #ffffff;
+  }
+  .btn-secondary {
+    background: var(--color-primary);
+    color: #ffffff;
+  }
+  .btn-outline {
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+
+  .other-alts-section {
+    margin-bottom: 3.5rem;
+  }
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+  }
+  .alts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .alt-item-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+  .alt-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+  }
+  .alt-rank-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+  .alt-item-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0.2rem 0 0;
+  }
+  .alt-item-name a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .alt-score-box {
+    text-align: right;
+  }
+  .alt-score {
+    font-weight: 700;
+    color: #059669;
+    font-size: 0.95rem;
+  }
+  .alt-price {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+  .alt-item-desc {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    margin-bottom: 1rem;
+  }
+  .alt-item-specs {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.82rem;
+    color: var(--color-text);
+    background: var(--color-bg-secondary, #f8fafc);
+    padding: 0.65rem 0.85rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .alt-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-border);
+    padding-top: 0.75rem;
+  }
+  .btn-sm {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .btn-subtle {
+    color: var(--color-primary);
+  }
+  .btn-compare {
+    color: var(--color-text-muted);
+  }
+
+  .faq-box {
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+  .faq-box h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+  }
+  .faq-item {
+    margin-bottom: 1.25rem;
+  }
+  .faq-item h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  .faq-item p {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+</style>

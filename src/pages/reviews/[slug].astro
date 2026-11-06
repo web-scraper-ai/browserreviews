@@ -64,6 +64,30 @@ const siteDescription = `In-depth technical review of ${browser.name}. Benchmark
       "reviewBody": browser.verdict
     }
   })} />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Cloud Browsers",
+        "item": "/browsers"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": browser.name,
+        "item": `/reviews/${browser.slug}`
+      }
+    ]
+  })} />
   <div class="review-container">
     <!-- Breadcrumb -->
     <div class="breadcrumb">

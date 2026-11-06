@@ -64,6 +64,30 @@ const siteDescription = `Configuration guide and technical evaluation of ${mcp.n
       "reviewBody": mcp.verdict
     }
   })} />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Browser MCP",
+        "item": "/mcp"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": mcp.name,
+        "item": `/mcp/${mcp.slug}`
+      }
+    ]
+  })} />
   <div class="mcp-detail-container">
     <!-- Breadcrumb -->
     <div class="breadcrumb">

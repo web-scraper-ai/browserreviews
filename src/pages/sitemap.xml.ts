@@ -14,6 +14,8 @@ export const GET: APIRoute = async ({ request }) => {
     { loc: "/rankings", changefreq: "daily", priority: 0.8 },
     { loc: "/calculator", changefreq: "weekly", priority: 0.8 },
     { loc: "/compare", changefreq: "weekly", priority: 0.8 },
+    { loc: "/alternatives", changefreq: "daily", priority: 0.85 },
+    { loc: "/best-for", changefreq: "daily", priority: 0.85 },
     { loc: "/about", changefreq: "monthly", priority: 0.6 },
     { loc: "/methodology", changefreq: "monthly", priority: 0.6 },
     { loc: "/editorial-policy", changefreq: "monthly", priority: 0.5 },
@@ -42,7 +44,48 @@ export const GET: APIRoute = async ({ request }) => {
     { loc: "/compare/2captcha-browser-mcp-vs-browser-use-mcp", changefreq: "weekly", priority: 0.8 },
   ];
 
-  const allUrls = [...staticPages, ...browserPages, ...mcpPages, ...popularComparisons];
+  const alternativeSlugs = [
+    "browserbase",
+    "brightdata-scraping-browser",
+    "browserless",
+    "zenrows-browser",
+    "steel-dev",
+    "hyperbrowser",
+    "oxylabs-agent-browser",
+    "browser-use",
+    "scrapfly-cloud-browser",
+    "scrapeless"
+  ];
+
+  const alternativePages = alternativeSlugs.map((slug) => ({
+    loc: `/alternatives/${slug}`,
+    changefreq: "weekly",
+    priority: 0.85,
+  }));
+
+  const bestForSlugs = [
+    "turnstile-bypass",
+    "claude-desktop",
+    "cursor",
+    "pay-as-you-go",
+    "residential-proxies",
+    "datadome"
+  ];
+
+  const bestForPages = bestForSlugs.map((slug) => ({
+    loc: `/best-for/${slug}`,
+    changefreq: "weekly",
+    priority: 0.85,
+  }));
+
+  const allUrls = [
+    ...staticPages,
+    ...browserPages,
+    ...mcpPages,
+    ...popularComparisons,
+    ...alternativePages,
+    ...bestForPages
+  ];
   const nowIso = new Date().toISOString().split("T")[0];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

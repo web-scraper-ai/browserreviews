@@ -18,6 +18,8 @@ const staticRoutes = [
   '/rankings',
   '/calculator',
   '/compare',
+  '/alternatives',
+  '/best-for',
   '/about',
   '/methodology',
   '/editorial-policy',
@@ -36,7 +38,38 @@ const comparisonRoutes = [
   '/compare/2captcha-browser-mcp-vs-browser-use-mcp'
 ];
 
-const allRoutes = [...staticRoutes, ...browserRoutes, ...mcpRoutes, ...comparisonRoutes];
+const alternativeSlugs = [
+  'browserbase',
+  'brightdata-scraping-browser',
+  'browserless',
+  'zenrows-browser',
+  'steel-dev',
+  'hyperbrowser',
+  'oxylabs-agent-browser',
+  'browser-use',
+  'scrapfly-cloud-browser',
+  'scrapeless'
+];
+const alternativeRoutes = alternativeSlugs.map(s => `/alternatives/${s}`);
+
+const bestForSlugs = [
+  'turnstile-bypass',
+  'claude-desktop',
+  'cursor',
+  'pay-as-you-go',
+  'residential-proxies',
+  'datadome'
+];
+const bestForRoutes = bestForSlugs.map(s => `/best-for/${s}`);
+
+const allRoutes = [
+  ...staticRoutes,
+  ...browserRoutes,
+  ...mcpRoutes,
+  ...comparisonRoutes,
+  ...alternativeRoutes,
+  ...bestForRoutes
+];
 const allUrls = allRoutes.map(r => `${BASE_URL.replace(/\/$/, '')}${r}`);
 
 const exportsDir = path.join(rootDir, 'exports');

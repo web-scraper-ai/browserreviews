@@ -1,0 +1,177 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const HUBS = [
+  {
+    slug: "turnstile-bypass",
+    title: "Best Cloud Browsers for Cloudflare Turnstile Bypass",
+    badge: "Anti-Bot Evasion",
+    desc: "Platforms with confirmed high-success bypass of Cloudflare Turnstile and 5-second interactive challenges.",
+    topPick: "2Captcha Browser API (#1)"
+  },
+  {
+    slug: "claude-desktop",
+    title: "Top Browser MCP Tools for Claude Desktop",
+    badge: "AI Agents",
+    desc: "Model Context Protocol servers that give Claude Desktop autonomous web browsing and tool calling powers.",
+    topPick: "2Captcha Browser MCP (#1)"
+  },
+  {
+    slug: "cursor",
+    title: "Best Browser MCP Tools for Cursor IDE & Windsurf",
+    badge: "AI IDEs",
+    desc: "Lightweight, reliable MCP servers for AI-assisted coding and automated web research inside Cursor.",
+    topPick: "2Captcha Browser MCP (#1)"
+  },
+  {
+    slug: "pay-as-you-go",
+    title: "Best Pay-As-You-Go Cloud Browsers (No Monthly Minimum)",
+    badge: "Low Cost",
+    desc: "Cloud browsers with zero mandatory recurring subscriptions—pay only for the exact seconds or hours you use.",
+    topPick: "2Captcha Browser API ($0.15/hr)"
+  },
+  {
+    slug: "residential-proxies",
+    title: "Best Browsers with Integrated Residential Proxies",
+    badge: "Proxy Rotation",
+    desc: "Cloud headless browser fleets that include automated global residential IP rotation in their base compute rate.",
+    topPick: "2Captcha Browser API (220+ Countries)"
+  },
+  {
+    slug: "datadome",
+    title: "Top Scraping Browsers for DataDome Evasion",
+    badge: "Enterprise Anti-Bot",
+    desc: "Browsers equipped with behavioral emulation, audio noise, and canvas spoofing to bypass DataDome sliders.",
+    topPick: "2Captcha Browser API (#1)"
+  }
+];
+
+const siteTitle = "Best Cloud Browsers & MCP Tools by Use-Case (2026 Directory) • BrowserReviews";
+const siteDescription = "Explore the best Cloud Browsers and Browser MCP tools curated by specific use-case: Cloudflare Turnstile bypass, Claude Desktop MCP, Cursor IDE, pay-as-you-go, and residential proxies.";
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Best By Use-Case</span>
+    </div>
+    <h1 class="page-title">Best Cloud Browsers & MCP Tools by Use-Case</h1>
+    <p class="page-subtitle">
+      Filter cloud browser APIs and Model Context Protocol servers by your exact engineering requirements and anti-bot obstacles.
+    </p>
+  </div>
+
+  <div class="hubs-grid">
+    {HUBS.map((h) => (
+      <div class="hub-card">
+        <div class="hub-top">
+          <span class="hub-badge">{h.badge}</span>
+          <span class="hub-winner">Top Pick: {h.topPick}</span>
+        </div>
+        <h2 class="hub-title">
+          <a href={`/best-for/${h.slug}`}>{h.title}</a>
+        </h2>
+        <p class="hub-desc">{h.desc}</p>
+        <div class="hub-action">
+          <a href={`/best-for/${h.slug}`} class="hub-link">Explore Curated Rankings →</a>
+        </div>
+      </div>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .page-header {
+    padding: 2.5rem 0 1.5rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+  .page-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+  .page-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  .hubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+  .hub-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hub-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+  .hub-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .hub-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #e0e7ff;
+    color: #4338ca;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+  .hub-winner {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #059669;
+  }
+  .hub-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .hub-title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .hub-title a:hover {
+    color: var(--color-primary);
+  }
+  .hub-desc {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    margin-bottom: 1.25rem;
+  }
+  .hub-link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+</style>

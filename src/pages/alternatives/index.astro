@@ -1,0 +1,224 @@
+---
+import Base from "../../layouts/Base.astro";
+import { fetchAllBrowsers } from "../../utils/browser-data";
+
+const { browsers } = await fetchAllBrowsers();
+
+// Select top 10 well-known competitors that people search alternatives for
+const TARGET_SLUGS = [
+  "browserbase",
+  "brightdata-scraping-browser",
+  "browserless",
+  "zenrows-browser",
+  "steel-dev",
+  "hyperbrowser",
+  "oxylabs-agent-browser",
+  "browser-use",
+  "scrapfly-cloud-browser",
+  "scrapeless"
+];
+
+const alternativeHubs = TARGET_SLUGS.map((slug) => {
+  const target = browsers.find((b) => b.slug === slug);
+  return {
+    slug,
+    name: target ? target.name : slug,
+    tagline: target ? target.tagline : "",
+    price: target ? target.starting_price_hour : 0.20,
+    rank: target ? target.demo_rank : 99,
+  };
+});
+
+const siteTitle = "Cloud Browser Alternatives & Competitor Directory (2026)";
+const siteDescription = "Explore the best alternatives and cheaper competitors to Browserbase, Bright Data, Browserless, ZenRows, and other headless cloud browser services.";
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Alternatives Directory</span>
+    </div>
+    <h1 class="page-title">Cloud Browser Alternatives Directory</h1>
+    <p class="page-subtitle">
+      Looking to replace an expensive or restrictive cloud browser service? Compare vetted alternatives with lower hourly rates, native CAPTCHA solving, and reliable anti-bot bypass.
+    </p>
+  </div>
+
+  <div class="featured-banner">
+    <span class="badge-gold">#1 Top Rated Alternative Overall</span>
+    <h2>Switch to 2Captcha Browser API</h2>
+    <p>
+      Tired of paying $500+/mo commitments or configuring external CAPTCHA keys? <strong>2Captcha Browser API</strong> gives you standard CDP WebSockets, automated Turnstile/reCAPTCHA solving, and global residential proxies starting at just <strong>$0.15/hour</strong>.
+    </p>
+    <div class="banner-actions">
+      <a href="/reviews/2captcha-browser-api" class="btn btn-primary">Read Lab Review</a>
+      <a href="https://2captcha.com/scraper/browser-api" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Start Free Trial ↗</a>
+    </div>
+  </div>
+
+  <div class="hubs-grid">
+    {alternativeHubs.map((hub) => (
+      <div class="hub-card">
+        <div class="hub-top">
+          <span class="hub-tag">Competitor Guide</span>
+          <span class="hub-price">From ${hub.price.toFixed(2)}/hr</span>
+        </div>
+        <h2 class="hub-title">
+          <a href={`/alternatives/${hub.slug}`}>Best {hub.name} Alternatives</a>
+        </h2>
+        <p class="hub-desc">
+          Top-rated cheaper and more reliable alternatives to {hub.name} for scraping, AI agents, and Playwright workflows.
+        </p>
+        <div class="hub-action">
+          <a href={`/alternatives/${hub.slug}`} class="hub-link">View Alternatives →</a>
+        </div>
+      </div>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .page-header {
+    padding: 2.5rem 0 1.5rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+  .page-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+  .page-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  .featured-banner {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(59, 130, 246, 0.08));
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+  .badge-gold {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+  }
+  .featured-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+  .featured-banner p {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.55;
+    max-width: 750px;
+    margin-bottom: 1.25rem;
+  }
+  .banner-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: #ffffff;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+
+  .hubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+  .hub-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hub-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  }
+  .hub-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .hub-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #e2e8f0;
+    color: #1e293b;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+  .hub-price {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+  .hub-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .hub-title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .hub-title a:hover {
+    color: var(--color-primary);
+  }
+  .hub-desc {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    margin-bottom: 1.25rem;
+  }
+  .hub-link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+</style>

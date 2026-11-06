@@ -15,6 +15,44 @@ const siteDescription = "Independent benchmarks, pricing comparisons, and techni
 ---
 
 <Base title={siteTitle} description={siteDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a Cloud Browser API?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Cloud Browser API executes headless Chromium or Firefox instances on remote high-speed cloud clusters. Instead of exhausting local server RAM and CPU, your code connects via standard Chrome DevTools Protocol (CDP) WebSocket URLs using Playwright or Puppeteer."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a Browser MCP Server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Model Context Protocol (MCP) browser server exposes browser primitives (navigate, click, type, screenshot, evaluate) directly to AI assistants like Claude Desktop, Cursor, and Windsurf, enabling LLMs to interact with web pages autonomously."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is 2Captcha Browser API ranked #1?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "2Captcha Browser API solves the single biggest friction point in web automation: CAPTCHA roadblocks. By combining native, zero-latency CAPTCHA decoding with automatic residential proxy rotation and standard CDP in a unified $0.15/hr pay-as-you-go service, it outperforms fragmented multi-vendor stacks."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need residential proxies for web scraping?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, for bot-sensitive targets. Cloud platforms like Cloudflare and DataDome immediately flag datacenter IP addresses. Residential proxies assign real ISP consumer IP addresses that bypass static ASN reputation blocks."
+        }
+      }
+    ]
+  })} />
   <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-badge">Independent Testing Lab • 2026 Benchmarks</div>

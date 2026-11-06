@@ -1,0 +1,496 @@
+---
+import { decodeSlug } from "emdash";
+import Base from "../../layouts/Base.astro";
+import { fetchAllBrowsers, fetchAllMcpTools } from "../../utils/browser-data";
+
+const rawSlug = decodeSlug(Astro.params.slug);
+
+if (!rawSlug) {
+  return Astro.redirect("/best-for");
+}
+
+const { browsers } = await fetchAllBrowsers();
+const { tools: mcpTools } = await fetchAllMcpTools();
+
+interface HubMeta {
+  title: string;
+  badge: string;
+  subtitle: string;
+  whyMatters: string;
+  isMcp: boolean;
+  filterFn: (items: any[]) => any[];
+  faq: Array<{ q: string; a: string }>;
+}
+
+const HUBS_CONFIG: Record<string, HubMeta> = {
+  "turnstile-bypass": {
+    title: "Best Cloud Browsers for Cloudflare Turnstile Bypass (2026)",
+    badge: "Cloudflare Turnstile",
+    subtitle: "Cloud headless browser APIs with verified high-success automated bypass of Cloudflare Turnstile, 5-second challenges, and managed challenge interstitial pages.",
+    whyMatters: "Cloudflare Turnstile analyzes device telemetry, TLS fingerprints, and mouse telemetry. Standard headless Chromium instances trigger automatic 1020/challenge blocks without specialized anti-detect stealth layers and automated solving.",
+    isMcp: false,
+    filterFn: (items) => items.filter(b => 
+      b.antibot_bypass.toLowerCase().includes("turnstile") || 
+      b.captcha_auto_solve.toLowerCase().includes("turnstile") ||
+      b.demo_rank === 1
+    ).slice(0, 8),
+    faq: [
+      {
+        q: "What is the best browser API to bypass Cloudflare Turnstile?",
+        a: "2Captcha Browser API is our #1 ranked solution. It bypasses Turnstile automatically by combining residential proxy rotation, stealth hardware emulation, and native zero-latency CAPTCHA solving into a single CDP WebSocket."
+      },
+      {
+        q: "Does standard Playwright bypass Turnstile?",
+        a: "No. Standard Playwright and Puppeteer leak automation indicators (like Runtime.Enable and navigator.webdriver). You need stealth browser infrastructure to pass Cloudflare challenges."
+      }
+    ]
+  },
+  "claude-desktop": {
+    title: "Top Browser MCP Tools for Claude Desktop (2026)",
+    badge: "Claude Desktop",
+    subtitle: "The most reliable Model Context Protocol (MCP) browser servers for Anthropic's Claude Desktop application.",
+    whyMatters: "Giving Claude Desktop the ability to browse the live web, extract content, and navigate multi-step apps turns Claude into a powerful research and automation assistant.",
+    isMcp: true,
+    filterFn: (items) => items.filter(m => m.supports_claude_desktop).slice(0, 8),
+    faq: [
+      {
+        q: "Which Browser MCP server works best with Claude Desktop?",
+        a: "2Captcha Browser MCP is ranked #1. Unlike other servers that break when encountering CAPTCHAs, 2Captcha Browser MCP automatically solves them in the background while feeding clean Markdown to Claude."
+      },
+      {
+        q: "How do I add a browser MCP server to Claude Desktop?",
+        a: "Simply open your claude_desktop_config.json file and add the MCP server configuration snippet provided in each tool's guide."
+      }
+    ]
+  },
+  "cursor": {
+    title: "Best Browser MCP Tools for Cursor IDE & Windsurf (2026)",
+    badge: "AI Coding IDEs",
+    subtitle: "Lightweight, responsive Model Context Protocol browser tools designed for AI-driven development inside Cursor and Windsurf.",
+    whyMatters: "Allow your Cursor AI composer to verify live web documentation, inspect dynamic frontend elements, and test APIs without switching windows.",
+    isMcp: true,
+    filterFn: (items) => items.filter(m => m.supports_cursor).slice(0, 8),
+    faq: [
+      {
+        q: "Why use a Browser MCP in Cursor?",
+        a: "It allows Cursor's AI models to fetch real-time library documentation, verify API changes, and inspect live web applications directly inside your coding workflow."
+      }
+    ]
+  },
+  "pay-as-you-go": {
+    title: "Best Pay-As-You-Go Cloud Browsers (No Monthly Minimum)",
+    badge: "Cost Efficient",
+    subtitle: "Top-rated cloud browser APIs with pure pay-as-you-go billing. No $500/mo enterprise minimum commitments.",
+    whyMatters: "Most enterprise scraping providers impose steep minimum monthly commitments ($250–$1,000/mo). Pay-as-you-go options allow teams to scale up and down elastically.",
+    isMcp: false,
+    filterFn: (items) => items.filter(b => b.pricing_model === "pay_as_you_go" || b.starting_price_hour <= 0.20).slice(0, 8),
+    faq: [
+      {
+        q: "What is the cheapest cloud browser API?",
+        a: "2Captcha Browser API offers the best value at $0.15/hour with residential proxies and automated CAPTCHA solving included in the base rate without recurring subscriptions."
+      }
+    ]
+  },
+  "residential-proxies": {
+    title: "Best Browsers with Integrated Residential Proxies (2026)",
+    badge: "Residential IP Network",
+    subtitle: "Headless cloud browsers that automatically rotate real consumer residential IPs across 200+ countries.",
+    whyMatters: "Datacenter IPs are quickly blocked by modern anti-bot filters. Integrated residential proxies ensure your browser requests originate from clean residential internet service providers.",
+    isMcp: false,
+    filterFn: (items) => items.filter(b => 
+      b.proxy_integration.toLowerCase().includes("residential") || 
+      b.demo_rank === 1
+    ).slice(0, 8),
+    faq: [
+      {
+        q: "Why do cloud browsers need residential proxies?",
+        a: "Anti-bot defenses check the Autonomous System Number (ASN) of incoming connections. Residential IPs match genuine home internet connections, drastically reducing challenge rates."
+      }
+    ]
+  },
+  "datadome": {
+    title: "Top Scraping Browsers for DataDome Evasion (2026)",
+    badge: "DataDome Bypass",
+    subtitle: "Cloud browser platforms engineered to bypass DataDome's behavioral analysis, device sensors, and slider puzzles.",
+    whyMatters: "DataDome analyzes client-side browser fingerprints, audio context, canvas noise, and behavioral cadence to detect headless automation.",
+    isMcp: false,
+    filterFn: (items) => items.filter(b => 
+      b.antibot_bypass.toLowerCase().includes("datadome") || 
+      b.demo_rank === 1
+    ).slice(0, 8),
+    faq: [
+      {
+        q: "How does 2Captcha Browser API bypass DataDome?",
+        a: "By combining clean residential IPs, deep canvas/WebGL/audio context randomization, and native automated slider solving."
+      }
+    ]
+  }
+};
+
+const hubConfig = HUBS_CONFIG[rawSlug];
+
+if (!hubConfig) {
+  return Astro.redirect("/best-for");
+}
+
+const items = hubConfig.isMcp 
+  ? hubConfig.filterFn(mcpTools) 
+  : hubConfig.filterFn(browsers);
+
+const topPick = items[0];
+
+const siteTitle = `${hubConfig.title} • BrowserReviews`;
+const siteDescription = `${hubConfig.subtitle} Compare top-ranked platforms evaluated by our independent testing lab.`;
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <!-- Schema.org Breadcrumbs & FAQ -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Best By Use-Case",
+        "item": "/best-for"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": hubConfig.title,
+        "item": `/best-for/${rawSlug}`
+      }
+    ]
+  })} />
+
+  {hubConfig.faq.length > 0 && (
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": hubConfig.faq.map(item => ({
+        "@type": "Question",
+        "name": item.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.a
+        }
+      }))
+    })} />
+  )}
+
+  <div class="hub-container">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span>
+      <a href="/best-for">Best By Use-Case</a> <span>/</span>
+      <span>{hubConfig.badge}</span>
+    </div>
+
+    <div class="hub-header">
+      <span class="hub-badge">{hubConfig.badge}</span>
+      <h1 class="hub-title">{hubConfig.title}</h1>
+      <p class="hub-subtitle">{hubConfig.subtitle}</p>
+    </div>
+
+    <!-- Why This Matters Callout -->
+    <div class="why-box">
+      <h3>Why This Matters</h3>
+      <p>{hubConfig.whyMatters}</p>
+    </div>
+
+    <!-- #1 Top Pick Highlight Banner -->
+    {topPick && (
+      <div class="top-pick-card">
+        <div class="top-pick-header">
+          <span class="badge-gold">★ #1 Ranked Top Pick</span>
+          <span class="top-score">Lab Score: {topPick.overall_score.toFixed(1)} / 10</span>
+        </div>
+        <h2 class="top-name">{topPick.name}</h2>
+        <p class="top-tagline">{topPick.tagline}</p>
+        <div class="top-actions">
+          <a href={hubConfig.isMcp ? `/mcp/${topPick.slug}` : `/reviews/${topPick.slug}`} class="btn btn-primary">
+            Read Comprehensive Review
+          </a>
+          <a href={topPick.affiliate_url || topPick.website_url} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+            Visit Official Site ↗
+          </a>
+        </div>
+      </div>
+    )}
+
+    <!-- Curated List -->
+    <div class="curated-section">
+      <h2 class="section-title">Ranked Solutions ({items.length})</h2>
+      <div class="items-grid">
+        {items.map((item, idx) => (
+          <div class={`item-card ${idx === 0 ? "card-gold" : ""}`}>
+            <div class="item-card-top">
+              <span class="rank-badge">#{idx + 1} In Category</span>
+              <span class="item-score">★ {item.overall_score.toFixed(1)}</span>
+            </div>
+            <h3 class="item-title">
+              <a href={hubConfig.isMcp ? `/mcp/${item.slug}` : `/reviews/${item.slug}`}>
+                {item.name}
+              </a>
+            </h3>
+            <p class="item-desc">{item.tagline}</p>
+            <div class="item-footer">
+              <span class="item-price">
+                {!hubConfig.isMcp ? `$${item.starting_price_hour.toFixed(2)}/hr` : `${item.tools_provided.length} Tools`}
+              </span>
+              <a href={hubConfig.isMcp ? `/mcp/${item.slug}` : `/reviews/${item.slug}`} class="item-link">
+                Review & Specs →
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    {hubConfig.faq.length > 0 && (
+      <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        {hubConfig.faq.map(f => (
+          <div class="faq-item">
+            <h4>{f.q}</h4>
+            <p>{f.a}</p>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</Base>
+
+<style>
+  .hub-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 0 4rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+
+  .hub-header {
+    margin-bottom: 2rem;
+  }
+  .hub-badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #e0e7ff;
+    color: #4338ca;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+  }
+  .hub-title {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+  .hub-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .why-box {
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .why-box h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .why-box p {
+    font-size: 0.92rem;
+    color: var(--color-text);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .top-pick-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(59, 130, 246, 0.08));
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 3.5rem;
+  }
+  .top-pick-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .badge-gold {
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+  }
+  .top-score {
+    font-weight: 700;
+    color: #059669;
+    font-size: 0.95rem;
+  }
+  .top-name {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+  .top-tagline {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+  .top-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: #ffffff;
+  }
+  .btn-outline {
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+
+  .curated-section {
+    margin-bottom: 3.5rem;
+  }
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+  }
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+  .item-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card-gold {
+    border: 1.5px solid #f59e0b;
+  }
+  .item-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .rank-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+  .item-score {
+    font-weight: 700;
+    color: #059669;
+    font-size: 0.9rem;
+  }
+  .item-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .item-title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .item-title a:hover {
+    color: var(--color-primary);
+  }
+  .item-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    margin-bottom: 1rem;
+  }
+  .item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-border);
+    padding-top: 0.75rem;
+  }
+  .item-price {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+  .item-link {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .faq-section {
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+  .faq-section h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+  }
+  .faq-item {
+    margin-bottom: 1.25rem;
+  }
+  .faq-item h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  .faq-item p {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+</style>

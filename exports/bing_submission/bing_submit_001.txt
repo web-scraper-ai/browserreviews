@@ -4,6 +4,8 @@ https://browserreviews.com/mcp
 https://browserreviews.com/rankings
 https://browserreviews.com/calculator
 https://browserreviews.com/compare
+https://browserreviews.com/alternatives
+https://browserreviews.com/best-for
 https://browserreviews.com/about
 https://browserreviews.com/methodology
 https://browserreviews.com/editorial-policy
@@ -96,5 +98,3 @@ https://browserreviews.com/mcp/usestring-mcp
 https://browserreviews.com/mcp/tinyfish-mcp
 https://browserreviews.com/mcp/surfsky-mcp
 https://browserreviews.com/mcp/browserview-mcp
-https://browserreviews.com/mcp/firecrawl-mcp-server
-https://browserreviews.com/mcp/axiom-mcp-server
