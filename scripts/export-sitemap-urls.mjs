@@ -62,13 +62,22 @@ const bestForSlugs = [
 ];
 const bestForRoutes = bestForSlugs.map(s => `/best-for/${s}`);
 
+const guideRoutes = [
+  '/guides',
+  '/guides/how-to-connect-puppeteer-cloud-browser',
+  '/guides/how-to-connect-playwright-cloud-browser',
+  '/guides/how-to-configure-claude-desktop-browser-mcp',
+  '/guides/how-to-bypass-cloudflare-turnstile-cloud-browsers'
+];
+
 const allRoutes = [
   ...staticRoutes,
   ...browserRoutes,
   ...mcpRoutes,
   ...comparisonRoutes,
   ...alternativeRoutes,
-  ...bestForRoutes
+  ...bestForRoutes,
+  ...guideRoutes
 ];
 const allUrls = allRoutes.map(r => `${BASE_URL.replace(/\/$/, '')}${r}`);
 

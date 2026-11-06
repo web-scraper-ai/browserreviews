@@ -78,13 +78,22 @@ export const GET: APIRoute = async ({ request }) => {
     priority: 0.85,
   }));
 
+  const guidePages = [
+    { loc: "/guides", changefreq: "daily", priority: 0.85 },
+    { loc: "/guides/how-to-connect-puppeteer-cloud-browser", changefreq: "weekly", priority: 0.8 },
+    { loc: "/guides/how-to-connect-playwright-cloud-browser", changefreq: "weekly", priority: 0.8 },
+    { loc: "/guides/how-to-configure-claude-desktop-browser-mcp", changefreq: "weekly", priority: 0.8 },
+    { loc: "/guides/how-to-bypass-cloudflare-turnstile-cloud-browsers", changefreq: "weekly", priority: 0.8 },
+  ];
+
   const allUrls = [
     ...staticPages,
     ...browserPages,
     ...mcpPages,
     ...popularComparisons,
     ...alternativePages,
-    ...bestForPages
+    ...bestForPages,
+    ...guidePages
   ];
   const nowIso = new Date().toISOString().split("T")[0];
 

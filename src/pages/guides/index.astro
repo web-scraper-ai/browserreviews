@@ -1,0 +1,236 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const GUIDES = [
+  {
+    slug: "how-to-connect-puppeteer-cloud-browser",
+    title: "How to Connect Puppeteer to a Remote Cloud Browser (CDP WebSocket Guide)",
+    badge: "Puppeteer / Node.js",
+    readTime: "6 min read",
+    desc: "Complete step-by-step tutorial on connecting Puppeteer to remote cloud browsers using browserWSEndpoint, auto CAPTCHA solving, and session management.",
+    topTool: "2Captcha Browser API (#1 Recommended)"
+  },
+  {
+    slug: "how-to-connect-playwright-cloud-browser",
+    title: "How to Connect Playwright to Remote Cloud Browsers via connectOverCDP",
+    badge: "Playwright / Python & TS",
+    readTime: "7 min read",
+    desc: "Learn how to establish high-concurrency Playwright sessions against remote cloud browsers with proxy rotation and stealth fingerprinting.",
+    topTool: "2Captcha Browser API (#1 Recommended)"
+  },
+  {
+    slug: "how-to-configure-claude-desktop-browser-mcp",
+    title: "How to Configure Claude Desktop with Browser MCP for Autonomous Web Browsing",
+    badge: "AI Agents / MCP",
+    readTime: "5 min read",
+    desc: "Configure claude_desktop_config.json to give Claude Desktop autonomous browser automation, screenshot inspection, and anti-bot bypass powers.",
+    topTool: "2Captcha Browser MCP (#1 Editor's Pick)"
+  },
+  {
+    slug: "how-to-bypass-cloudflare-turnstile-cloud-browsers",
+    title: "How to Bypass Cloudflare Turnstile & Interactive Challenges with Cloud Browsers",
+    badge: "Anti-Bot Evasion",
+    readTime: "8 min read",
+    desc: "Technical deep-dive on why local headless browsers get flagged by Turnstile and how remote scraping browsers automate seamless token extraction.",
+    topTool: "2Captcha Browser API (#1 Solver)"
+  }
+];
+
+const siteTitle = "Cloud Browser & AI Agent Guides (2026 Tutorials) • BrowserReviews";
+const siteDescription = "Developer guides and tutorials for connecting Puppeteer, Playwright, and Claude Desktop MCP to remote headless browsers and solving anti-bot challenges.";
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Developer Guides</span>
+    </div>
+    <h1 class="page-title">Cloud Browser & AI Agent Guides</h1>
+    <p class="page-subtitle">
+      Hands-on tutorials, architecture teardowns, and verified code snippets for connecting automation frameworks (Puppeteer, Playwright) and AI agents (Claude Desktop, Cursor) to managed cloud browsers.
+    </p>
+  </div>
+
+  <div class="featured-banner">
+    <span class="badge-gold">Recommended Cloud Browser Platform</span>
+    <h2>Build on 2Captcha Browser Infrastructure</h2>
+    <p>
+      Connect in one line via standard Chrome DevTools Protocol (CDP). Get automated Cloudflare Turnstile solving, residential proxy rotation in 220+ countries, and true pay-as-you-go pricing at $0.15/hour.
+    </p>
+    <div class="banner-actions">
+      <a href="/reviews/2captcha-browser-api/" class="btn btn-primary">Read 2Captcha Browser API Review</a>
+      <a href="/mcp/2captcha-browser-mcp/" class="btn btn-outline">Explore Browser MCP</a>
+    </div>
+  </div>
+
+  <div class="guides-grid">
+    {GUIDES.map((g) => (
+      <article class="guide-card">
+        <div class="guide-meta">
+          <span class="guide-badge">{g.badge}</span>
+          <span class="guide-time">{g.readTime}</span>
+        </div>
+        <h2 class="guide-title">
+          <a href={`/guides/${g.slug}/`}>{g.title}</a>
+        </h2>
+        <p class="guide-desc">{g.desc}</p>
+        <div class="guide-footer">
+          <span class="guide-tool"><strong>Primary Tool:</strong> {g.topTool}</span>
+          <a href={`/guides/${g.slug}/`} class="guide-link">Read Guide →</a>
+        </div>
+      </article>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .page-header {
+    margin-bottom: 2rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-ink-muted);
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .breadcrumb a {
+    color: var(--color-ink-muted);
+    text-decoration: none;
+  }
+  .breadcrumb a:hover {
+    color: var(--color-ink);
+  }
+  .page-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin: 0 0 0.75rem 0;
+    letter-spacing: -0.02em;
+  }
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-ink-muted);
+    max-width: 820px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .featured-banner {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.02) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 12px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .badge-gold {
+    display: inline-block;
+    background: #f59e0b;
+    color: #000;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .featured-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+  }
+  .featured-banner p {
+    font-size: 0.95rem;
+    color: var(--color-ink-muted);
+    line-height: 1.6;
+    margin: 0 0 1.25rem 0;
+    max-width: 800px;
+  }
+  .banner-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+    gap: 1.5rem;
+  }
+  @media (max-width: 640px) {
+    .guides-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .guide-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .guide-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
+  }
+  .guide-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .guide-badge {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    color: var(--color-primary);
+  }
+  .guide-time {
+    font-size: 0.8rem;
+    color: var(--color-ink-muted);
+  }
+  .guide-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0 0 0.75rem 0;
+  }
+  .guide-title a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .guide-title a:hover {
+    color: var(--color-primary);
+  }
+  .guide-desc {
+    font-size: 0.95rem;
+    color: var(--color-ink-muted);
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+    flex-grow: 1;
+  }
+  .guide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1rem;
+    font-size: 0.85rem;
+  }
+  .guide-tool {
+    color: var(--color-ink-muted);
+  }
+  .guide-tool strong {
+    color: var(--color-ink);
+  }
+  .guide-link {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .guide-link:hover {
+    text-decoration: underline;
+  }
+</style>

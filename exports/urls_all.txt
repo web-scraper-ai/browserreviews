@@ -125,3 +125,8 @@ https://browserreviews.com/best-for/cursor
 https://browserreviews.com/best-for/pay-as-you-go
 https://browserreviews.com/best-for/residential-proxies
 https://browserreviews.com/best-for/datadome
+https://browserreviews.com/guides
+https://browserreviews.com/guides/how-to-connect-puppeteer-cloud-browser
+https://browserreviews.com/guides/how-to-connect-playwright-cloud-browser
+https://browserreviews.com/guides/how-to-configure-claude-desktop-browser-mcp
+https://browserreviews.com/guides/how-to-bypass-cloudflare-turnstile-cloud-browsers
