@@ -1,0 +1,811 @@
+---
+import Base from "../layouts/Base.astro";
+
+const siteTitle = "Cloud Browser & MCP Code Generator • BrowserReviews";
+const siteDescription = "Interactive code generator for cloud browsers and AI agent MCP servers. Export ready-to-run Playwright, Puppeteer, Claude Desktop, and Cursor configurations.";
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/browsers">Tools</a> <span>/</span> <span>Connect & MCP Generator</span>
+    </div>
+    <h1 class="page-title">Cloud Browser &amp; MCP Config Generator</h1>
+    <p class="page-subtitle">
+      Generate ready-to-run connection scripts for Python Playwright, Node.js, Puppeteer, Claude Desktop, and Cursor. Configure anti-detection, residential proxy routing, and automated CAPTCHA bypass in seconds.
+    </p>
+  </div>
+
+  <div class="generator-grid">
+    <!-- Configuration Form -->
+    <div class="card form-card">
+      <h2 class="section-title">1. Connection Parameters</h2>
+
+      <!-- Provider Selector -->
+      <div class="form-group">
+        <label class="form-label" for="providerSelect">Target Cloud Provider:</label>
+        <select id="providerSelect" class="form-select">
+          <option value="2captcha" selected>⚡ 2Captcha Browser API &amp; MCP (Rank #1 — Recommended)</option>
+          <option value="browserbase">Browserbase (Developer Platform)</option>
+          <option value="steel">Steel.dev (Open Source Cloud Browser)</option>
+          <option value="brightdata">Bright Data Scraping Browser</option>
+          <option value="browserless">Browserless / Anchor</option>
+        </select>
+        <div id="providerTip" class="provider-badge-tip">
+          🏆 <strong>Rank #1 Pick:</strong> Native Cloudflare Turnstile &amp; reCAPTCHA bypass included at $0.05/hr with residential IP rotation.
+        </div>
+      </div>
+
+      <!-- Framework / Runtime Selector -->
+      <div class="form-group">
+        <label class="form-label">Integration Framework / Target:</label>
+        <div class="framework-pills" id="frameworkPills">
+          <button type="button" class="framework-pill active" data-framework="playwright-python">🐍 Playwright (Python)</button>
+          <button type="button" class="framework-pill" data-framework="playwright-node">🟩 Playwright (Node.js)</button>
+          <button type="button" class="framework-pill" data-framework="puppeteer">🟨 Puppeteer (Node.js)</button>
+          <button type="button" class="framework-pill" data-framework="claude-desktop">🤖 Claude Desktop MCP</button>
+          <button type="button" class="framework-pill" data-framework="cursor">💻 Cursor MCP</button>
+          <button type="button" class="framework-pill" data-framework="cdp-ws">🌐 Raw CDP WebSocket</button>
+        </div>
+      </div>
+
+      <!-- Credentials -->
+      <div class="form-group">
+        <label class="form-label" for="apiKeyInput">API Key / Token:</label>
+        <input 
+          type="text" 
+          id="apiKeyInput" 
+          class="form-input" 
+          placeholder="YOUR_API_KEY_HERE" 
+          value="YOUR_API_KEY_HERE" 
+          autocomplete="off" 
+          spellcheck="false" 
+        />
+        <span class="form-hint">🔒 Keys stay entirely in your browser memory — never logged or transmitted.</span>
+      </div>
+
+      <!-- Target URL -->
+      <div class="form-group">
+        <label class="form-label" for="targetUrlInput">Initial Target URL:</label>
+        <input 
+          type="url" 
+          id="targetUrlInput" 
+          class="form-input" 
+          value="https://nowsecure.nl" 
+          placeholder="https://example.com" 
+        />
+        <span class="form-hint">Page to navigate to and test anti-bot evasion.</span>
+      </div>
+
+      <!-- Advanced Capabilities Toggles -->
+      <div class="form-group">
+        <label class="form-label">Active Capabilities:</label>
+        <div class="toggle-list">
+          <label class="toggle-item">
+            <input type="checkbox" id="toggleCaptcha" checked />
+            <span class="toggle-text">
+              <strong>Auto-Solve CAPTCHAs</strong>
+              <small>Automatically solve Cloudflare Turnstile, reCAPTCHA v2/v3, and hCaptcha on page load</small>
+            </span>
+          </label>
+
+          <label class="toggle-item">
+            <input type="checkbox" id="toggleProxy" checked />
+            <span class="toggle-text">
+              <strong>Residential Proxy Rotation</strong>
+              <small>Route all socket traffic through residential IP pools to prevent data center blocks</small>
+            </span>
+          </label>
+
+          <label class="toggle-item">
+            <input type="checkbox" id="toggleStealth" checked />
+            <span class="toggle-text">
+              <strong>CDP Stealth Masking</strong>
+              <small>Spoof canvas, WebGL vendor, audio context, and navigator.webdriver properties</small>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generated Code Output Panel -->
+    <div class="card output-card">
+      <div class="output-header">
+        <div class="output-title-group">
+          <span class="output-lang-badge" id="outputLangBadge">python</span>
+          <span class="output-filename" id="outputFilename">scrape_cloud_browser.py</span>
+        </div>
+        <button type="button" class="btn btn-sm btn-primary copy-btn" id="copyBtn">
+          📋 Copy Code
+        </button>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="codeOutput" class="code-block"></code></pre>
+      </div>
+
+      <div class="output-footer">
+        <div class="provider-specs">
+          <div class="spec-row">
+            <span class="spec-label">Selected Engine:</span>
+            <span class="spec-value" id="specEngine">2Captcha Cloud Browser (Rank #1)</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Pricing Estimate:</span>
+            <span class="spec-value" id="specPricing">$0.05 / hour ($0.00083/min) — Zero monthly minimum</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">CDP Compatibility:</span>
+            <span class="spec-value text-success">✓ Full Chromium CDP via wss://</span>
+          </div>
+        </div>
+
+        <div class="output-actions">
+          <a href="https://2captcha.com/?from=browserreviews" target="_blank" rel="noopener sponsored" class="btn btn-accent btn-full" id="ctaBtn">
+            🚀 Get 2Captcha API Key &amp; Test Live
+          </a>
+          <a href="/reviews/2captcha-browser-api" class="text-link" id="reviewLink">
+            Read comprehensive benchmark review →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Benchmarking & Implementation Guide Section -->
+  <div class="card guide-card">
+    <h2 class="section-title">Why Connect Over CDP WebSocket?</h2>
+    <div class="guide-grid">
+      <div class="guide-col">
+        <h3>⚡ Zero Local Compute Overhead</h3>
+        <p>
+          Running local headless Chromium consumes 300MB–800MB RAM and 20–40% CPU per concurrent session. By offloading rendering to cloud browsers over <code>wss://</code>, you can drive 500+ concurrent scraping pipelines or AI agent sessions from a lightweight $5/month VPS.
+        </p>
+      </div>
+      <div class="guide-col">
+        <h3>🛡️ Bypassing Fingerprinting &amp; Anti-Bots</h3>
+        <p>
+          Cloud browsers run pre-configured stealth patches at the browser binary level, overriding <code>Runtime.enable</code> leakages, WebGL hashes, and client hints that flag traditional headless instances on Cloudflare, DataDome, and Kasada protected sites.
+        </p>
+      </div>
+      <div class="guide-col">
+        <h3>🤖 Native MCP Agent Integration</h3>
+        <p>
+          For AI agents built with Claude Desktop, Cursor, LangChain, or Browser-Use, connecting through an MCP (Model Context Protocol) server allows LLMs to navigate, click, fill forms, and inspect DOM states without writing manual DOM query logic.
+        </p>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .generator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 28px;
+    margin-bottom: 36px;
+    align-items: start;
+  }
+
+  .form-card, .output-card, .guide-card {
+    padding: 24px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .section-title {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--color-ink);
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--color-ink);
+  }
+
+  .form-select, .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .form-select:focus, .form-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+
+  .provider-badge-tip {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(37, 99, 235, 0.08);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    font-size: 12.5px;
+    color: var(--color-ink-secondary);
+  }
+
+  .framework-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .framework-pill {
+    background: var(--color-canvas-muted);
+    border: 1px solid var(--color-border);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--color-ink-secondary);
+    transition: all 0.15s ease;
+  }
+
+  .framework-pill:hover {
+    border-color: var(--color-primary);
+    color: var(--color-ink);
+  }
+
+  .framework-pill.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+  }
+
+  .form-hint {
+    display: block;
+    font-size: 11.5px;
+    color: var(--color-ink-muted);
+    margin-top: 5px;
+  }
+
+  .toggle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--color-canvas-muted);
+    padding: 12px;
+    border-radius: var(--radius-md);
+  }
+
+  .toggle-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+  }
+
+  .toggle-item input[type="checkbox"] {
+    margin-top: 3px;
+    cursor: pointer;
+  }
+
+  .toggle-text strong {
+    display: block;
+    font-size: 13px;
+    color: var(--color-ink);
+  }
+
+  .toggle-text small {
+    display: block;
+    font-size: 11.5px;
+    color: var(--color-ink-muted);
+    line-height: 1.35;
+  }
+
+  .output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 14px;
+  }
+
+  .output-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .output-lang-badge {
+    background: var(--color-canvas-muted);
+    border: 1px solid var(--color-border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .output-filename {
+    font-family: var(--font-mono, monospace);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .code-container {
+    background: #0f172a;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 1px solid #1e293b;
+  }
+
+  .code-block {
+    display: block;
+    padding: 16px;
+    font-family: var(--font-mono, 'JetBrains Mono', Consolas, monospace);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #e2e8f0;
+    overflow-x: auto;
+    white-space: pre;
+    max-height: 440px;
+    scrollbar-width: thin;
+  }
+
+  .output-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .provider-specs {
+    background: var(--color-canvas-muted);
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    font-size: 12.5px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .spec-label {
+    color: var(--color-ink-muted);
+  }
+
+  .spec-value {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .text-success {
+    color: #10b981;
+  }
+
+  .output-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .btn-full {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .btn-accent {
+    background: #10b981;
+    color: #fff;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+
+  .btn-accent:hover {
+    background: #059669;
+    color: #fff;
+  }
+
+  .text-link {
+    font-size: 12.5px;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .text-link:hover {
+    text-decoration: underline;
+  }
+
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 14px;
+  }
+
+  .guide-col h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .guide-col p {
+    font-size: 13px;
+    color: var(--color-ink-secondary);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 900px) {
+    .generator-grid {
+      grid-template-columns: 1fr;
+    }
+    .guide-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // DOM Elements
+  const providerSelect = document.getElementById('providerSelect') as HTMLSelectElement;
+  const apiKeyInput = document.getElementById('apiKeyInput') as HTMLInputElement;
+  const targetUrlInput = document.getElementById('targetUrlInput') as HTMLInputElement;
+  const toggleCaptcha = document.getElementById('toggleCaptcha') as HTMLInputElement;
+  const toggleProxy = document.getElementById('toggleProxy') as HTMLInputElement;
+  const toggleStealth = document.getElementById('toggleStealth') as HTMLInputElement;
+  const frameworkPills = document.querySelectorAll('.framework-pill');
+  
+  const codeOutput = document.getElementById('codeOutput');
+  const copyBtn = document.getElementById('copyBtn');
+  const outputLangBadge = document.getElementById('outputLangBadge');
+  const outputFilename = document.getElementById('outputFilename');
+  const specEngine = document.getElementById('specEngine');
+  const specPricing = document.getElementById('specPricing');
+  const ctaBtn = document.getElementById('ctaBtn') as HTMLAnchorElement;
+  const reviewLink = document.getElementById('reviewLink') as HTMLAnchorElement;
+  const providerTip = document.getElementById('providerTip');
+
+  let activeFramework = 'playwright-python';
+
+  // Provider configuration metadata
+  const PROVIDERS_META: Record<string, any> = {
+    '2captcha': {
+      name: '2Captcha Cloud Browser (Rank #1)',
+      pricing: '$0.05 / hour ($0.00083/min) — Zero monthly minimum',
+      wsUrl: (key: string, captcha: boolean, proxy: boolean) => 
+        `wss://browser.2captcha.com/cdp?api_key=${key}&captcha_solve=${captcha}&proxy=${proxy ? 'residential' : 'none'}`,
+      cta: '🚀 Get 2Captcha API Key ($0.05/hr)',
+      ctaUrl: 'https://2captcha.com/?from=browserreviews',
+      reviewUrl: '/reviews/2captcha-browser-api',
+      mcpCommand: 'npx -y @2captcha-mcp/server',
+      tip: '🏆 <strong>Rank #1 Pick:</strong> Native Cloudflare Turnstile & reCAPTCHA bypass included at $0.05/hr with residential IP rotation.'
+    },
+    'browserbase': {
+      name: 'Browserbase Developer Cloud',
+      pricing: '$0.20 / hour + $5/GB proxy bandwidth',
+      wsUrl: (key: string) => `wss://connect.browserbase.com?apiKey=${key}`,
+      cta: 'Explore Browserbase API',
+      ctaUrl: 'https://browserbase.com',
+      reviewUrl: '/reviews/browserbase',
+      mcpCommand: 'npx -y @browserbase/mcp-server',
+      tip: '⚙️ <strong>Developer Sandbox:</strong> Session replay recording included. Residential proxy incurs standard $5/GB markup.'
+    },
+    'steel': {
+      name: 'Steel.dev Open Source Cloud',
+      pricing: '$0.17 / hour ($0.0028/min) on cloud tier',
+      wsUrl: (key: string) => `wss://connect.steel.dev?apiKey=${key}`,
+      cta: 'Explore Steel.dev',
+      ctaUrl: 'https://steel.dev',
+      reviewUrl: '/reviews/steel-dev',
+      mcpCommand: 'npx -y @steel-dev/mcp-server',
+      tip: '🛡️ <strong>Open Source Engine:</strong> Docker self-hostable or managed cloud deployment with session keep-alives.'
+    },
+    'brightdata': {
+      name: 'Bright Data Scraping Browser',
+      pricing: '$8.40 / GB bandwidth ($500/mo commit recommended)',
+      wsUrl: (key: string) => `wss://brd-customer-hl_acc:pass@brd.superproxy.io:9222`,
+      cta: 'Explore Bright Data Browser',
+      ctaUrl: 'https://brightdata.com',
+      reviewUrl: '/reviews/brightdata-scraping-browser',
+      mcpCommand: 'npx -y @brightdata/scraping-mcp',
+      tip: '🏢 <strong>Enterprise Scale:</strong> Massive residential IP pool with proxy bandwidth based billing.'
+    },
+    'browserless': {
+      name: 'Browserless / Anchor',
+      pricing: '$0.004 / minute ($0.24/hour) on standard plan',
+      wsUrl: (key: string) => `wss://chrome.browserless.io?token=${key}`,
+      cta: 'Explore Browserless',
+      ctaUrl: 'https://browserless.io',
+      reviewUrl: '/reviews/browserless',
+      mcpCommand: 'npx -y @browserless/mcp-server',
+      tip: '⚡ <strong>Classic Automation:</strong> Robust headless Chrome instances with live debugger endpoints.'
+    }
+  };
+
+  function updateCode() {
+    const provider = providerSelect.value;
+    const key = apiKeyInput.value.trim() || 'YOUR_API_KEY';
+    const targetUrl = targetUrlInput.value.trim() || 'https://nowsecure.nl';
+    const captcha = toggleCaptcha.checked;
+    const proxy = toggleProxy.checked;
+    const stealth = toggleStealth.checked;
+
+    const meta = PROVIDERS_META[provider];
+
+    // Update Metadata Panel
+    if (specEngine) specEngine.textContent = meta.name;
+    if (specPricing) specPricing.textContent = meta.pricing;
+    if (ctaBtn) {
+      ctaBtn.textContent = meta.cta;
+      ctaBtn.href = meta.ctaUrl;
+    }
+    if (reviewLink) reviewLink.href = meta.reviewUrl;
+    if (providerTip) providerTip.innerHTML = meta.tip;
+
+    let code = '';
+    let filename = '';
+    let lang = '';
+
+    const endpoint = meta.wsUrl(key, captcha, proxy);
+
+    switch (activeFramework) {
+      case 'playwright-python':
+        lang = 'python';
+        filename = 'scrape_browser.py';
+        code = `import asyncio
+from playwright.async_api import async_playwright
+
+# Connect over Chrome DevTools Protocol (CDP) WebSocket
+CDP_URL = "${endpoint}"
+TARGET_URL = "${targetUrl}"
+
+async def main():
+    print(f"Connecting to remote browser at: {CDP_URL[:40]}...")
+    async with async_playwright() as p:
+        # Attach to remote cloud browser instance
+        browser = await p.chromium.connect_over_cdp(CDP_URL)
+        context = browser.contexts[0] if browser.contexts else await browser.new_context()
+        page = await context.new_page()
+
+        print(f"Navigating to {TARGET_URL}...")
+        response = await page.goto(TARGET_URL, wait_until="networkidle", timeout=60000)
+        
+        # Verify page title and anti-bot resolution
+        title = await page.title()
+        print(f"Page loaded successfully! Title: {title}")
+        print(f"HTTP Status: {response.status if response else 'N/A'}")
+
+        # Capture verification screenshot
+        await page.screenshot(path="screenshot.png")
+        print("Saved screenshot.png")
+
+        await browser.close()
+
+if __name__ == "__main__":
+    asyncio.run(main())`;
+        break;
+
+      case 'playwright-node':
+        lang = 'javascript';
+        filename = 'scrape_browser.mjs';
+        code = `import { chromium } from 'playwright';
+
+// Connect over Chrome DevTools Protocol (CDP) WebSocket
+const CDP_URL = '${endpoint}';
+const TARGET_URL = '${targetUrl}';
+
+async function run() {
+  console.log('Connecting to cloud browser session...');
+  const browser = await chromium.connectOverCDP(CDP_URL);
+
+  const context = browser.contexts()[0] || await browser.newContext();
+  const page = await context.newPage();
+
+  console.log(\`Navigating to \${TARGET_URL}...\`);
+  const response = await page.goto(TARGET_URL, { 
+    waitUntil: 'networkidle', 
+    timeout: 60000 
+  });
+
+  const title = await page.title();
+  console.log(\`Page loaded: "\${title}" (Status: \${response?.status()})\`);
+
+  await page.screenshot({ path: 'bypass-result.png', fullPage: true });
+  console.log('Screenshot saved to bypass-result.png');
+
+  await browser.close();
+}
+
+run().catch(console.error);`;
+        break;
+
+      case 'puppeteer':
+        lang = 'javascript';
+        filename = 'puppeteer_browser.mjs';
+        code = `import puppeteer from 'puppeteer-core';
+
+// Connect Puppeteer via remote browserWSEndpoint
+const BROWSER_WS = '${endpoint}';
+const TARGET_URL = '${targetUrl}';
+
+async function run() {
+  console.log('Connecting Puppeteer to cloud browser WebSocket...');
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: BROWSER_WS,
+    defaultViewport: { width: 1920, height: 1080 }
+  });
+
+  const page = await browser.newPage();
+  
+  console.log(\`Navigating to \${TARGET_URL}...\`);
+  await page.goto(TARGET_URL, { waitUntil: 'networkidle2', timeout: 60000 });
+
+  const pageTitle = await page.title();
+  console.log(\`Page title resolved: \${pageTitle}\`);
+
+  // Extract page content
+  const content = await page.evaluate(() => document.body.innerText.slice(0, 300));
+  console.log('Sample text:', content);
+
+  await browser.close();
+}
+
+run().catch(console.error);`;
+        break;
+
+      case 'claude-desktop':
+        lang = 'json';
+        filename = 'claude_desktop_config.json';
+        code = JSON.stringify({
+          "mcpServers": {
+            [`${provider}-browser`]: {
+              "command": "npx",
+              "args": [
+                "-y",
+                meta.mcpCommand.replace("npx -y ", "")
+              ],
+              "env": {
+                "API_KEY": key,
+                "AUTO_SOLVE_CAPTCHA": String(captcha),
+                "USE_RESIDENTIAL_PROXY": String(proxy),
+                "ENABLE_STEALTH": String(stealth)
+              }
+            }
+          }
+        }, null, 2);
+        break;
+
+      case 'cursor':
+        lang = 'json';
+        filename = '.cursor/mcp.json';
+        code = JSON.stringify({
+          "mcpServers": {
+            [`${provider}-browser-mcp`]: {
+              "command": "npx",
+              "args": [
+                "-y",
+                meta.mcpCommand.replace("npx -y ", "")
+              ],
+              "env": {
+                "API_KEY": key,
+                "SOLVE_CAPTCHAS": String(captcha),
+                "RESIDENTIAL_ROUTING": String(proxy)
+              }
+            }
+          }
+        }, null, 2);
+        break;
+
+      case 'cdp-ws':
+        lang = 'python';
+        filename = 'raw_cdp_client.py';
+        code = `import asyncio
+import json
+import websockets
+
+CDP_WS_URL = "${endpoint}"
+TARGET_URL = "${targetUrl}"
+
+async def run_cdp():
+    print(f"Connecting raw WebSocket to: {CDP_WS_URL[:45]}...")
+    async with websockets.connect(CDP_WS_URL) as ws:
+        # 1. Enable Page and Runtime domains
+        await ws.send(json.dumps({"id": 1, "method": "Page.enable"}))
+        print("Page domain enabled")
+        
+        # 2. Navigate to target URL
+        await ws.send(json.dumps({
+            "id": 2, 
+            "method": "Page.navigate", 
+            "params": {"url": TARGET_URL}
+        }))
+        
+        # Listen for load event
+        while True:
+            raw_msg = await ws.recv()
+            event = json.loads(raw_msg)
+            if event.get("method") == "Page.loadEventFired":
+                print("Page load event fired successfully!")
+                break
+
+        # 3. Evaluate title in remote DOM
+        await ws.send(json.dumps({
+            "id": 3,
+            "method": "Runtime.evaluate",
+            "params": {"expression": "document.title"}
+        }))
+        res = json.loads(await ws.recv())
+        title = res.get("result", {}).get("result", {}).get("value")
+        print(f"Remote document.title: {title}")
+
+if __name__ == "__main__":
+    asyncio.run(run_cdp())`;
+        break;
+    }
+
+    if (codeOutput) codeOutput.textContent = code;
+    if (outputLangBadge) outputLangBadge.textContent = lang;
+    if (outputFilename) outputFilename.textContent = filename;
+  }
+
+  // Framework pill selector
+  frameworkPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      frameworkPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFramework = pill.getAttribute('data-framework') || 'playwright-python';
+      updateCode();
+    });
+  });
+
+  // Event Listeners
+  providerSelect.addEventListener('change', updateCode);
+  apiKeyInput.addEventListener('input', updateCode);
+  targetUrlInput.addEventListener('input', updateCode);
+  toggleCaptcha.addEventListener('change', updateCode);
+  toggleProxy.addEventListener('change', updateCode);
+  toggleStealth.addEventListener('change', updateCode);
+
+  // Copy to clipboard
+  copyBtn?.addEventListener('click', async () => {
+    if (!codeOutput?.textContent) return;
+    try {
+      await navigator.clipboard.writeText(codeOutput.textContent);
+      const originalText = copyBtn.textContent;
+      copyBtn.textContent = '✓ Copied!';
+      copyBtn.classList.add('btn-success');
+      setTimeout(() => {
+        copyBtn.textContent = originalText;
+        copyBtn.classList.remove('btn-success');
+      }, 2000);
+    } catch {
+      copyBtn.textContent = 'Failed to copy';
+    }
+  });
+
+  // Initial render
+  updateCode();
+</script>
