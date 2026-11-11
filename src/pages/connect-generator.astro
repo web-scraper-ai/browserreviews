@@ -1,11 +1,29 @@
 ---
 import Base from "../layouts/Base.astro";
+import { getSiteOrigin } from "../utils/site-url";
 
+const siteOrigin = getSiteOrigin(Astro.url.origin);
 const siteTitle = "Cloud Browser & MCP Code Generator • BrowserReviews";
 const siteDescription = "Interactive code generator for cloud browsers and AI agent MCP servers. Export ready-to-run Playwright, Puppeteer, Claude Desktop, and Cursor configurations.";
+
+const schema = {
+	"@context": "https://schema.org",
+	"@type": "WebApplication",
+	name: "Cloud Browser & MCP Config Generator",
+	url: `${siteOrigin}/connect-generator`,
+	applicationCategory: "DeveloperApplication",
+	operatingSystem: "All",
+	description: siteDescription,
+	offers: {
+		"@type": "Offer",
+		price: "0",
+		priceCurrency: "USD",
+	},
+};
 ---
 
 <Base title={siteTitle} description={siteDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   <div class="page-header">
     <div class="breadcrumb">
       <a href="/">Home</a> <span>/</span> <a href="/browsers">Tools</a> <span>/</span> <span>Connect & MCP Generator</span>
