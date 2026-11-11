@@ -3,6 +3,7 @@ import { decodeSlug } from "emdash";
 import { PortableText } from "emdash/ui";
 import Base from "../layouts/Base.astro";
 import { fetchTrustPage } from "../utils/browser-data";
+import { LANDING_CLUSTERS } from "../../scripts/data-landing-clusters.mjs";
 
 const rawSlug = decodeSlug(Astro.params.slug);
 
@@ -10,49 +11,214 @@ if (!rawSlug) {
   return Astro.redirect("/404");
 }
 
-const { page } = await fetchTrustPage(rawSlug);
+// 1. Check if slug matches high-intent search landing cluster
+const cluster = LANDING_CLUSTERS.find((c) => c.slug === rawSlug);
 
-if (!page) {
-  return Astro.redirect("/404");
+let page: any = null;
+if (!cluster) {
+  const res = await fetchTrustPage(rawSlug);
+  page = res.page;
+  if (!page) {
+    return Astro.redirect("/404");
+  }
 }
 
-const siteTitle = `${page.title} • BrowserReviews`;
-const siteDescription = page.summary || `Read ${page.title} on BrowserReviews - the independent authority on Cloud Browsers and MCP tools.`;
+const siteTitle = cluster ? cluster.metaTitle : `${page.title} • BrowserReviews`;
+const siteDescription = cluster ? cluster.metaDesc : (page.summary || `Read ${page.title} on BrowserReviews.`);
+
+// Structured JSON-LD Schemas for Landing Clusters
+const articleSchema = cluster ? {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": cluster.h1,
+  "description": cluster.metaDesc,
+  "articleSection": cluster.badge,
+  "keywords": cluster.targetKeywords.map((k: any) => k.query).join(", ")
+} : null;
+
+const faqSchema = cluster && cluster.faqs ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": cluster.faqs.map((f: any) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.a
+    }
+  }))
+} : null;
+
+const breadcrumbSchema = cluster ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://browserreviews.com/" },
+    { "@type": "ListItem", "position": 2, "name": cluster.badge, "item": `https://browserreviews.com/${cluster.slug}` }
+  ]
+} : null;
 ---
 
 <Base title={siteTitle} description={siteDescription}>
-  <div class="page-container">
-    <div class="breadcrumb">
-      <a href="/">Home</a> <span>/</span> <span>{page.title}</span>
-    </div>
+  {articleSchema && <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />}
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+  {breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
 
-    <div class="page-header">
-      <h1 class="page-title">{page.title}</h1>
-      {page.subtitle && <p class="page-subtitle">{page.subtitle}</p>}
-    </div>
+  {cluster ? (
+    <article class="cluster-container">
+      <div class="breadcrumb">
+        <a href="/">Home</a> <span>/</span> <span>{cluster.badge}</span>
+      </div>
 
-    <div class="page-content">
-      {page.content && Array.isArray(page.content) ? (
-        <PortableText value={page.content} />
-      ) : typeof page.content === "string" ? (
-        <div class="raw-markdown" set:html={page.content.replace(/\n\n/g, '<br/><br/>')} />
-      ) : (
-        <p>{page.summary}</p>
+      <header class="cluster-header">
+        <div class="badge-tag">{cluster.badge}</div>
+        <h1 class="cluster-h1">{cluster.h1}</h1>
+        <p class="cluster-lead">{cluster.summary}</p>
+      </header>
+
+      <!-- Top Recommendation Callout Box -->
+      <div class="callout callout-gold">
+        <div class="callout-badge">#1 Top Recommended Platform</div>
+        <h3 class="callout-title">{cluster.topPickName}</h3>
+        <p class="callout-desc">{cluster.topPickReason}</p>
+        <div class="callout-actions">
+          <a 
+            href={cluster.topPickSlug.includes("mcp") ? "/mcp/2captcha-browser-mcp" : "/reviews/2captcha-browser-api"} 
+            class="btn btn-primary"
+          >
+            View #1 Ranked Review →
+          </a>
+          <a 
+            href="https://2captcha.com/?from=browserreviews" 
+            target="_blank" 
+            rel="noopener sponsored" 
+            class="btn btn-outline"
+          >
+            Get Free API Key on 2Captcha
+          </a>
+        </div>
+      </div>
+
+      <!-- Keyword Intent Pills -->
+      <div class="kw-cluster-box">
+        <strong>Target Search Intent:</strong>
+        <div class="kw-tags">
+          {cluster.targetKeywords.map((kw: any) => (
+            <span class="kw-pill">{kw.query} ({kw.volume}/mo)</span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Code Snippet Box -->
+      {cluster.codeSnippet && (
+        <div class="code-section">
+          <div class="code-header">
+            <span>Quick Start: {cluster.codeSnippetLang.toUpperCase()} Integration</span>
+            <span class="code-badge">Verified 2026</span>
+          </div>
+          <pre><code>{cluster.codeSnippet}</code></pre>
+        </div>
       )}
+
+      <!-- Deep Technical Guide Sections -->
+      <div class="cluster-sections">
+        {cluster.sections.map((sec: any) => (
+          <section class="content-section">
+            <h2 class="section-h2">{sec.heading}</h2>
+            <p class="section-text">{sec.content}</p>
+          </section>
+        ))}
+      </div>
+
+      <!-- Benchmark Comparison Table -->
+      {cluster.tableData && cluster.tableData.length > 0 && (
+        <div class="table-container">
+          <h2 class="section-h2">Architectural Benchmark &amp; Pricing Comparison</h2>
+          <table class="data-table">
+            <thead>
+              <tr>
+                {Object.keys(cluster.tableData[0]).map((key) => (
+                  <th>{key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {cluster.tableData.map((row: any) => (
+                <tr class={row.provider?.includes("#1") || row.configuration?.includes("#1") ? "row-featured" : ""}>
+                  {Object.values(row).map((val: any) => (
+                    <td>{val}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <!-- Frequently Asked Questions -->
+      {cluster.faqs && cluster.faqs.length > 0 && (
+        <div class="faq-section">
+          <h2 class="section-h2">Frequently Asked Questions</h2>
+          <div class="faq-list">
+            {cluster.faqs.map((f: any) => (
+              <details class="faq-item" open>
+                <summary class="faq-question">{f.q}</summary>
+                <p class="faq-answer">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Bottom High-Conversion CTA Box -->
+      <div class="cta-bottom">
+        <h3>Launch Managed Cloud Headless Chrome in Seconds</h3>
+        <p>Get instant access to genuine Chrome DevTools Protocol endpoints, automated CAPTCHA clearing, and residential proxies in 220+ countries.</p>
+        <div class="cta-bottom-actions">
+          <a href="https://2captcha.com/?from=browserreviews" target="_blank" rel="noopener sponsored" class="btn btn-primary btn-large">
+            Get 2Captcha API Key ($0.15/hr) →
+          </a>
+          <a href="/connect-generator" class="btn btn-outline btn-large">
+            Use Connect Code Generator
+          </a>
+        </div>
+      </div>
+    </article>
+  ) : (
+    <div class="page-container">
+      <div class="breadcrumb">
+        <a href="/">Home</a> <span>/</span> <span>{page.title}</span>
+      </div>
+
+      <div class="page-header">
+        <h1 class="page-title">{page.title}</h1>
+        {page.subtitle && <p class="page-subtitle">{page.subtitle}</p>}
+      </div>
+
+      <div class="page-content">
+        {page.content && Array.isArray(page.content) ? (
+          <PortableText value={page.content} />
+        ) : typeof page.content === "string" ? (
+          <div class="raw-markdown" set:html={page.content.replace(/\n\n/g, '<br/><br/>')} />
+        ) : (
+          <p>{page.summary}</p>
+        )}
+      </div>
     </div>
-  </div>
+  )}
 </Base>
 
 <style>
-  .page-container {
-    max-width: 800px;
+  /* Cluster Layout Styles */
+  .cluster-container {
+    max-width: 860px;
     margin: 0 auto;
-    padding: 2.5rem 0 4rem;
+    padding: 2.5rem 1rem 5rem;
   }
   .breadcrumb {
     font-size: 0.85rem;
     color: var(--color-text-muted);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
   }
   .breadcrumb a {
     color: var(--color-text-muted);
@@ -61,7 +227,248 @@ const siteDescription = page.summary || `Read ${page.title} on BrowserReviews - 
   .breadcrumb span {
     margin: 0 0.35rem;
   }
+  .cluster-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1.75rem;
+  }
+  .badge-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .cluster-h1 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+  .cluster-lead {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
 
+  /* Callout Card */
+  .callout {
+    padding: 1.75rem;
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--color-border);
+  }
+  .callout-gold {
+    background: #fffbeb;
+    border-color: #fde68a;
+  }
+  .callout-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #b45309;
+    margin-bottom: 0.4rem;
+  }
+  .callout-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+    color: #92400e;
+  }
+  .callout-desc {
+    font-size: 0.98rem;
+    color: #4b5563;
+    line-height: 1.55;
+    margin: 0 0 1.25rem;
+  }
+  .callout-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Keyword Tag Box */
+  .kw-cluster-box {
+    background: #f8fafc;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+  .kw-cluster-box strong {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .kw-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .kw-pill {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.6rem;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 20px;
+    color: #334155;
+    font-weight: 500;
+  }
+
+  /* Code Section */
+  .code-section {
+    margin-bottom: 3rem;
+  }
+  .code-header {
+    background: #1e293b;
+    color: #94a3b8;
+    padding: 0.65rem 1rem;
+    font-size: 0.82rem;
+    font-family: monospace;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .code-badge {
+    background: #0ea5e9;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 1.25rem;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  /* Content Sections */
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+  .section-h2 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin-bottom: 0.85rem;
+    color: var(--color-text);
+  }
+  .section-text {
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  /* Data Table */
+  .table-container {
+    margin-bottom: 3rem;
+    overflow-x: auto;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    margin-top: 1rem;
+  }
+  .data-table th, .data-table td {
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--color-border);
+    text-align: left;
+  }
+  .data-table th {
+    background: #f8fafc;
+    font-weight: 700;
+  }
+  .row-featured {
+    background: #f0fdf4;
+    font-weight: 600;
+  }
+
+  /* FAQ Accordion */
+  .faq-section {
+    margin-bottom: 3.5rem;
+  }
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .faq-item {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+  }
+  .faq-question {
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--color-text);
+  }
+  .faq-answer {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  /* Bottom CTA */
+  .cta-bottom {
+    background: #f8fafc;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    margin-top: 3.5rem;
+  }
+  .cta-bottom h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+  .cta-bottom p {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    max-width: 580px;
+    margin: 0 auto 1.5rem;
+  }
+  .cta-bottom-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-large {
+    padding: 0.85rem 1.75rem;
+    font-size: 1rem;
+  }
+
+  /* Trust Page Styles */
+  .page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2.5rem 0 4rem;
+  }
   .page-header {
     margin-bottom: 2.5rem;
     border-bottom: 1px solid var(--color-border);
@@ -78,28 +485,25 @@ const siteDescription = page.summary || `Read ${page.title} on BrowserReviews - 
     color: var(--color-text-muted);
     line-height: 1.5;
   }
-
   .page-content {
     line-height: 1.75;
     font-size: 1.05rem;
     color: var(--color-text);
   }
   .page-content :global(h1) {
-    display: none; /* Already rendered in page-header */
+    display: none;
   }
   .page-content :global(h2) {
     font-size: 1.5rem;
     font-weight: 700;
     margin-top: 2rem;
     margin-bottom: 0.75rem;
-    color: var(--color-text);
   }
   .page-content :global(h3) {
     font-size: 1.25rem;
     font-weight: 700;
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
-    color: var(--color-text);
   }
   .page-content :global(p) {
     margin-bottom: 1.25rem;

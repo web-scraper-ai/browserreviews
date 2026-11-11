@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CLOUD_BROWSERS } from './data-browsers.mjs';
 import { BROWSER_MCP_TOOLS } from './data-mcp.mjs';
+import { LANDING_CLUSTERS } from './data-landing-clusters.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -91,8 +92,11 @@ const topicRoutes = [
   '/topics/browser-for-ai-agents'
 ];
 
+const clusterRoutes = LANDING_CLUSTERS.map(c => `/${c.slug}`);
+
 const allRoutes = [
   ...staticRoutes,
+  ...clusterRoutes,
   ...browserRoutes,
   ...mcpRoutes,
   ...comparisonRoutes,

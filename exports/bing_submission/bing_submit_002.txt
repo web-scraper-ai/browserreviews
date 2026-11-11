@@ -1,3 +1,17 @@
+https://browserreviews.com/mcp/scrayle-mcp
+https://browserreviews.com/mcp/getsolari-mcp
+https://browserreviews.com/mcp/browserbeam-mcp
+https://browserreviews.com/mcp/humanbrowser-mcp
+https://browserreviews.com/mcp/gologin-mcp
+https://browserreviews.com/mcp/oxylabs-agent-browser-mcp
+https://browserreviews.com/mcp/scrapeless-mcp
+https://browserreviews.com/mcp/brightdata-mcp
+https://browserreviews.com/mcp/zenrows-mcp
+https://browserreviews.com/mcp/skyvern-mcp
+https://browserreviews.com/mcp/azure-playwright-mcp
+https://browserreviews.com/mcp/usestring-mcp
+https://browserreviews.com/mcp/tinyfish-mcp
+https://browserreviews.com/mcp/surfsky-mcp
 https://browserreviews.com/mcp/browserview-mcp
 https://browserreviews.com/mcp/firecrawl-mcp-server
 https://browserreviews.com/mcp/axiom-mcp-server

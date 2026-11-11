@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { fetchAllBrowsers, fetchAllMcpTools } from "../utils/browser-data";
 import { getSiteOrigin } from "../utils/site-url";
+import { LANDING_CLUSTERS } from "../../scripts/data-landing-clusters.mjs";
 
 export const GET: APIRoute = async ({ request }) => {
   const origin = getSiteOrigin(request);
@@ -107,8 +108,15 @@ export const GET: APIRoute = async ({ request }) => {
     { loc: "/topics/browser-for-ai-agents", changefreq: "weekly", priority: 0.8 },
   ];
 
+  const clusterPages = LANDING_CLUSTERS.map((c) => ({
+    loc: `/${c.slug}`,
+    changefreq: "daily",
+    priority: 0.9,
+  }));
+
   const allUrls = [
     ...staticPages,
+    ...clusterPages,
     ...browserPages,
     ...mcpPages,
     ...popularComparisons,
