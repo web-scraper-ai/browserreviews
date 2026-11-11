@@ -73,6 +73,7 @@ const bestForRoutes = bestForSlugs.map(s => `/best-for/${s}`);
 
 const guideRoutes = [
   '/guides',
+  '/guides/how-to-connect-cursor-to-browser-mcp',
   '/guides/how-to-connect-puppeteer-cloud-browser',
   '/guides/how-to-connect-playwright-cloud-browser',
   '/guides/how-to-configure-claude-desktop-browser-mcp',

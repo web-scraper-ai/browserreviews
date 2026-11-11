@@ -1,0 +1,389 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const siteTitle = "How to Connect Cursor IDE to Browser MCP for Agent Browsing • BrowserReviews";
+const siteDescription = "Complete setup guide for connecting Cursor IDE to 2Captcha Browser MCP via .cursor/mcp.json. Enable autonomous browser testing, live web scraping, and Turnstile bypass.";
+
+const schemaMarkup = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Connect Cursor IDE to Browser MCP for Autonomous Web Browsing",
+  "description": "Configure .cursor/mcp.json in Cursor IDE to give AI Agent mode full browser navigation and automated anti-bot bypass capabilities.",
+  "totalTime": "PT4M",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Create or Open .cursor/mcp.json",
+      "text": "In your project root, create or edit .cursor/mcp.json (or navigate to Cursor Settings > Features > MCP)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Add 2Captcha Browser MCP Server Entry",
+      "text": "Add the 2captcha-browser-mcp configuration snippet under mcpServers with your API key."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Verify MCP Connection in Cursor Settings",
+      "text": "Check Cursor Settings > Features > MCP to confirm the green status indicator for twocaptcha-browser."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Invoke Browser Tools in Composer Agent Mode",
+      "text": "In Cursor Composer (Ctrl+I or Cmd+I), prompt the Agent to inspect live web endpoints, test UI components, or scrape protected data."
+    }
+  ]
+};
+
+const cursorMcpConfig = `{
+  "mcpServers": {
+    "twocaptcha-browser": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@2captcha/browser-mcp"
+      ],
+      "env": {
+        "TWOCAPTCHA_API_KEY": "YOUR_ACTUAL_2CAPTCHA_API_KEY",
+        "AUTO_SOLVE_CAPTCHAS": "true",
+        "DEFAULT_COUNTRY": "us"
+      }
+    }
+  }
+}`;
+
+const composerPromptExample = `@twocaptcha-browser Navigate to https://example-protected.com/pricing, wait for any Cloudflare challenge to clear automatically, and extract the latest enterprise tier pricing table into a TypeScript interface.`;
+---
+
+<Base title={siteTitle} description={siteDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaMarkup)} />
+
+  <article class="article-container">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Cursor Browser MCP Setup</span>
+    </div>
+
+    <header class="article-header">
+      <div class="article-meta">
+        <span class="badge-tag">Cursor IDE / MCP</span>
+        <span class="read-time">4 min read • Updated for 2026</span>
+      </div>
+      <h1 class="article-title">How to Connect Cursor IDE to Browser MCP for Agent Browsing</h1>
+      <p class="article-lead">
+        Supercharge Cursor's AI Agent mode with autonomous browser automation, automated Cloudflare Turnstile bypass, and live DOM inspection directly inside your IDE workflow.
+      </p>
+    </header>
+
+    <div class="callout callout-gold">
+      <div class="callout-badge">#1 Rated Browser MCP Tool</div>
+      <h3>2Captcha Browser MCP</h3>
+      <p>
+        The only Model Context Protocol browser server with native CAPTCHA auto-solving, residential IP rotation across 220+ countries, and zero-configuration Cloudflare Turnstile &amp; reCAPTCHA decoding.
+      </p>
+      <div class="callout-actions">
+        <a href="https://2captcha.com/?from=browserreviews" target="_blank" rel="noopener sponsored" class="btn btn-primary">Get 2Captcha API Key ($1.50/1k) →</a>
+        <a href="/mcp/2captcha-browser-mcp" class="btn btn-outline">Read MCP Benchmark</a>
+      </div>
+    </div>
+
+    <div class="article-content">
+      <h2>Why Add Browser MCP to Cursor IDE?</h2>
+      <p>
+        Cursor IDE's Agent mode and Composer are state-of-the-art coding companions. However, out of the box, LLM agents cannot access dynamic JavaScript-rendered web pages, verify UI rendering, or inspect competitor APIs protected by Cloudflare Turnstile or AWS WAF.
+      </p>
+      <p>
+        Connecting <strong>2Captcha Browser MCP</strong> equips Cursor with real CDP browser primitives:
+      </p>
+      <ul>
+        <li><strong>Live Web Inspection:</strong> Let Cursor visit production web applications to fetch live schemas, API payloads, and documentation.</li>
+        <li><strong>Automated Anti-Bot Bypass:</strong> Cloudflare Turnstile, AWS WAF, and Google reCAPTCHA challenges are solved automatically in the background.</li>
+        <li><strong>Zero Compute Overhead:</strong> All Chromium rendering happens on scalable cloud infrastructure—no heavy local Docker or headless processes eating your laptop RAM.</li>
+        <li><strong>Full Session Privacy:</strong> Clean ephemeral sessions with residential IP pools in 220+ countries.</li>
+      </ul>
+
+      <h2>Step 1: Create or Edit <code>.cursor/mcp.json</code></h2>
+      <p>
+        Cursor supports project-specific MCP configurations through a <code>.cursor/mcp.json</code> file located in your project root, or globally via <strong>Cursor Settings &gt; Features &gt; MCP</strong>.
+      </p>
+      <p>Add the following configuration block:</p>
+
+      <div class="code-header">.cursor/mcp.json</div>
+      <pre><code>{cursorMcpConfig}</code></pre>
+
+      <div class="callout callout-info">
+        <strong>Tip:</strong> Replace <code>YOUR_ACTUAL_2CAPTCHA_API_KEY</code> with your API token from the 
+        <a href="https://2captcha.com/?from=browserreviews" target="_blank" rel="noopener sponsored">2Captcha Dashboard</a>.
+      </div>
+
+      <h2>Step 2: Verify MCP Connection in Cursor</h2>
+      <ol class="steps-list">
+        <li>Open <strong>Cursor Settings</strong> (<code>Ctrl+,</code> on Windows/Linux or <code>Cmd+,</code> on macOS).</li>
+        <li>Navigate to the <strong>Features</strong> tab on the left sidebar and select <strong>MCP</strong>.</li>
+        <li>Locate <code>twocaptcha-browser</code> in the list of installed MCP servers.</li>
+        <li>Verify that the status dot is <span class="status-green">● Connected</span> and displaying available browser tools (e.g., <code>navigate</code>, <code>screenshot</code>, <code>click</code>, <code>extract_content</code>).</li>
+      </ol>
+
+      <h2>Step 3: Prompting Cursor Composer in Agent Mode</h2>
+      <p>
+        Switch Cursor Composer into <strong>Agent</strong> mode (press <code>Ctrl+I</code> or <code>Cmd+I</code> and toggle the dropdown to Agent). You can now mention the browser tool directly or ask the agent to inspect live URLs:
+      </p>
+
+      <div class="code-header">Cursor Composer Agent Prompt Example</div>
+      <pre><code>{composerPromptExample}</code></pre>
+
+      <p>
+        Cursor will execute the MCP tool, launch a cloud browser session with an integrated residential proxy, wait for 2Captcha's solver network to automatically resolve any interactive challenges, and return clean structured data directly into your editor buffer.
+      </p>
+
+      <h2>Available Tools in 2Captcha Browser MCP</h2>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tool Name</th>
+              <th>Description</th>
+              <th>Auto-Solve Capabilities</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>browser_navigate</code></td>
+              <td>Navigates cloud Chromium to target URL with proxy rotation</td>
+              <td>Turnstile, reCAPTCHA, AWS WAF</td>
+            </tr>
+            <tr>
+              <td><code>browser_screenshot</code></td>
+              <td>Captures full-page or viewport PNG for LLM multimodal vision</td>
+              <td>Pre-screenshot solver check</td>
+            </tr>
+            <tr>
+              <td><code>browser_click</code></td>
+              <td>Simulates human mouse clicks with randomized bezier paths</td>
+              <td>Bypasses behavioral heuristics</td>
+            </tr>
+            <tr>
+              <td><code>browser_extract_text</code></td>
+              <td>Dumps cleaned DOM text content for context injection</td>
+              <td>Extracts post-render dynamic JS content</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Comparing Browser MCP Servers for Cursor</h2>
+      <p>
+        How does 2Captcha compare to other popular MCP browser servers for development teams?
+      </p>
+      <ul>
+        <li><a href="/compare/2captcha-browser-mcp-vs-browserbase-mcp"><strong>2Captcha Browser MCP vs Browserbase MCP:</strong></a> 2Captcha includes built-in CAPTCHA decoding at $1.50/1k without recurring seat fees.</li>
+        <li><a href="/compare/2captcha-browser-mcp-vs-steel-mcp"><strong>2Captcha Browser MCP vs Steel MCP:</strong></a> Steel is great for self-hosted instances, but requires managing your own residential proxies and anti-bot fingerprints.</li>
+        <li><a href="/compare/2captcha-browser-mcp-vs-browser-use-mcp"><strong>2Captcha Browser MCP vs Browser-Use MCP:</strong></a> Browser-Use is vision-agent driven, while 2Captcha provides rock-solid deterministic CDP primitives for IDE workflows.</li>
+      </ul>
+
+      <div class="cta-box">
+        <h3>Connect Cursor IDE in 30 Seconds</h3>
+        <p>Get instant access to cloud Chromium, automated CAPTCHA solvers, and residential IP rotation.</p>
+        <a href="https://2captcha.com/?from=browserreviews" target="_blank" rel="noopener sponsored" class="btn btn-primary btn-large">Get Free 2Captcha API Key →</a>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .article-container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 4rem;
+  }
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.25rem;
+  }
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 0.35rem;
+  }
+  .article-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 2rem;
+  }
+  .article-meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .badge-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .read-time {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+  .article-title {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .article-lead {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .callout {
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--color-border);
+  }
+  .callout-gold {
+    background: #fffbeb;
+    border-color: #fde68a;
+  }
+  .callout-info {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    margin-top: 1rem;
+  }
+  .callout-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #b45309;
+    margin-bottom: 0.5rem;
+  }
+  .callout h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .callout p {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+  .callout-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .article-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 2.5rem 0 1rem;
+  }
+  .article-content p {
+    font-size: 1.02rem;
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+    color: var(--color-text);
+  }
+  .article-content ul, .article-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+  .article-content li {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+
+  .steps-list {
+    padding-left: 1.25rem;
+  }
+  .steps-list li {
+    margin-bottom: 0.75rem;
+  }
+  .status-green {
+    color: #16a34a;
+    font-weight: 700;
+  }
+
+  .code-header {
+    background: #1e293b;
+    color: #94a3b8;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-family: monospace;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin-top: 1.5rem;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 1.25rem;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    margin: 1.5rem 0 2rem;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  .data-table th, .data-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    text-align: left;
+  }
+  .data-table th {
+    background: var(--color-card-bg, #f8fafc);
+    font-weight: 700;
+  }
+
+  .cta-box {
+    background: #f8fafc;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    text-align: center;
+    margin: 3.5rem 0 1rem;
+  }
+  .cta-box h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+  .cta-box p {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+  }
+  .btn-large {
+    padding: 0.85rem 2rem;
+    font-size: 1.05rem;
+  }
+</style>
