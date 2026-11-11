@@ -328,6 +328,68 @@ const siteDescription = "Independent benchmarks, pricing comparisons, and techni
     </div>
   </section>
 
+  <!-- High-Intent Scraping & Automation Hubs -->
+  <section class="section-container">
+    <div class="section-header-row">
+      <div>
+        <h2 class="section-title">Scraper Browser &amp; Headless Chrome Hubs</h2>
+        <p class="section-subtitle">Comprehensive architecture teardowns, pricing breakdowns, and code tutorials for web scraping teams.</p>
+      </div>
+      <a href="/topics" class="view-all-link">View All Topics →</a>
+    </div>
+
+    <div class="hubs-grid">
+      <div class="hub-card">
+        <span class="badge-mini">Scraping Browser</span>
+        <h3><a href="/scraper-browser">Scraper Browser &amp; Cloud Chrome</a></h3>
+        <p>Managed cloud headless Chrome with integrated residential IP rotation, Turnstile auto-solving, and CDP stability.</p>
+        <a href="/scraper-browser" class="hub-link">Explore Hub →</a>
+      </div>
+      <div class="hub-card">
+        <span class="badge-mini">Cloud API</span>
+        <h3><a href="/scraper-browser-api">Scraper Browser APIs &amp; REST Endpoints</a></h3>
+        <p>Compare one-shot REST endpoints and persistent CDP WebSocket connections for scalable web data pipelines.</p>
+        <a href="/scraper-browser-api" class="hub-link">Explore Hub →</a>
+      </div>
+      <div class="hub-card">
+        <span class="badge-mini">Headless Chrome</span>
+        <h3><a href="/headless-chrome-for-scraping">Headless Chrome for Scraping</a></h3>
+        <p>Google Chrome's modern --headless=new engine, ChromeOptions optimization, and fingerprint masking.</p>
+        <a href="/headless-chrome-for-scraping" class="hub-link">Explore Hub →</a>
+      </div>
+      <div class="hub-card">
+        <span class="badge-mini">Web Scraping</span>
+        <h3><a href="/chrome-scraper">Chrome Scraper &amp; Website Scraping</a></h3>
+        <p>Extract dynamic Single-Page Applications (SPAs) and JavaScript portals at scale using Google Chrome.</p>
+        <a href="/chrome-scraper" class="hub-link">Explore Hub →</a>
+      </div>
+      <div class="hub-card">
+        <span class="badge-mini">Alternatives</span>
+        <h3><a href="/browserless-alternative">Browserless.io Alternatives</a></h3>
+        <p>Why engineering teams are migrating away from $200+/mo plans to pay-as-you-go $0.15/hr cloud browsers.</p>
+        <a href="/browserless-alternative" class="hub-link">Explore Hub →</a>
+      </div>
+      <div class="hub-card">
+        <span class="badge-mini">AI Agents</span>
+        <h3><a href="/browser-for-ai-agent">Browser for AI Agents &amp; MCP Tools</a></h3>
+        <p>How Claude Desktop, Cursor, and autonomous LLM agents browse the live web without bot blocks.</p>
+        <a href="/browser-for-ai-agent" class="hub-link">Explore Hub →</a>
+      </div>
+      <div class="hub-card">
+        <span class="badge-mini">Selenium</span>
+        <h3><a href="/scraper-browser-selenium">Selenium Scraper Browser in Python</a></h3>
+        <p>Setup ChromeOptions, prevent bot detection, and connect Selenium to managed cloud browser nodes.</p>
+        <a href="/scraper-browser-selenium" class="hub-link">Explore Hub →</a>
+      </div>
+      <div class="hub-card">
+        <span class="badge-mini">Playwright</span>
+        <h3><a href="/scraper-browser-playwright">Playwright Scraper Browser</a></h3>
+        <p>Fast async/await web scraping with Playwright using remote connectOverCDP and residential proxies.</p>
+        <a href="/scraper-browser-playwright" class="hub-link">Explore Hub →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- Editorial Benchmark FAQ -->
   <section class="section-container">
     <h2 class="section-title">Frequently Asked Questions</h2>
@@ -805,6 +867,52 @@ const siteDescription = "Independent benchmarks, pricing comparisons, and techni
   }
   .check-no {
     color: #94a3b8;
+  }
+
+  /* FAQ */
+  .hubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .hub-card {
+    background: var(--color-card-bg, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hub-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  }
+  .hub-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+  }
+  .hub-card h3 a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .hub-card h3 a:hover {
+    color: var(--color-primary);
+  }
+  .hub-card p {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    margin: 0 0 1rem;
+  }
+  .hub-link {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
   }
 
   /* FAQ */
