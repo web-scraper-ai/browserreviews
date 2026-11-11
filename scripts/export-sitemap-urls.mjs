@@ -35,8 +35,16 @@ const comparisonRoutes = [
   '/compare/2captcha-browser-api-vs-brightdata-scraping-browser',
   '/compare/2captcha-browser-api-vs-steel-dev',
   '/compare/2captcha-browser-api-vs-browserless',
+  '/compare/2captcha-browser-api-vs-anchorbrowser',
+  '/compare/2captcha-browser-api-vs-hyperbrowser',
+  '/compare/2captcha-browser-api-vs-kernel-sh',
+  '/compare/2captcha-browser-api-vs-browser-use',
+  '/compare/2captcha-browser-api-vs-lightpanda',
   '/compare/2captcha-browser-mcp-vs-browserbase-mcp',
-  '/compare/2captcha-browser-mcp-vs-browser-use-mcp'
+  '/compare/2captcha-browser-mcp-vs-browser-use-mcp',
+  '/compare/2captcha-browser-mcp-vs-steel-mcp',
+  '/compare/2captcha-browser-mcp-vs-kernel-mcp-server',
+  '/compare/2captcha-browser-mcp-vs-hyperbrowser-mcp'
 ];
 
 const alternativeSlugs = [

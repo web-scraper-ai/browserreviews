@@ -41,8 +41,16 @@ export const GET: APIRoute = async ({ request }) => {
     { loc: "/compare/2captcha-browser-api-vs-brightdata-scraping-browser", changefreq: "weekly", priority: 0.8 },
     { loc: "/compare/2captcha-browser-api-vs-steel-dev", changefreq: "weekly", priority: 0.8 },
     { loc: "/compare/2captcha-browser-api-vs-browserless", changefreq: "weekly", priority: 0.75 },
+    { loc: "/compare/2captcha-browser-api-vs-anchorbrowser", changefreq: "weekly", priority: 0.8 },
+    { loc: "/compare/2captcha-browser-api-vs-hyperbrowser", changefreq: "weekly", priority: 0.8 },
+    { loc: "/compare/2captcha-browser-api-vs-kernel-sh", changefreq: "weekly", priority: 0.8 },
+    { loc: "/compare/2captcha-browser-api-vs-browser-use", changefreq: "weekly", priority: 0.8 },
+    { loc: "/compare/2captcha-browser-api-vs-lightpanda", changefreq: "weekly", priority: 0.75 },
     { loc: "/compare/2captcha-browser-mcp-vs-browserbase-mcp", changefreq: "weekly", priority: 0.8 },
     { loc: "/compare/2captcha-browser-mcp-vs-browser-use-mcp", changefreq: "weekly", priority: 0.8 },
+    { loc: "/compare/2captcha-browser-mcp-vs-steel-mcp", changefreq: "weekly", priority: 0.8 },
+    { loc: "/compare/2captcha-browser-mcp-vs-kernel-mcp-server", changefreq: "weekly", priority: 0.8 },
+    { loc: "/compare/2captcha-browser-mcp-vs-hyperbrowser-mcp", changefreq: "weekly", priority: 0.8 },
   ];
 
   const alternativeSlugs = [

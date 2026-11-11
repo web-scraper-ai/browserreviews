@@ -8,8 +8,16 @@ https://browserreviews.com/compare/2captcha-browser-api-vs-browserbase
 https://browserreviews.com/compare/2captcha-browser-api-vs-brightdata-scraping-browser
 https://browserreviews.com/compare/2captcha-browser-api-vs-steel-dev
 https://browserreviews.com/compare/2captcha-browser-api-vs-browserless
+https://browserreviews.com/compare/2captcha-browser-api-vs-anchorbrowser
+https://browserreviews.com/compare/2captcha-browser-api-vs-hyperbrowser
+https://browserreviews.com/compare/2captcha-browser-api-vs-kernel-sh
+https://browserreviews.com/compare/2captcha-browser-api-vs-browser-use
+https://browserreviews.com/compare/2captcha-browser-api-vs-lightpanda
 https://browserreviews.com/compare/2captcha-browser-mcp-vs-browserbase-mcp
 https://browserreviews.com/compare/2captcha-browser-mcp-vs-browser-use-mcp
+https://browserreviews.com/compare/2captcha-browser-mcp-vs-steel-mcp
+https://browserreviews.com/compare/2captcha-browser-mcp-vs-kernel-mcp-server
+https://browserreviews.com/compare/2captcha-browser-mcp-vs-hyperbrowser-mcp
 https://browserreviews.com/alternatives/browserbase
 https://browserreviews.com/alternatives/brightdata-scraping-browser
 https://browserreviews.com/alternatives/browserless
