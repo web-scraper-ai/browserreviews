@@ -95,6 +95,17 @@ export const GET: APIRoute = async ({ request }) => {
     { loc: "/guides/how-to-bypass-cloudflare-turnstile-cloud-browsers", changefreq: "weekly", priority: 0.8 },
   ];
 
+  const topicPages = [
+    { loc: "/what-is-a-headless-browser", changefreq: "weekly", priority: 0.85 },
+    { loc: "/topics", changefreq: "weekly", priority: 0.85 },
+    { loc: "/topics/headless-browser-api", changefreq: "weekly", priority: 0.8 },
+    { loc: "/topics/headless-chrome-docker-aws-lambda", changefreq: "weekly", priority: 0.8 },
+    { loc: "/topics/selenium-headless-chrome-python", changefreq: "weekly", priority: 0.8 },
+    { loc: "/topics/headless-browser-node-js", changefreq: "weekly", priority: 0.8 },
+    { loc: "/topics/phantomjs-alternatives", changefreq: "weekly", priority: 0.8 },
+    { loc: "/topics/browser-for-ai-agents", changefreq: "weekly", priority: 0.8 },
+  ];
+
   const allUrls = [
     ...staticPages,
     ...browserPages,
@@ -102,7 +113,8 @@ export const GET: APIRoute = async ({ request }) => {
     ...popularComparisons,
     ...alternativePages,
     ...bestForPages,
-    ...guidePages
+    ...guidePages,
+    ...topicPages
   ];
   const nowIso = new Date().toISOString().split("T")[0];
 
