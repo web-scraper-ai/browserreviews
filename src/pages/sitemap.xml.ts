@@ -91,6 +91,8 @@ export const GET: APIRoute = async ({ request }) => {
   const guidePages = [
     { loc: "/guides", changefreq: "daily", priority: 0.85 },
     { loc: "/guides/how-to-connect-cursor-to-browser-mcp", changefreq: "weekly", priority: 0.85 },
+      { loc: "/guides/how-to-connect-windsurf-cascade-to-browser-mcp", changefreq: "weekly", priority: 0.85 },
+      { loc: "/guides/how-to-build-autonomous-ai-agent-with-browser-mcp", changefreq: "weekly", priority: 0.85 },
     { loc: "/guides/how-to-connect-puppeteer-cloud-browser", changefreq: "weekly", priority: 0.8 },
     { loc: "/guides/how-to-connect-playwright-cloud-browser", changefreq: "weekly", priority: 0.8 },
     { loc: "/guides/how-to-configure-claude-desktop-browser-mcp", changefreq: "weekly", priority: 0.8 },
