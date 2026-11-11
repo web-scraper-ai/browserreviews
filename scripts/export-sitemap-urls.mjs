@@ -16,6 +16,7 @@ const staticRoutes = [
   '/browsers',
   '/mcp',
   '/rankings',
+  '/connect-generator',
   '/calculator',
   '/compare',
   '/alternatives',

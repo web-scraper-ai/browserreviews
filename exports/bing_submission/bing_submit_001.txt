@@ -2,6 +2,7 @@ https://browserreviews.com/
 https://browserreviews.com/browsers
 https://browserreviews.com/mcp
 https://browserreviews.com/rankings
+https://browserreviews.com/connect-generator
 https://browserreviews.com/calculator
 https://browserreviews.com/compare
 https://browserreviews.com/alternatives
@@ -97,4 +98,3 @@ https://browserreviews.com/mcp/azure-playwright-mcp
 https://browserreviews.com/mcp/usestring-mcp
 https://browserreviews.com/mcp/tinyfish-mcp
 https://browserreviews.com/mcp/surfsky-mcp
-https://browserreviews.com/mcp/browserview-mcp
