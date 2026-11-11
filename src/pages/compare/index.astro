@@ -5,7 +5,7 @@ import { fetchAllBrowsers, fetchAllMcpTools } from "../../utils/browser-data";
 const { browsers } = await fetchAllBrowsers();
 const { tools: mcpTools } = await fetchAllMcpTools();
 
-const POPULAR_COMPARISONS = [
+const BROWSER_COMPARISONS = [
   {
     slug: "2captcha-browser-api-vs-browserbase",
     title: "2Captcha Browser API vs Browserbase",
@@ -31,9 +31,42 @@ const POPULAR_COMPARISONS = [
     desc: "Compare anti-bot residential rotation with Browserless's battle-tested PDF rendering and Docker infrastructure."
   },
   {
+    slug: "2captcha-browser-api-vs-anchorbrowser",
+    title: "2Captcha Browser API vs AnchorBrowser",
+    badge: "AI Agent Execution",
+    desc: "Benchmark 2Captcha's integrated CAPTCHA solver against AnchorBrowser's persistent agent sandboxes and streaming canvas."
+  },
+  {
+    slug: "2captcha-browser-api-vs-hyperbrowser",
+    title: "2Captcha Browser API vs Hyperbrowser",
+    badge: "High-Throughput CDP",
+    desc: "Contrast pay-per-minute residential browsing against Hyperbrowser's fast ephemeral sessions and session recording."
+  },
+  {
+    slug: "2captcha-browser-api-vs-kernel-sh",
+    title: "2Captcha Browser API vs Kernel.sh",
+    badge: "Cloud MicroVM Engine",
+    desc: "Compare automated Turnstile solving with Kernel's Firecracker microVM isolated browser environments."
+  },
+  {
+    slug: "2captcha-browser-api-vs-browser-use",
+    title: "2Captcha Browser API vs Browser-Use",
+    badge: "Cloud API vs Vision Agent",
+    desc: "Compare direct remote CDP WebSocket connection against open-source autonomous vision agent workflows."
+  },
+  {
+    slug: "2captcha-browser-api-vs-lightpanda",
+    title: "2Captcha Browser API vs Lightpanda",
+    badge: "Full Chromium vs Lightweight",
+    desc: "Evaluate comprehensive anti-bot stealth Chromium against Lightpanda's ultra-low-memory C++ headless web browser."
+  }
+];
+
+const MCP_COMPARISONS = [
+  {
     slug: "2captcha-browser-mcp-vs-browserbase-mcp",
     title: "2Captcha Browser MCP vs Browserbase MCP",
-    badge: "Top MCP Tools",
+    badge: "Top MCP Tools #1 vs #2",
     desc: "Compare Model Context Protocol implementations for Claude Desktop: native CAPTCHA bypass vs visual replay URLs."
   },
   {
@@ -41,6 +74,24 @@ const POPULAR_COMPARISONS = [
     title: "2Captcha Browser MCP vs Browser-Use MCP",
     badge: "CDP Primitives vs Vision AI",
     desc: "Standard CDP browser tool calling versus multi-step LLM vision agent navigation."
+  },
+  {
+    slug: "2captcha-browser-mcp-vs-steel-mcp",
+    title: "2Captcha Browser MCP vs Steel MCP",
+    badge: "Open MCP Standard",
+    desc: "Evaluate 2Captcha's fully managed CAPTCHA solver MCP against Steel's open-source server for local LLM agents."
+  },
+  {
+    slug: "2captcha-browser-mcp-vs-kernel-mcp-server",
+    title: "2Captcha Browser MCP vs Kernel MCP Server",
+    badge: "MicroVM Agent Tools",
+    desc: "Compare Turnstile auto-solve primitives against Kernel's microVM agent execution tools for Cursor and Claude."
+  },
+  {
+    slug: "2captcha-browser-mcp-vs-hyperbrowser-mcp",
+    title: "2Captcha Browser MCP vs Hyperbrowser MCP",
+    badge: "Fast Agent Actions",
+    desc: "Analyze 2Captcha's residential IP rotation MCP against Hyperbrowser's real-time scraping and session inspector MCP."
   }
 ];
 
@@ -66,9 +117,16 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
       <div class="picker-select-group">
         <label for="providerA">Select First Platform:</label>
         <select id="providerA">
-          {browsers.map((b) => (
-            <option value={b.slug}>#{b.demo_rank} {b.name}</option>
-          ))}
+          <optgroup label="Cloud Headless Browsers">
+            {browsers.map((b) => (
+              <option value={b.slug}>#{b.demo_rank} {b.name}</option>
+            ))}
+          </optgroup>
+          <optgroup label="Browser MCP Tools">
+            {mcpTools.map((m) => (
+              <option value={m.slug}>#{m.demo_rank} {m.name}</option>
+            ))}
+          </optgroup>
         </select>
       </div>
 
@@ -77,9 +135,16 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
       <div class="picker-select-group">
         <label for="providerB">Select Second Platform:</label>
         <select id="providerB">
-          {browsers.map((b, idx) => (
-            <option value={b.slug} selected={idx === 1}>#{b.demo_rank} {b.name}</option>
-          ))}
+          <optgroup label="Cloud Headless Browsers">
+            {browsers.map((b, idx) => (
+              <option value={b.slug} selected={idx === 1}>#{b.demo_rank} {b.name}</option>
+            ))}
+          </optgroup>
+          <optgroup label="Browser MCP Tools">
+            {mcpTools.map((m) => (
+              <option value={m.slug}>#{m.demo_rank} {m.name}</option>
+            ))}
+          </optgroup>
         </select>
       </div>
 
@@ -87,13 +152,44 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
     </div>
   </div>
 
-  <!-- Popular Comparisons Grid -->
+  <!-- Cloud Browser Comparisons Grid -->
   <div class="popular-section">
-    <h2 class="section-title">Popular Pre-Built Comparisons</h2>
+    <div class="section-header-row">
+      <div>
+        <h2 class="section-title">Head-to-Head Cloud Browser Matchups</h2>
+        <p class="section-subtitle">Direct benchmarks comparing stealth engines, CAPTCHA bypass, and per-hour compute pricing.</p>
+      </div>
+      <span class="badge-count">{BROWSER_COMPARISONS.length} Matchups</span>
+    </div>
+
     <div class="comparisons-grid">
-      {POPULAR_COMPARISONS.map((comp) => (
+      {BROWSER_COMPARISONS.map((comp) => (
         <div class="comp-card">
           <span class="badge-mini">{comp.badge}</span>
+          <h3 class="comp-title">
+            <a href={`/compare/${comp.slug}`}>{comp.title}</a>
+          </h3>
+          <p class="comp-desc">{comp.desc}</p>
+          <a href={`/compare/${comp.slug}`} class="comp-cta">View Full Comparison →</a>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- MCP Server Comparisons Grid -->
+  <div class="popular-section">
+    <div class="section-header-row">
+      <div>
+        <h2 class="section-title">Browser MCP Server Comparisons</h2>
+        <p class="section-subtitle">Compare Model Context Protocol integrations for Claude Desktop, Cursor, and autonomous AI agents.</p>
+      </div>
+      <span class="badge-count">{MCP_COMPARISONS.length} Matchups</span>
+    </div>
+
+    <div class="comparisons-grid">
+      {MCP_COMPARISONS.map((comp) => (
+        <div class="comp-card">
+          <span class="badge-mini badge-mcp">{comp.badge}</span>
           <h3 class="comp-title">
             <a href={`/compare/${comp.slug}`}>{comp.title}</a>
           </h3>
@@ -214,10 +310,31 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
   .popular-section {
     margin-bottom: 4rem;
   }
+  .section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
   .section-title {
     font-size: 1.4rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.35rem;
+  }
+  .section-subtitle {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .badge-count {
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    background: var(--color-bg-subtle, #f1f5f9);
+    color: var(--color-text-muted);
+    border-radius: 20px;
   }
   .comparisons-grid {
     display: grid;
@@ -232,6 +349,11 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .comp-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
   }
   .badge-mini {
     font-size: 0.72rem;
@@ -242,6 +364,10 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
     border-radius: 4px;
     width: fit-content;
     margin-bottom: 0.6rem;
+  }
+  .badge-mini.badge-mcp {
+    background: #fef3c7;
+    color: #92400e;
   }
   .comp-title {
     font-size: 1.15rem;
@@ -266,5 +392,8 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
     font-weight: 600;
     color: var(--color-primary);
     text-decoration: none;
+  }
+  .comp-cta:hover {
+    text-decoration: underline;
   }
 </style>
