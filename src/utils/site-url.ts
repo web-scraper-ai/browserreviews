@@ -9,7 +9,7 @@
  * Returns the configured public site origin without a trailing slash.
  * Defaults to `SITE_URL` if set, or `http://localhost:4321` (or request origin) in local development.
  */
-export const DEFAULT_SITE_URL = "https://2-proxy.com";
+export const DEFAULT_SITE_URL = "https://browser-review.com";
 
 export function getSiteOrigin(requestOrigin?: string): string {
 	const envUrl =
@@ -54,8 +54,8 @@ export function toSiteUrl(pathOrUrl?: string | null, requestOrigin?: string): st
 				urlHost === originHost ||
 				urlHost === "localhost" ||
 				urlHost === "127.0.0.1" ||
-				urlHost === "2-proxy.com" ||
-				urlHost.endsWith(".2-proxy.com");
+				urlHost === "browser-review.com" ||
+				urlHost.endsWith(".browser-review.com");
 
 			if (!isInternalHost) {
 				return trimmed;

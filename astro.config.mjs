@@ -6,7 +6,7 @@ import { defineConfig } from "astro/config";
 import emdash, { local } from "emdash/astro";
 import { sqlite } from "emdash/db";
 
-const siteUrl = process.env.SITE_URL || "http://localhost:4321";
+const siteUrl = process.env.SITE_URL || "https://browser-review.com";
 const rawDbUrl = process.env.DATABASE_URL || "file:./data.db";
 const dbUrl = rawDbUrl.startsWith("file:") ? rawDbUrl : `file:${rawDbUrl}`;
 const uploadsDir = process.env.UPLOADS_DIR || "./uploads";
