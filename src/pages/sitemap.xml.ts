@@ -14,6 +14,7 @@ export const GET: APIRoute = async ({ request }) => {
     { loc: "/mcp", changefreq: "daily", priority: 0.9 },
     { loc: "/rankings", changefreq: "daily", priority: 0.8 },
     { loc: "/connect-generator", changefreq: "weekly", priority: 0.85 },
+    { loc: "/tls-fingerprint", changefreq: "weekly", priority: 0.95 },
     { loc: "/calculator", changefreq: "weekly", priority: 0.8 },
     { loc: "/compare", changefreq: "weekly", priority: 0.8 },
     { loc: "/alternatives", changefreq: "daily", priority: 0.85 },
