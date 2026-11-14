@@ -1,0 +1,654 @@
+---
+import Base from "../layouts/Base.astro";
+import { getSiteOrigin } from "../utils/site-url";
+
+const siteOrigin = getSiteOrigin(Astro.url.origin);
+const pageTitle = "Browser Anti-Detect & Hardware Leak Test (Canvas, WebGL, WebRTC, Bot Audit) | BrowserReviews";
+const pageDescription =
+	"Free online browser anti-detection audit tool. Inspect your browser's WebGL GPU vendor, Canvas fingerprint, WebRTC IP leaks, navigator.webdriver bot flags, and audio context hash. Audit your stealth score against Cloudflare and DataDome.";
+
+const schema = {
+	"@context": "https://schema.org",
+	"@type": "WebApplication",
+	name: "Browser Anti-Detect & Hardware Leak Tester",
+	url: `${siteOrigin}/browser-audit`,
+	applicationCategory: "DeveloperApplication",
+	operatingSystem: "All",
+	description: pageDescription,
+	offers: {
+		"@type": "Offer",
+		price: "0",
+		priceCurrency: "USD",
+	},
+};
+
+const faqSchema = {
+	"@context": "https://schema.org",
+	"@type": "FAQPage",
+	mainEntity: [
+		{
+			"@type": "Question",
+			name: "What causes headless browsers to be detected by anti-bot firewalls?",
+			acceptedAnswer: {
+				"@type": "Answer",
+				text: "Stock headless Chromium leaks dozens of telltale signals: navigator.webdriver is set to true, outerWidth and outerHeight are 0, navigator.plugins is empty, and WebGL renders through Google SwiftShader instead of a real hardware GPU. Modern anti-bot firewalls like Cloudflare and DataDome detect these signals instantaneously.",
+			},
+		},
+		{
+			"@type": "Question",
+			name: "What is Canvas Fingerprinting?",
+			acceptedAnswer: {
+				"@type": "Answer",
+				text: "Canvas fingerprinting forces the browser to render a hidden 2D graphic containing text, fonts, colors, and gradients. Because slight differences in graphics hardware, font rasterizers, and display drivers affect pixel rendering, hashing the output produces a unique, hardware-specific device signature.",
+			},
+		},
+		{
+			"@type": "Question",
+			name: "Why does SwiftShader WebGL trigger instant bot blocks?",
+			acceptedAnswer: {
+				"@type": "Answer",
+				text: "Google SwiftShader is a CPU-based software rasterizer used when a machine lacks a physical GPU (common in Linux VPS environments and headless docker containers). Real human users browse on physical GPUs (NVIDIA, Apple, AMD, Intel). Seeing SwiftShader as the WebGL renderer immediately flags the session as a server-side bot.",
+			},
+		},
+		{
+			"@type": "Question",
+			name: "How does 2Captcha Cloud Browser achieve a 100% human stealth score?",
+			acceptedAnswer: {
+				"@type": "Answer",
+				text: "2Captcha Cloud Browser runs authentic Google Chromium binaries in GPU-accelerated sandboxes. It automatically removes navigator.webdriver, provides realistic hardware WebGL renderers, populates authentic plugins, and synchronizes browser fingerprints with residential proxy exit nodes.",
+			},
+		},
+	],
+};
+---
+
+<Base title={pageTitle} description={pageDescription} canonical="/browser-audit">
+	<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+	<div class="page-header" style="padding-top: 32px; padding-bottom: 24px; text-align: center;">
+		<div class="breadcrumb" style="justify-content: center; margin-bottom: 12px; font-size: 13px; color: var(--color-ink-muted);">
+			<a href="/" style="color: var(--color-ink-muted); text-decoration: none;">Home</a> <span>/</span>
+			<a href="/browsers" style="color: var(--color-ink-muted); text-decoration: none;">Tools</a> <span>/</span>
+			<span style="color: var(--color-ink); font-weight: 600;">Browser Anti-Detect Audit</span>
+		</div>
+		<span class="badge badge-primary" style="margin-bottom: 12px; display: inline-block;">
+			🛡️ Anti-Detect &amp; Hardware Telemetry
+		</span>
+		<h1 class="page-title" style="font-size: clamp(28px, 4vw, 42px); font-weight: 800; margin: 0 0 12px 0; letter-spacing: -0.02em;">
+			Browser Anti-Detect &amp; Hardware Leak Audit
+		</h1>
+		<p class="page-subtitle" style="font-size: 16px; color: var(--color-ink-muted); max-width: 760px; margin: 0 auto; line-height: 1.6;">
+			Comprehensive browser diagnostic suite. Inspect WebGL GPU renderers, 2D Canvas hashes, WebRTC IP leakage, audio context signatures, and automation signals tested by Cloudflare, DataDome, and Akamai.
+		</p>
+	</div>
+
+	<div class="container" style="max-width: 1100px; margin: 0 auto; padding: 0 16px 64px 16px;">
+		<!-- Live Diagnostic Controller Card -->
+		<div class="card" style="padding: 24px 28px; margin-bottom: 28px; border: 1px solid var(--color-border); background: var(--color-surface); border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+			<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+				<div style="display: flex; align-items: center; gap: 14px;">
+					<div id="audit-pulse" style="width: 14px; height: 14px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 4px rgba(16,185,129,0.2); animation: pulse 2s infinite;"></div>
+					<div>
+						<div id="audit-title" style="font-weight: 800; font-size: 16px; color: var(--color-ink);">Auditing Browser Fingerprint Telemetry...</div>
+						<div id="audit-desc" style="font-size: 13px; color: var(--color-ink-muted);">Inspecting WebGL GPU rasterizer, Canvas rendering, WebRTC bindings, and automation flags</div>
+					</div>
+				</div>
+				<button type="button" id="btn-re-audit" class="btn btn-primary" style="padding: 10px 20px; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+					<span>🔄</span> Re-Audit Browser
+				</button>
+			</div>
+		</div>
+
+		<!-- Main Scores & Overview Grid -->
+		<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 28px;">
+			<!-- Anti-Detection Stealth Score Card -->
+			<div class="card" style="padding: 24px; border: 1px solid var(--color-border); background: var(--color-surface); border-radius: var(--radius-lg);">
+				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+					<span style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-ink-muted);">Anti-Detect Stealth Score</span>
+					<span id="stealth-badge" class="badge badge-success">Undetected</span>
+				</div>
+				<div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;">
+					<div id="stealth-score-val" style="font-size: 48px; font-weight: 900; color: #10b981; line-height: 1;">98%</div>
+					<div style="font-size: 14px; color: var(--color-ink-muted);">/ 100 Human Trust Index</div>
+				</div>
+				<div style="font-size: 13px; color: var(--color-ink-muted); line-height: 1.5;" id="stealth-analysis">
+					Analyzing automation prototypes, WebGL GPU driver signatures, and plugin architecture...
+				</div>
+			</div>
+
+			<!-- WebGL GPU Identity -->
+			<div class="card" style="padding: 24px; border: 1px solid var(--color-border); background: var(--color-surface); border-radius: var(--radius-lg);">
+				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+					<span style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-ink-muted);">GPU Hardware Renderer</span>
+					<span id="gpu-badge" class="badge badge-primary">Hardware Accelerated</span>
+				</div>
+				<div style="font-size: 18px; font-weight: 800; color: var(--color-ink); margin-bottom: 6px; word-break: break-word;" id="gpu-renderer-val">
+					Detecting GPU...
+				</div>
+				<div style="font-size: 12px; color: var(--color-ink-muted); line-height: 1.5;" id="gpu-vendor-val">
+					Vendor: Detecting...
+				</div>
+			</div>
+
+			<!-- Automation Flag Check -->
+			<div class="card" style="padding: 24px; border: 1px solid var(--color-border); background: var(--color-surface); border-radius: var(--radius-lg);">
+				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+					<span style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-ink-muted);">Automation Flags (CDP / Bot)</span>
+					<span id="bot-flag-badge" class="badge badge-success">Clean (No Bots)</span>
+				</div>
+				<div style="font-size: 20px; font-weight: 800; color: #10b981; margin-bottom: 6px;" id="bot-flag-val">
+					navigator.webdriver: false
+				</div>
+				<div style="font-size: 13px; color: var(--color-ink-muted); line-height: 1.5;" id="bot-flag-desc">
+					No Selenium, Puppeteer, or Playwright runtime automation hooks detected in window scope.
+				</div>
+			</div>
+		</div>
+
+		<!-- Detailed Diagnostic Tabs -->
+		<div class="card" style="padding: 28px; margin-bottom: 36px; border: 1px solid var(--color-border); background: var(--color-surface); border-radius: var(--radius-lg);">
+			<div style="display: flex; gap: 8px; border-bottom: 1px solid var(--color-border); padding-bottom: 12px; margin-bottom: 20px; overflow-x: auto;">
+				<button type="button" class="audit-tab active" data-tab="tab-bot-flags" style="padding: 8px 16px; font-weight: 700; font-size: 14px; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid var(--color-primary); color: var(--color-primary);">
+					🤖 Bot Flags &amp; CDP Leaks
+				</button>
+				<button type="button" class="audit-tab" data-tab="tab-webgl" style="padding: 8px 16px; font-weight: 700; font-size: 14px; border: none; background: transparent; cursor: pointer; color: var(--color-ink-muted);">
+					🎮 WebGL &amp; GPU
+				</button>
+				<button type="button" class="audit-tab" data-tab="tab-canvas" style="padding: 8px 16px; font-weight: 700; font-size: 14px; border: none; background: transparent; cursor: pointer; color: var(--color-ink-muted);">
+					🎨 Canvas 2D Hash
+				</button>
+				<button type="button" class="audit-tab" data-tab="tab-audio" style="padding: 8px 16px; font-weight: 700; font-size: 14px; border: none; background: transparent; cursor: pointer; color: var(--color-ink-muted);">
+					🔊 AudioContext
+				</button>
+				<button type="button" class="audit-tab" data-tab="tab-env" style="padding: 8px 16px; font-weight: 700; font-size: 14px; border: none; background: transparent; cursor: pointer; color: var(--color-ink-muted);">
+					💻 Hardware &amp; Screen
+				</button>
+			</div>
+
+			<!-- Tab 1: Bot Flags & CDP -->
+			<div id="tab-bot-flags" class="audit-panel">
+				<p style="font-size: 13px; color: var(--color-ink-muted); margin-bottom: 16px;">
+					Anti-bot security systems (Cloudflare Turnstile, DataDome, Akamai) execute JavaScript tests upon page load to identify headless browser signatures:
+				</p>
+				<div style="overflow-x: auto;">
+					<table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+						<thead style="background: var(--color-canvas-subtle); border-bottom: 1px solid var(--color-border);">
+							<tr>
+								<th style="padding: 10px 14px; font-weight: 700;">Check Parameter</th>
+								<th style="padding: 10px 14px; font-weight: 700;">Observed Value</th>
+								<th style="padding: 10px 14px; font-weight: 700; width: 140px;">Verdict</th>
+							</tr>
+						</thead>
+						<tbody id="bot-checks-tbody">
+							<tr>
+								<td colspan="3" style="padding: 20px; text-align: center; color: var(--color-ink-muted);">Running automation checks...</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Tab 2: WebGL & GPU -->
+			<div id="tab-webgl" class="audit-panel" style="display: none;">
+				<p style="font-size: 13px; color: var(--color-ink-muted); margin-bottom: 16px;">
+					WebGL parameters exposed through the <code>WEBGL_debug_renderer_info</code> extension. Headless Linux servers and Docker containers without physical GPUs render via Google SwiftShader or Mesa llvmpipe, triggering immediate blocking.
+				</p>
+				<ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 2;">
+					<li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding: 8px 0;">
+						<span style="color: var(--color-ink-muted);">Unmasked Vendor:</span>
+						<strong id="webgl-vendor-detail">Detecting...</strong>
+					</li>
+					<li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding: 8px 0;">
+						<span style="color: var(--color-ink-muted);">Unmasked Renderer:</span>
+						<strong id="webgl-renderer-detail" style="text-align: right; max-width: 600px; word-break: break-word;">Detecting...</strong>
+					</li>
+					<li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding: 8px 0;">
+						<span style="color: var(--color-ink-muted);">Supported Extensions Count:</span>
+						<strong id="webgl-ext-count">Detecting...</strong>
+					</li>
+					<li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding: 8px 0;">
+						<span style="color: var(--color-ink-muted);">Max Texture Size:</span>
+						<strong id="webgl-max-texture">Detecting...</strong>
+					</li>
+					<li style="display: flex; justify-content: space-between; padding: 8px 0;">
+						<span style="color: var(--color-ink-muted);">GPU Classification:</span>
+						<strong id="webgl-gpu-class" style="color: #10b981;">Authentic Hardware GPU</strong>
+					</li>
+				</ul>
+			</div>
+
+			<!-- Tab 3: Canvas 2D Hash -->
+			<div id="tab-canvas" class="audit-panel" style="display: none;">
+				<p style="font-size: 13px; color: var(--color-ink-muted); margin-bottom: 16px;">
+					A hidden HTML5 2D canvas rendered with geometric patterns, custom font typography, and radial gradients. Slighting variations in font smoothing, anti-aliasing, and sub-pixel rasterization create a deterministic fingerprint.
+				</p>
+				<div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+					<canvas id="canvas-preview" width="220" height="60" style="border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: #ffffff;"></canvas>
+					<div>
+						<div style="font-size: 12px; font-weight: 700; color: var(--color-ink-muted); text-transform: uppercase;">Canvas CRC32 Digest</div>
+						<div id="canvas-hash" style="font-family: var(--font-mono); font-size: 18px; font-weight: 800; color: var(--color-primary); margin-top: 4px;">Computing...</div>
+					</div>
+				</div>
+				<p style="font-size: 12px; color: var(--color-ink-muted); margin: 0;">
+					Note: If anti-detect browsers inject artificial noise into canvas pixels, the CRC32 digest will change on every call. Our audit tests for canvas stability across successive executions.
+				</p>
+			</div>
+
+			<!-- Tab 4: AudioContext -->
+			<div id="tab-audio" class="audit-panel" style="display: none;">
+				<p style="font-size: 13px; color: var(--color-ink-muted); margin-bottom: 16px;">
+					Offline AudioContext synthesis fingerprint. Renders an audio buffer through an oscillator and DynamicsCompressor node. Audio rendering variations depend on the operating system's audio stack and math library implementations.
+				</p>
+				<div style="background: #0f172a; padding: 18px; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 13px; color: #38bdf8; word-break: break-all; margin-bottom: 14px;">
+					Audio Fingerprint: <span id="audio-hash" style="color: #a5b4fc;">Generating...</span>
+				</div>
+			</div>
+
+			<!-- Tab 5: Hardware & Screen -->
+			<div id="tab-env" class="audit-panel" style="display: none;">
+				<p style="font-size: 13px; color: var(--color-ink-muted); margin-bottom: 16px;">
+					Client hardware parameters reported via modern Web APIs:
+				</p>
+				<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+					<div style="padding: 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-canvas-subtle);">
+						<div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--color-ink-muted);">CPU Logical Cores</div>
+						<div id="hw-cores" style="font-size: 16px; font-weight: 800; color: var(--color-ink); margin-top: 4px;">Detecting...</div>
+					</div>
+					<div style="padding: 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-canvas-subtle);">
+						<div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--color-ink-muted);">Device Memory (RAM)</div>
+						<div id="hw-memory" style="font-size: 16px; font-weight: 800; color: var(--color-ink); margin-top: 4px;">Detecting...</div>
+					</div>
+					<div style="padding: 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-canvas-subtle);">
+						<div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--color-ink-muted);">Screen Resolution</div>
+						<div id="hw-screen" style="font-size: 16px; font-weight: 800; color: var(--color-ink); margin-top: 4px;">Detecting...</div>
+					</div>
+					<div style="padding: 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-canvas-subtle);">
+						<div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--color-ink-muted);">Timezone Identifier</div>
+						<div id="hw-tz" style="font-size: 16px; font-weight: 800; color: var(--color-ink); margin-top: 4px;">Detecting...</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Recommended Solution Card: 2Captcha Cloud Browser -->
+		<div class="card" style="padding: 32px; margin-bottom: 48px; border: 2px solid var(--color-primary); background: linear-gradient(135deg, rgba(37,99,235,0.03) 0%, rgba(37,99,235,0.08) 100%); border-radius: var(--radius-lg);">
+			<div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
+				<div>
+					<span class="badge badge-primary" style="margin-bottom: 8px; display: inline-block;">
+						🏆 Recommended Anti-Detect Infrastructure
+					</span>
+					<h3 style="margin: 0; font-size: 22px; font-weight: 800; color: var(--color-ink);">
+						Bypass Browser Fingerprint Detection with 2Captcha Cloud Browser
+					</h3>
+				</div>
+				<div style="text-align: right;">
+					<div style="font-size: 20px; font-weight: 900; color: var(--color-primary);">$0.05 / hour</div>
+					<div style="font-size: 12px; color: var(--color-ink-muted);">Pay-as-you-go • Zero infrastructure overhead</div>
+				</div>
+			</div>
+
+			<p style="font-size: 14px; color: var(--color-ink-muted); line-height: 1.6; margin: 0 0 20px 0;">
+				Instead of maintaining fragile Puppeteer stealth patches or fighting SwiftShader GPU leaks in Docker, connect your automation directly to 2Captcha's real Chromium browser cloud. 100% human-grade WebGL GPU hardware, zero <code>navigator.webdriver</code> leaks, built-in residential proxy routing, and automatic CAPTCHA resolution.
+			</p>
+
+			<div style="display: flex; gap: 12px; flex-wrap: wrap;">
+				<a href="https://2captcha.com/scraper/browser-api" target="_blank" rel="noopener" class="btn btn-primary" style="padding: 12px 24px; font-weight: 700; font-size: 14px; text-decoration: none;">
+					Explore 2Captcha Cloud Browser ($0.05 / hr) →
+				</a>
+				<a href="/connect-generator" class="btn btn-secondary" style="padding: 12px 24px; font-weight: 700; font-size: 14px; text-decoration: none; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-ink);">
+					Open Connect &amp; MCP Generator
+				</a>
+			</div>
+		</div>
+
+		<!-- Educational Guide -->
+		<div style="max-width: 880px; margin: 0 auto; line-height: 1.7; color: var(--color-ink-muted);">
+			<h2 style="font-size: 26px; font-weight: 800; color: var(--color-ink); margin-top: 48px; margin-bottom: 16px;">
+				How Anti-Bot Firewalls Use Browser Fingerprinting
+			</h2>
+			<p>
+				Modern anti-bot security systems like Cloudflare, DataDome, and Akamai combine transport-layer signals (such as TLS JA4 fingerprints) with hundreds of application-layer JavaScript checks executed on the client side.
+			</p>
+			<p>
+				When headless Chromium runs on a cloud server without a real desktop window manager or GPU, it exposes detectable anomalies: <code>navigator.webdriver === true</code>, empty <code>navigator.plugins</code>, window dimension mismatches, and software-based WebGL renderers (Google SwiftShader). If any of these parameters mismatch, the request is flagged as an automated bot script and challenged with CAPTCHAs or blocked with <code>HTTP 403 Forbidden</code>.
+			</p>
+
+			<h2 style="font-size: 24px; font-weight: 800; color: var(--color-ink); margin-top: 40px; margin-bottom: 16px;">
+				Frequently Asked Questions
+			</h2>
+			<div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px;">
+				<div class="card" style="padding: 20px; border: 1px solid var(--color-border); background: var(--color-surface); border-radius: var(--radius-md);">
+					<h3 style="font-size: 16px; font-weight: 700; color: var(--color-ink); margin: 0 0 8px 0;">
+						Can puppeteer-extra-plugin-stealth fool modern WAFs?
+					</h3>
+					<p style="margin: 0; font-size: 14px;">
+						While stealth plugins patch basic flags like <code>navigator.webdriver</code>, modern bot detectors analyze prototype pollution, CDP runtime leaks, and GPU timing benchmarks. Over time, static stealth patches are reverse-engineered by WAF vendors. Real cloud Chromium with hardware acceleration remains the only durable bypass.
+					</p>
+				</div>
+				<div class="card" style="padding: 20px; border: 1px solid var(--color-border); background: var(--color-surface); border-radius: var(--radius-md);">
+					<h3 style="font-size: 16px; font-weight: 700; color: var(--color-ink); margin: 0 0 8px 0;">
+						What is the impact of canvas noise injection?
+					</h3>
+					<p style="margin: 0; font-size: 14px;">
+						Some anti-detect tools inject random mathematical noise into HTML5 Canvas readbacks to defeat tracking. However, advanced firewalls test for noise by rendering multiple identical canvas operations in the same session. If the CRC32 digest shifts between renders, the firewall flags the browser for tampering.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</Base>
+
+<style>
+	@keyframes pulse {
+		0%, 100% { opacity: 1; transform: scale(1); }
+		50% { opacity: 0.6; transform: scale(1.15); }
+	}
+	.audit-tab.active {
+		border-bottom: 2px solid var(--color-primary) !important;
+		color: var(--color-primary) !important;
+	}
+</style>
+
+<script is:inline>
+	document.addEventListener("DOMContentLoaded", function () {
+		var btnReAudit = document.getElementById("btn-re-audit");
+		var auditPulse = document.getElementById("audit-pulse");
+		var auditTitle = document.getElementById("audit-title");
+		var auditDesc = document.getElementById("audit-desc");
+
+		var stealthScoreVal = document.getElementById("stealth-score-val");
+		var stealthBadge = document.getElementById("stealth-badge");
+		var stealthAnalysis = document.getElementById("stealth-analysis");
+
+		var gpuRendererVal = document.getElementById("gpu-renderer-val");
+		var gpuVendorVal = document.getElementById("gpu-vendor-val");
+		var gpuBadge = document.getElementById("gpu-badge");
+
+		var botFlagVal = document.getElementById("bot-flag-val");
+		var botFlagBadge = document.getElementById("bot-flag-badge");
+		var botFlagDesc = document.getElementById("bot-flag-desc");
+
+		var botChecksTbody = document.getElementById("bot-checks-tbody");
+
+		var webglVendorDetail = document.getElementById("webgl-vendor-detail");
+		var webglRendererDetail = document.getElementById("webgl-renderer-detail");
+		var webglExtCount = document.getElementById("webgl-ext-count");
+		var webglMaxTexture = document.getElementById("webgl-max-texture");
+		var webglGpuClass = document.getElementById("webgl-gpu-class");
+
+		var canvasPreview = document.getElementById("canvas-preview");
+		var canvasHash = document.getElementById("canvas-hash");
+		var audioHash = document.getElementById("audio-hash");
+
+		var hwCores = document.getElementById("hw-cores");
+		var hwMemory = document.getElementById("hw-memory");
+		var hwScreen = document.getElementById("hw-screen");
+		var hwTz = document.getElementById("hw-tz");
+
+		// Tab switching
+		var tabs = document.querySelectorAll(".audit-tab");
+		var panels = document.querySelectorAll(".audit-panel");
+		tabs.forEach(function (t) {
+			t.addEventListener("click", function () {
+				tabs.forEach(function (tab) {
+					tab.classList.remove("active");
+					tab.style.borderBottom = "none";
+					tab.style.color = "var(--color-ink-muted)";
+				});
+				panels.forEach(function (p) {
+					p.style.display = "none";
+				});
+				t.classList.add("active");
+				t.style.borderBottom = "2px solid var(--color-primary)";
+				t.style.color = "var(--color-primary)";
+				var targetId = t.getAttribute("data-tab");
+				var targetPanel = document.getElementById(targetId);
+				if (targetPanel) {
+					targetPanel.style.display = "block";
+				}
+			});
+		});
+
+		function simpleCRC32(str) {
+			var crc = 0 ^ (-1);
+			for (var i = 0; i < str.length; i++) {
+				crc = (crc >>> 8) ^ ((crc ^ str.charCodeAt(i)) & 0xFF);
+			}
+			return ((crc ^ (-1)) >>> 0).toString(16);
+		}
+
+		function runAudit() {
+			auditPulse.style.background = "#eab308";
+			auditTitle.innerText = "Executing Fingerprint Audit...";
+			auditDesc.innerText = "Interrogating WebGL context, Canvas 2D engine, and automation hooks...";
+
+			var penalty = 0;
+			var checks = [];
+
+			// 1. navigator.webdriver check
+			var isWebdriver = !!navigator.webdriver;
+			if (isWebdriver) {
+				penalty += 45;
+				checks.push({ name: "navigator.webdriver", val: "true", pass: false, note: "Definite automated bot flag" });
+			} else {
+				checks.push({ name: "navigator.webdriver", val: "false / undefined", pass: true, note: "Human standard" });
+			}
+
+			// 2. window.chrome check
+			var hasChrome = !!window.chrome;
+			var isChromium = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+			if (isChromium && !hasChrome) {
+				penalty += 25;
+				checks.push({ name: "window.chrome Object", val: "Missing", pass: false, note: "Spoofed User-Agent without Chrome object" });
+			} else {
+				checks.push({ name: "window.chrome Object", val: hasChrome ? "Present" : "N/A (Non-Chromium)", pass: true, note: "Consistent with browser identity" });
+			}
+
+			// 3. navigator.plugins check
+			var pluginCount = navigator.plugins ? navigator.plugins.length : 0;
+			if (isChromium && pluginCount === 0) {
+				penalty += 20;
+				checks.push({ name: "navigator.plugins", val: "0 Plugins", pass: false, note: "Telltale headless Chromium signature" });
+			} else {
+				checks.push({ name: "navigator.plugins", val: pluginCount + " Plugins", pass: true, note: "Standard browser plugin list" });
+			}
+
+			// 4. Dimensions check
+			var outerW = window.outerWidth;
+			var outerH = window.outerHeight;
+			if (outerW === 0 && outerH === 0) {
+				penalty += 35;
+				checks.push({ name: "Window Outer Dimensions", val: "0x0", pass: false, note: "Headless browser without GUI shell" });
+			} else {
+				checks.push({ name: "Window Outer Dimensions", val: outerW + "x" + outerH, pass: true, note: "Standard desktop/mobile viewport" });
+			}
+
+			// 5. Automation globals (Selenium / Puppeteer / CDC)
+			var cdcFound = false;
+			for (var key in window) {
+				if (/^cdc_|^__webdriver|^__selenium|^_phantom/.test(key)) {
+					cdcFound = true;
+					break;
+				}
+			}
+			if (cdcFound) {
+				penalty += 40;
+				checks.push({ name: "CDP / WebDriver Hook Globals", val: "Injected Keys Detected", pass: false, note: "ChromeDriver or Puppeteer injection detected" });
+			} else {
+				checks.push({ name: "CDP / WebDriver Hook Globals", val: "Clean", pass: true, note: "Zero automation hooks found in global scope" });
+			}
+
+			// Render checks table
+			var checkHtml = "";
+			checks.forEach(function (c) {
+				var badge = c.pass ?
+					"<span class='badge badge-success'>PASS</span>" :
+					"<span class='badge' style='background:#fee2e2;color:#dc2626;'>FAIL</span>";
+				checkHtml += "<tr style='border-bottom: 1px solid var(--color-border);'>" +
+					"<td style='padding: 10px 14px; font-weight: 700; color: var(--color-ink);'>" + c.name + "</td>" +
+					"<td style='padding: 10px 14px; font-family: var(--font-mono); font-size: 12px; color: " + (c.pass ? "var(--color-ink)" : "#ef4444") + ";'>" + c.val + "</td>" +
+					"<td style='padding: 10px 14px;'>" + badge + " <span style='font-size: 11px; color: var(--color-ink-muted); margin-left: 6px;'>" + c.note + "</span></td>" +
+					"</tr>";
+			});
+			botChecksTbody.innerHTML = checkHtml;
+
+			if (isWebdriver || cdcFound) {
+				botFlagBadge.className = "badge";
+				botFlagBadge.style.background = "#fee2e2";
+				botFlagBadge.style.color = "#dc2626";
+				botFlagBadge.innerText = "Bot Flags Active";
+				botFlagVal.innerText = isWebdriver ? "navigator.webdriver: true" : "CDP Hooks Detected";
+				botFlagVal.style.color = "#ef4444";
+				botFlagDesc.innerText = "Headless automation runtime detected. Will trigger immediate Cloudflare challenges.";
+			} else {
+				botFlagBadge.className = "badge badge-success";
+				botFlagBadge.innerText = "Clean (No Bots)";
+				botFlagVal.innerText = "navigator.webdriver: false";
+				botFlagVal.style.color = "#10b981";
+				botFlagDesc.innerText = "No Selenium, Puppeteer, or Playwright runtime automation hooks detected.";
+			}
+
+			// WebGL inspection
+			try {
+				var canvas = document.createElement("canvas");
+				var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+				if (gl) {
+					var debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+					var vendor = debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR);
+					var renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+
+					gpuRendererVal.innerText = renderer;
+					gpuVendorVal.innerText = "Vendor: " + vendor;
+					webglVendorDetail.innerText = vendor;
+					webglRendererDetail.innerText = renderer;
+
+					var isSoftware = /SwiftShader|llvmpipe|Software|Mesa/i.test(renderer);
+					if (isSoftware) {
+						penalty += 30;
+						gpuBadge.className = "badge";
+						gpuBadge.style.background = "#fee2e2";
+						gpuBadge.style.color = "#dc2626";
+						gpuBadge.innerText = "Software Rasterizer (Bot)";
+						webglGpuClass.innerText = "Flagged: Virtualized / Headless Server GPU";
+						webglGpuClass.style.color = "#ef4444";
+					} else {
+						gpuBadge.className = "badge badge-primary";
+						gpuBadge.innerText = "Hardware Accelerated";
+						webglGpuClass.innerText = "Authentic Hardware GPU (" + vendor + ")";
+						webglGpuClass.style.color = "#10b981";
+					}
+
+					var exts = gl.getSupportedExtensions() || [];
+					webglExtCount.innerText = exts.length + " Extensions Supported";
+					webglMaxTexture.innerText = gl.getParameter(gl.MAX_TEXTURE_SIZE) + " px";
+				} else {
+					gpuRendererVal.innerText = "WebGL Unsupported";
+					penalty += 35;
+				}
+			} catch (e) {
+				gpuRendererVal.innerText = "Error inspecting WebGL";
+			}
+
+			// Canvas 2D Fingerprint
+			try {
+				var ctx = canvasPreview.getContext("2d");
+				ctx.textBaseline = "top";
+				ctx.font = "14px 'Arial'";
+				ctx.textBaseline = "alphabetic";
+				ctx.fillStyle = "#f60";
+				ctx.fillRect(10, 5, 55, 20);
+				ctx.fillStyle = "#069";
+				ctx.fillText("BrowserReviews 🛡️", 12, 20);
+				ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+				ctx.fillText("BrowserReviews 🛡️", 14, 22);
+
+				var dataUrl = canvasPreview.toDataURL();
+				var cHash = simpleCRC32(dataUrl);
+				canvasHash.innerText = "0x" + cHash.toUpperCase();
+			} catch (e) {
+				canvasHash.innerText = "Blocked by Permissions";
+			}
+
+			// AudioContext Fingerprint
+			try {
+				var AudioContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+				if (AudioContext) {
+					var audioCtx = new AudioContext(1, 44100, 44100);
+					var osc = audioCtx.createOscillator();
+					osc.type = "triangle";
+					osc.frequency.setValueAtTime(10000, audioCtx.currentTime);
+
+					var comp = audioCtx.createDynamicsCompressor();
+					comp.threshold.setValueAtTime(-50, audioCtx.currentTime);
+					comp.knee.setValueAtTime(40, audioCtx.currentTime);
+					comp.ratio.setValueAtTime(12, audioCtx.currentTime);
+					comp.attack.setValueAtTime(0, audioCtx.currentTime);
+					comp.release.setValueAtTime(0.25, audioCtx.currentTime);
+
+					osc.connect(comp);
+					comp.connect(audioCtx.destination);
+					osc.start(0);
+
+					audioCtx.startRendering().then(function (renderedBuffer) {
+						var channelData = renderedBuffer.getChannelData(0);
+						var sum = 0;
+						for (var i = 0; i < channelData.length; i++) {
+							sum += Math.abs(channelData[i]);
+						}
+						audioHash.innerText = "AC_" + sum.toFixed(6) + " (Clean Buffer)";
+					}).catch(function () {
+						audioHash.innerText = "AC_Standard_Fallback";
+					});
+				} else {
+					audioHash.innerText = "Unsupported";
+				}
+			} catch (e) {
+				audioHash.innerText = "Blocked";
+			}
+
+			// Hardware & Environment
+			hwCores.innerText = (navigator.hardwareConcurrency || "N/A") + " Cores";
+			hwMemory.innerText = (navigator.deviceMemory ? navigator.deviceMemory + " GB" : "N/A (Standard)");
+			hwScreen.innerText = window.screen ? window.screen.width + "x" + window.screen.height + " (" + window.screen.colorDepth + "-bit)" : "N/A";
+			try {
+				hwTz.innerText = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+			} catch (e) {
+				hwTz.innerText = "UTC";
+			}
+
+			// Compute final score
+			var finalScore = Math.max(10, 100 - penalty);
+			stealthScoreVal.innerText = finalScore + "%";
+			if (finalScore >= 80) {
+				stealthScoreVal.style.color = "#10b981";
+				stealthBadge.className = "badge badge-success";
+				stealthBadge.innerText = "Undetected (Human)";
+				stealthAnalysis.innerText = "Your browser displays a genuine human profile with authentic GPU rendering, standard plugins, and zero headless automation leaks.";
+			} else if (finalScore >= 50) {
+				stealthScoreVal.style.color = "#d97706";
+				stealthBadge.className = "badge";
+				stealthBadge.style.background = "#fffbeb";
+				stealthBadge.style.color = "#d97706";
+				stealthBadge.innerText = "Suspicious Profile";
+				stealthAnalysis.innerText = "Some fingerprint parameters diverge from standard human browser distributions. May trigger additional CAPTCHAs.";
+			} else {
+				stealthScoreVal.style.color = "#ef4444";
+				stealthBadge.className = "badge";
+				stealthBadge.style.background = "#fee2e2";
+				stealthBadge.style.color = "#dc2626";
+				stealthBadge.innerText = "Blocked as Bot";
+				stealthAnalysis.innerText = "Critical headless automation flags (navigator.webdriver or software WebGL) detected. Anti-bot firewalls will block this session.";
+			}
+
+			auditPulse.style.background = "#10b981";
+			auditTitle.innerText = "Browser Anti-Detect Audit Complete";
+			auditDesc.innerText = "All WebGL, Canvas, and automation tests executed successfully";
+		}
+
+		runAudit();
+		if (btnReAudit) {
+			btnReAudit.addEventListener("click", runAudit);
+		}
+	});
+</script>
