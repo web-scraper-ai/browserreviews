@@ -1,72 +1,72 @@
-/* Capway Reviews — Editorial Design System (A + B Hybrid) */
+/* BrowserReviews — Linear / Raycast Dark Design System */
 :root {
-  /* Brand & Palette */
-  --color-canvas: #ffffff;
-  --color-canvas-subtle: #f8fafc;
-  --color-canvas-muted: #f1f5f9;
-  --color-surface: #ffffff;
-  --color-surface-hover: #f8fafc;
+  /* Brand & Dark Matte Zinc Palette */
+  --color-canvas: #09090b;
+  --color-canvas-subtle: #111114;
+  --color-canvas-muted: #18181b;
+  --color-surface: #131316;
+  --color-surface-hover: #1c1c20;
 
-  /* Typography / Ink */
-  --color-ink: #0f172a;
-  --color-ink-secondary: #334155;
-  --color-ink-muted: #64748b;
-  --color-ink-subtle: #94a3b8;
+  /* Typography / Ink (High Contrast on Dark) */
+  --color-ink: #f4f4f5;
+  --color-ink-secondary: #a1a1aa;
+  --color-ink-muted: #71717a;
+  --color-ink-subtle: #52525b;
 
-  /* Hairlines & Borders */
-  --color-border: #e2e8f0;
-  --color-border-strong: #cbd5e1;
-  --color-border-focus: #3b82f6;
+  /* Hairlines & Tech Borders */
+  --color-border: #222226;
+  --color-border-strong: #333338;
+  --color-border-focus: #f59e0b;
 
-  /* Brand Accents */
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
-  --color-primary-subtle: #eff6ff;
+  /* Brand Accents (Warm Electric Amber) */
+  --color-primary: #f59e0b;
+  --color-primary-hover: #fbbf24;
+  --color-primary-subtle: rgba(245, 158, 11, 0.12);
 
-  /* Editorial Accents (RunRepeat Gold & Badges) */
-  --color-award: #d97706;
-  --color-award-bg: #fffbeb;
-  --color-award-border: #fde68a;
+  /* Performance Accents */
+  --color-award: #f59e0b;
+  --color-award-bg: rgba(245, 158, 11, 0.1);
+  --color-award-border: rgba(245, 158, 11, 0.25);
 
-  /* Performance Accents (Direction A) */
-  --color-success: #059669;
-  --color-success-bg: #ecfdf5;
-  --color-success-border: #a7f3d0;
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.1);
+  --color-success-border: rgba(16, 185, 129, 0.25);
 
-  --color-warning: #d97706;
-  --color-warning-bg: #fffbeb;
-  --color-warning-border: #fde68a;
+  --color-warning: #f59e0b;
+  --color-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-warning-border: rgba(245, 158, 11, 0.25);
 
-  --color-danger: #e11d48;
-  --color-danger-bg: #fff1f2;
-  --color-danger-border: #fecdd3;
+  --color-danger: #f43f5e;
+  --color-danger-bg: rgba(244, 63, 94, 0.1);
+  --color-danger-border: rgba(244, 63, 94, 0.25);
 
-  --color-info: #0284c7;
-  --color-info-bg: #f0f9ff;
-  --color-info-border: #bae6fd;
+  --color-info: #0ea5e9;
+  --color-info-bg: rgba(14, 165, 233, 0.1);
+  --color-info-border: rgba(14, 165, 233, 0.25);
 
   /* Typography Stacks */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-heading: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Layout & Spacing */
   --max-w-content: 1200px;
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.7);
+
   /* EmDash Search Variables */
   --emdash-search-bg: var(--color-surface);
   --emdash-search-text: var(--color-ink);
   --emdash-search-muted: var(--color-ink-muted);
   --emdash-search-border: var(--color-border);
   --emdash-search-border-focus: var(--color-primary);
-  --emdash-search-hover: var(--color-canvas-subtle);
+  --emdash-search-hover: var(--color-surface-hover);
   --emdash-search-highlight: var(--color-primary);
 }
 
@@ -85,6 +85,8 @@ body {
   font-family: var(--font-sans);
   color: var(--color-ink);
   background-color: var(--color-canvas);
+  background-image: radial-gradient(rgba(245, 158, 11, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }

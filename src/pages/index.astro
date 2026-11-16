@@ -53,17 +53,204 @@ const siteDescription = "Independent benchmarks, pricing comparisons, and techni
       }
     ]
   })} />
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-badge">Independent Testing Lab • 2026 Benchmarks</div>
-    <h1 class="hero-title">
-      The Authority on <span class="gradient-text">Cloud Browsers</span> & <span class="gradient-text">Browser MCP Tools</span>
-    </h1>
-    <p class="hero-subtitle">
-      Automate the modern web without bot-detection roadblocks. We test, benchmark, and compare 60 cloud browser APIs and 32 Model Context Protocol (MCP) servers for Claude, Cursor, and autonomous AI agents.
-    </p>
 
-    <!-- Dual Hero Highlight Cards -->
+  <!-- Top Ambient Telemetry Ticker -->
+  <div class="telemetry-bar">
+    <div class="container telemetry-inner">
+      <div class="telemetry-item">
+        <span class="live-dot"></span>
+        <span class="telemetry-label">CDP CLUSTER:</span>
+        <span class="telemetry-val">60 CLOUD BROWSERS AUDITED</span>
+      </div>
+      <div class="telemetry-sep">•</div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">AI AGENT MCP:</span>
+        <span class="telemetry-val">32 SERVERS BENCHMARKED</span>
+      </div>
+      <div class="telemetry-sep">•</div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">TOP CHOICE:</span>
+        <span class="telemetry-val text-amber">2Captcha Browser API ($0.15/hr)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section with Interactive CDP Terminal -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Hero Left Pitch -->
+        <div class="hero-content">
+          <div class="hero-badge">Independent Testing Lab • 2026 Benchmarks</div>
+          <h1 class="hero-title">
+            The Authority on <span class="gradient-text">Cloud Browsers</span> &amp; <span class="gradient-text">Browser MCP Tools</span>
+          </h1>
+          <p class="hero-subtitle">
+            Automate the modern web without bot-detection roadblocks. We test, benchmark, and compare 60 cloud browser APIs and 32 Model Context Protocol (MCP) servers for Claude Desktop, Cursor, and autonomous AI agents.
+          </p>
+
+          <div class="hero-metrics">
+            <div class="metric-card">
+              <div class="metric-val">$0.15 / hr</div>
+              <div class="metric-label">2Captcha Starting Rate</div>
+              <div class="metric-sub">True PAYG • No Lock-in</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-val">100% Native</div>
+              <div class="metric-label">CAPTCHA Auto-Solve</div>
+              <div class="metric-sub">Turnstile, reCAPTCHA, DataDome</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-val">CDP wss://</div>
+              <div class="metric-label">Standard DevTools Protocol</div>
+              <div class="metric-sub">Playwright &amp; Puppeteer</div>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <a href="https://2captcha.com/scraper/browser-api" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-glow">
+              ⚡ Start 2Captcha Browser ($0.15/hr) ↗
+            </a>
+            <a href="/browsers" class="btn btn-outline">
+              Compare 60 Cloud Browsers →
+            </a>
+            <a href="/mcp" class="btn btn-outline">
+              Browse 32 MCP Tools →
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Right: Interactive CDP Connect Terminal -->
+        <div class="hero-terminal-col">
+          <div class="raycast-terminal">
+            <div class="terminal-bar-top">
+              <div class="terminal-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="terminal-title">
+                <span class="terminal-icon">🌐</span>
+                <span>2CAPTCHA CLOUD BROWSER • CDP CONNECT</span>
+              </div>
+              <span class="terminal-status">LIVE wss://</span>
+            </div>
+
+            <!-- Framework Tabs -->
+            <div class="framework-tabs" id="framework-selector">
+              <button type="button" class="tab-btn active" data-fw="python">Python (Playwright)</button>
+              <button type="button" class="tab-btn" data-fw="ts">TypeScript</button>
+              <button type="button" class="tab-btn" data-fw="puppeteer">Puppeteer</button>
+              <button type="button" class="tab-btn" data-fw="curl">cURL / Raw CDP</button>
+            </div>
+
+            <!-- Live Code Window -->
+            <div class="terminal-code-body">
+              <pre><code id="cdp-code-snippet" class="language-python">{`from playwright.sync_api import sync_playwright
+
+# 2Captcha Cloud Browser: Residential proxy + CAPTCHA auto-solve included
+CDP_URL = "wss://browser.2captcha.com?token=YOUR_API_KEY"
+
+with sync_playwright() as p:
+    browser = p.chromium.connect_over_cdp(CDP_URL)
+    page = browser.new_page()
+    page.goto("https://target-with-turnstile.com/login")
+    # Native CAPTCHA bypass executes in the background!
+    print("Page Title:", page.title())
+    browser.close()`}</code></pre>
+            </div>
+
+            <!-- Actions Bar -->
+            <div class="terminal-bar-bottom">
+              <div class="terminal-note">
+                💡 <strong>Auto-Bypass:</strong> Cloudflare Turnstile &amp; DataDome are solved automatically in the browser cluster.
+              </div>
+              <div class="terminal-actions">
+                <button type="button" class="terminal-btn" id="btn-copy-cdp">📋 Copy Code</button>
+                <button type="button" class="terminal-btn" id="btn-download-cdp">💾 Download .py</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Spend & Concurrency Calculator -->
+  <section class="calc-section">
+    <div class="container">
+      <div class="section-header-centered">
+        <span class="badge-mini">Raycast Cost Analysis</span>
+        <h2 class="section-title">Cloud Browser Automation Spend Calculator</h2>
+        <p class="section-subtitle">
+          Calculate your monthly cloud browser runtime costs. Compare 2Captcha's $0.15/hr pay-as-you-go architecture against expensive monthly subscriptions and bandwidth fees.
+        </p>
+      </div>
+
+      <div class="calc-card-container">
+        <div class="calc-controls">
+          <div class="calc-slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Daily Scraping Hours:</span>
+              <span class="slider-val tabular-nums" id="val-hours">4 hours / day</span>
+            </div>
+            <input type="range" id="slider-hours" min="1" max="24" value="4" class="ray-slider" />
+          </div>
+
+          <div class="calc-slider-group" style="margin-top: 20px;">
+            <div class="slider-header">
+              <span class="slider-label">Concurrent Browser Tabs:</span>
+              <span class="slider-val tabular-nums" id="val-tabs">5 concurrent</span>
+            </div>
+            <input type="range" id="slider-tabs" min="1" max="20" value="5" class="ray-slider" />
+          </div>
+        </div>
+
+        <div class="calc-comparison-grid">
+          <!-- 2Captcha Browser Card -->
+          <div class="calc-card winner-card">
+            <div class="calc-badge">★ #1 RECOMMENDED</div>
+            <h3 class="calc-title">2Captcha Browser API</h3>
+            <div class="calc-price-wrap">
+              <span class="calc-price-amount tabular-nums" id="price-2captcha">$90.00</span>
+              <span class="calc-price-unit">/ month</span>
+            </div>
+            <ul class="calc-perks">
+              <li><span class="perk-icon-yes">✔</span> $0.15 / hour flat pay-as-you-go</li>
+              <li><span class="perk-icon-yes">✔</span> Automatic residential proxy rotation included ($0)</li>
+              <li><span class="perk-icon-yes">✔</span> Native zero-latency CAPTCHA solving included ($0)</li>
+              <li><span class="perk-icon-yes">✔</span> Zero monthly subscription commitment</li>
+            </ul>
+            <a href="https://2captcha.com/scraper/browser-api" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="width: 100%; text-align: center; margin-top: 16px;">
+              Launch 2Captcha Cloud Browser ↗
+            </a>
+          </div>
+
+          <!-- Browserbase Card -->
+          <div class="calc-card">
+            <h3 class="calc-title">Browserbase</h3>
+            <div class="calc-price-wrap">
+              <span class="calc-price-amount tabular-nums" id="price-browserbase">$140.00</span>
+              <span class="calc-price-unit">/ month + proxies</span>
+            </div>
+            <ul class="calc-perks">
+              <li><span class="perk-icon-no">✖</span> $20.00 / mo base subscription minimum</li>
+              <li><span class="perk-icon-no">✖</span> $0.10 / min overage fees on high volume</li>
+              <li><span class="perk-icon-no">✖</span> External CAPTCHA solver subscription required</li>
+              <li><span class="perk-icon-no">✖</span> Residential proxies charged separately</li>
+            </ul>
+            <div class="calc-savings-box">
+              <span>Developer Savings with 2Captcha:</span>
+              <strong class="tabular-nums" id="val-savings">$50.00 / mo</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dual Spotlight Cards -->
+  <section class="section-container" style="padding-top: 0;">
     <div class="dual-hero-grid">
       <!-- #1 Cloud Browser -->
       <div class="spotlight-card featured-gold">
@@ -93,7 +280,7 @@ const siteDescription = "Independent benchmarks, pricing comparisons, and techni
         </div>
         <div class="spotlight-actions">
           <a href={`/reviews/${featuredBrowser.slug}`} class="btn btn-primary">Read Lab Review</a>
-          <a href={featuredBrowser.affiliate_url} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Visit Official Site ↗</a>
+          <a href="https://2captcha.com/scraper/browser-api" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Visit Official Site ↗</a>
         </div>
       </div>
 
@@ -131,23 +318,23 @@ const siteDescription = "Independent benchmarks, pricing comparisons, and techni
     </div>
   </section>
 
-  <!-- Quick Stats Counter -->
-  <section class="stats-strip">
-    <div class="stat-box">
-      <div class="stat-num">60</div>
-      <div class="stat-label">Cloud Browsers Benchmarked</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num">32</div>
-      <div class="stat-label">Browser MCP Servers</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num">99.8%</div>
-      <div class="stat-label">Top Turnstile Bypass Rate</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num">100%</div>
-      <div class="stat-label">Independent Lab Audited</div>
+  <!-- Cross-Link Banner to 40+ Scraping Targets -->
+  <section class="targets-banner-section">
+    <div class="container">
+      <div class="targets-card">
+        <div class="targets-info">
+          <span class="badge-mini" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);">📦 40+ TESTED SCRAPING TARGETS</span>
+          <h3 class="targets-title">Need Production Scraping Scripts for Cloud Browsers?</h3>
+          <p class="targets-text">
+            Explore our companion repository at <strong>ScrapingReview.com/targets</strong> featuring 40+ tested Playwright templates for Amazon, TikTok, Cloudflare, LinkedIn, Walmart, and YouTube with native 2Captcha CDP integration.
+          </p>
+        </div>
+        <div class="targets-cta">
+          <a href="https://scrapingreview.com/targets" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            Browse 40+ Scraping Targets ↗
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -167,7 +354,7 @@ const siteDescription = "Independent benchmarks, pricing comparisons, and techni
           <tr>
             <th style="width: 60px;">Rank</th>
             <th>Cloud Browser Provider</th>
-            <th>Bypass & CAPTCHA</th>
+            <th>Bypass &amp; CAPTCHA</th>
             <th>Protocol / SDK</th>
             <th>Pricing / Hour</th>
             <th>Score</th>
@@ -328,68 +515,6 @@ const siteDescription = "Independent benchmarks, pricing comparisons, and techni
     </div>
   </section>
 
-  <!-- High-Intent Scraping & Automation Hubs -->
-  <section class="section-container">
-    <div class="section-header-row">
-      <div>
-        <h2 class="section-title">Scraper Browser &amp; Headless Chrome Hubs</h2>
-        <p class="section-subtitle">Comprehensive architecture teardowns, pricing breakdowns, and code tutorials for web scraping teams.</p>
-      </div>
-      <a href="/topics" class="view-all-link">View All Topics →</a>
-    </div>
-
-    <div class="hubs-grid">
-      <div class="hub-card">
-        <span class="badge-mini">Scraping Browser</span>
-        <h3><a href="/scraper-browser">Scraper Browser &amp; Cloud Chrome</a></h3>
-        <p>Managed cloud headless Chrome with integrated residential IP rotation, Turnstile auto-solving, and CDP stability.</p>
-        <a href="/scraper-browser" class="hub-link">Explore Hub →</a>
-      </div>
-      <div class="hub-card">
-        <span class="badge-mini">Cloud API</span>
-        <h3><a href="/scraper-browser-api">Scraper Browser APIs &amp; REST Endpoints</a></h3>
-        <p>Compare one-shot REST endpoints and persistent CDP WebSocket connections for scalable web data pipelines.</p>
-        <a href="/scraper-browser-api" class="hub-link">Explore Hub →</a>
-      </div>
-      <div class="hub-card">
-        <span class="badge-mini">Headless Chrome</span>
-        <h3><a href="/headless-chrome-for-scraping">Headless Chrome for Scraping</a></h3>
-        <p>Google Chrome's modern --headless=new engine, ChromeOptions optimization, and fingerprint masking.</p>
-        <a href="/headless-chrome-for-scraping" class="hub-link">Explore Hub →</a>
-      </div>
-      <div class="hub-card">
-        <span class="badge-mini">Web Scraping</span>
-        <h3><a href="/chrome-scraper">Chrome Scraper &amp; Website Scraping</a></h3>
-        <p>Extract dynamic Single-Page Applications (SPAs) and JavaScript portals at scale using Google Chrome.</p>
-        <a href="/chrome-scraper" class="hub-link">Explore Hub →</a>
-      </div>
-      <div class="hub-card">
-        <span class="badge-mini">Alternatives</span>
-        <h3><a href="/browserless-alternative">Browserless.io Alternatives</a></h3>
-        <p>Why engineering teams are migrating away from $200+/mo plans to pay-as-you-go $0.15/hr cloud browsers.</p>
-        <a href="/browserless-alternative" class="hub-link">Explore Hub →</a>
-      </div>
-      <div class="hub-card">
-        <span class="badge-mini">AI Agents</span>
-        <h3><a href="/browser-for-ai-agent">Browser for AI Agents &amp; MCP Tools</a></h3>
-        <p>How Claude Desktop, Cursor, and autonomous LLM agents browse the live web without bot blocks.</p>
-        <a href="/browser-for-ai-agent" class="hub-link">Explore Hub →</a>
-      </div>
-      <div class="hub-card">
-        <span class="badge-mini">Selenium</span>
-        <h3><a href="/scraper-browser-selenium">Selenium Scraper Browser in Python</a></h3>
-        <p>Setup ChromeOptions, prevent bot detection, and connect Selenium to managed cloud browser nodes.</p>
-        <a href="/scraper-browser-selenium" class="hub-link">Explore Hub →</a>
-      </div>
-      <div class="hub-card">
-        <span class="badge-mini">Playwright</span>
-        <h3><a href="/scraper-browser-playwright">Playwright Scraper Browser</a></h3>
-        <p>Fast async/await web scraping with Playwright using remote connectOverCDP and residential proxies.</p>
-        <a href="/scraper-browser-playwright" class="hub-link">Explore Hub →</a>
-      </div>
-    </div>
-  </section>
-
   <!-- Editorial Benchmark FAQ -->
   <section class="section-container">
     <h2 class="section-title">Frequently Asked Questions</h2>
@@ -412,530 +537,989 @@ const siteDescription = "Independent benchmarks, pricing comparisons, and techni
       </div>
     </div>
   </section>
+
+  <!-- Client-side script for CDP terminal code switcher and spend calculator -->
+  <script is:inline>
+    (function() {
+      const snippets = {
+        python: `from playwright.sync_api import sync_playwright
+
+# 2Captcha Cloud Browser: Residential proxy + CAPTCHA auto-solve included
+CDP_URL = "wss://browser.2captcha.com?token=YOUR_API_KEY"
+
+with sync_playwright() as p:
+    browser = p.chromium.connect_over_cdp(CDP_URL)
+    page = browser.new_page()
+    page.goto("https://target-with-turnstile.com/login")
+    # Native CAPTCHA bypass executes in the background!
+    print("Page Title:", page.title())
+    browser.close()`,
+        ts: `import { chromium } from 'playwright';
+
+const CDP_URL = 'wss://browser.2captcha.com?token=YOUR_API_KEY';
+
+const browser = await chromium.connectOverCDP(CDP_URL);
+const page = await browser.newPage();
+await page.goto('https://target-with-turnstile.com/login');
+console.log('Page Title:', await page.title());
+await browser.close();`,
+        puppeteer: `import puppeteer from 'puppeteer-core';
+
+const CDP_URL = 'wss://browser.2captcha.com?token=YOUR_API_KEY';
+
+const browser = await puppeteer.connect({ browserWSEndpoint: CDP_URL });
+const page = await browser.newPage();
+await page.goto('https://target-with-turnstile.com/login');
+console.log('Page Title:', await page.title());
+await browser.close();`,
+        curl: `# Inspect 2Captcha Cloud Browser node endpoint
+curl -X GET "https://api.2captcha.com/browser/v1/health" \\
+  -H "Authorization: Bearer YOUR_API_KEY"`
+      };
+
+      let activeFw = 'python';
+      const codeBlock = document.getElementById('cdp-code-snippet');
+      const btnDownload = document.getElementById('btn-download-cdp');
+
+      const tabBtns = document.querySelectorAll('#framework-selector .tab-btn');
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeFw = btn.dataset.fw;
+          if (codeBlock) codeBlock.textContent = snippets[activeFw] || '';
+          if (btnDownload) {
+            const ext = activeFw === 'python' ? '.py' : (activeFw === 'ts' ? '.ts' : (activeFw === 'puppeteer' ? '.js' : '.sh'));
+            btnDownload.textContent = `💾 Download ${ext}`;
+          }
+        });
+      });
+
+      // Copy Code
+      const btnCopy = document.getElementById('btn-copy-cdp');
+      if (btnCopy) {
+        btnCopy.addEventListener('click', () => {
+          if (snippets[activeFw]) {
+            navigator.clipboard.writeText(snippets[activeFw]).then(() => {
+              btnCopy.textContent = '✓ Copied!';
+              setTimeout(() => { btnCopy.textContent = '📋 Copy Code'; }, 1800);
+            });
+          }
+        });
+      }
+
+      // Download Code
+      if (btnDownload) {
+        btnDownload.addEventListener('click', () => {
+          const content = snippets[activeFw] || '';
+          const ext = activeFw === 'python' ? 'py' : (activeFw === 'ts' ? 'ts' : (activeFw === 'puppeteer' ? 'js' : 'sh'));
+          const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `connect_cloud_browser_2captcha.${ext}`;
+          a.click();
+          URL.revokeObjectURL(url);
+        });
+      }
+
+      // Spend Calculator
+      const sliderHours = document.getElementById('slider-hours');
+      const sliderTabs = document.getElementById('slider-tabs');
+      const valHours = document.getElementById('val-hours');
+      const valTabs = document.getElementById('val-tabs');
+      const price2cap = document.getElementById('price-2captcha');
+      const priceBb = document.getElementById('price-browserbase');
+      const valSavings = document.getElementById('val-savings');
+
+      function updateCalc() {
+        if (!sliderHours || !sliderTabs) return;
+        const hours = parseInt(sliderHours.value, 10);
+        const tabs = parseInt(sliderTabs.value, 10);
+
+        if (valHours) valHours.textContent = `${hours} hours / day`;
+        if (valTabs) valTabs.textContent = `${tabs} concurrent tab${tabs > 1 ? 's' : ''}`;
+
+        // 30 days per month
+        const totalBrowserHours = hours * tabs * 30;
+        // 2Captcha rate: $0.15/hr
+        const cost2cap = totalBrowserHours * 0.15;
+
+        // Browserbase rate: $20/mo base + $0.10/min (= $6/hr) over base limits, plus proxy fees
+        // Simplified competitive model: $20 + ($0.20/hr * totalBrowserHours) + estimated $15 proxy fee
+        const costBb = 20.00 + (totalBrowserHours * 0.20) + 15.00;
+        const savings = Math.max(0, costBb - cost2cap);
+
+        if (price2cap) price2cap.textContent = `$${cost2cap.toFixed(2)}`;
+        if (priceBb) priceBb.textContent = `$${costBb.toFixed(2)}`;
+        if (valSavings) valSavings.textContent = `$${savings.toFixed(2)} / mo`;
+      }
+
+      if (sliderHours) sliderHours.addEventListener('input', updateCalc);
+      if (sliderTabs) sliderTabs.addEventListener('input', updateCalc);
+      updateCalc();
+    })();
+  </script>
 </Base>
 
 <style>
-  .hero-section {
-    padding: 3rem 0 2rem;
-    text-align: center;
+  /* Telemetry Bar */
+  .telemetry-bar {
+    background: var(--color-canvas-subtle);
+    border-bottom: 1px solid var(--color-border);
+    padding: 8px 0;
+    font-size: 12px;
+    font-family: var(--font-mono);
   }
+  .telemetry-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .telemetry-inner::-webkit-scrollbar { display: none; }
+  .telemetry-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-primary);
+    animation: livePulse 2s infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+  .telemetry-label {
+    color: var(--color-ink-muted);
+    font-weight: 700;
+  }
+  .telemetry-val {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+  .text-amber {
+    color: var(--color-primary);
+    font-weight: 800;
+  }
+  .telemetry-sep {
+    color: var(--color-border-strong);
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 48px 0 64px 0;
+    background: radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 10% 80%, rgba(245, 158, 11, 0.03) 0%, transparent 50%),
+                var(--color-canvas);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (max-width: 992px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .hero-badge {
     display: inline-block;
-    padding: 0.35rem 0.85rem;
-    font-size: 0.8rem;
-    font-weight: 600;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    background: rgba(59, 130, 246, 0.1);
+    background: var(--color-primary-subtle);
     color: var(--color-primary);
-    border-radius: 999px;
-    margin-bottom: 1.25rem;
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: var(--radius-full);
+    margin-bottom: 20px;
+    border: 1px solid var(--color-border-strong);
   }
   .hero-title {
-    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-size: clamp(30px, 4.5vw, 44px);
     font-weight: 800;
     line-height: 1.15;
-    margin-bottom: 1rem;
-    color: var(--color-text);
+    margin-bottom: 16px;
+    color: #fff;
+    letter-spacing: -0.02em;
   }
   .gradient-text {
-    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .hero-subtitle {
-    font-size: 1.15rem;
-    color: var(--color-text-muted);
-    max-width: 780px;
-    margin: 0 auto 2.5rem;
+    font-size: 16px;
+    color: var(--color-ink-secondary);
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  .hero-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .metric-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 12px;
+    border-radius: var(--radius-md);
+  }
+  .metric-val {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1.1;
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+  }
+  .metric-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-ink);
+    text-transform: uppercase;
+  }
+  .metric-sub {
+    font-size: 10px;
+    color: var(--color-ink-muted);
+    margin-top: 2px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn-glow {
+    background: var(--color-primary);
+    color: #000;
+    font-weight: 800;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    padding: 12px 24px;
+  }
+  .btn-glow:hover {
+    background: var(--color-primary-hover);
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.6);
+  }
+
+  /* Raycast Terminal */
+  .raycast-terminal {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.1);
+    overflow: hidden;
+  }
+  .terminal-bar-top {
+    background: var(--color-canvas-subtle);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .terminal-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .terminal-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .terminal-dots .red { background: #f43f5e; }
+  .terminal-dots .yellow { background: #f59e0b; }
+  .terminal-dots .green { background: #10b981; }
+
+  .terminal-title {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--color-ink-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .terminal-status {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--color-primary);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .framework-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 10px 16px;
+    background: var(--color-canvas);
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .framework-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-ink-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .tab-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-ink);
+  }
+  .tab-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #000;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+  }
+
+  .terminal-code-body {
+    background: #040406;
+    padding: 16px;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  .terminal-code-body pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #e4e4e7;
+  }
+
+  .terminal-bar-bottom {
+    background: var(--color-canvas-subtle);
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-border);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .terminal-note {
+    font-size: 11px;
+    color: var(--color-ink-muted);
+  }
+  .terminal-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .terminal-btn {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-ink-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+  .terminal-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-ink);
+  }
+
+  /* Spend Calculator */
+  .calc-section {
+    padding: 64px 0;
+    background: var(--color-canvas-subtle);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .section-header-centered {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 40px auto;
+  }
+  .section-title {
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 800;
+    margin: 8px 0 12px 0;
+    color: #fff;
+  }
+  .section-subtitle {
+    font-size: 15px;
+    color: var(--color-ink-muted);
+    margin: 0;
     line-height: 1.6;
   }
-  .dual-hero-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-    text-align: left;
-    margin-top: 1rem;
+
+  .calc-card-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    padding: clamp(20px, 4vw, 36px);
+    max-width: 960px;
+    margin: 0 auto;
   }
-  .spotlight-card {
-    background: var(--color-card-bg, #ffffff);
+  .calc-controls {
+    margin-bottom: 32px;
+  }
+  .calc-slider-group {
+    background: var(--color-canvas-subtle);
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
     border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 1.75rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .slider-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+  .slider-val {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-primary);
+  }
+  .ray-slider {
+    width: 100%;
+    height: 8px;
+    background: var(--color-canvas);
+    border-radius: 4px;
+    outline: none;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  .calc-comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .calc-card {
+    background: var(--color-canvas-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    position: relative;
+  }
+  .calc-card.winner-card {
+    border: 2px solid var(--color-primary);
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.06) 0%, var(--color-canvas-subtle) 100%);
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.15);
+  }
+  .calc-badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: var(--color-primary);
+    color: #000;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 12px;
+    border-radius: var(--radius-full);
+  }
+  .calc-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+    color: #fff;
+  }
+  .calc-price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .calc-price-amount {
+    font-size: 38px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+  }
+  .calc-price-unit {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+  }
+  .calc-perks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--color-ink-secondary);
+  }
+  .calc-perks li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .perk-icon-yes {
+    color: var(--color-success);
+    font-weight: 800;
+  }
+  .perk-icon-no {
+    color: var(--color-danger);
+    font-weight: 800;
+  }
+  .calc-savings-box {
+    margin-top: 24px;
+    background: var(--color-canvas);
+    border: 1px solid var(--color-border);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    display: flex;
     justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+  .calc-savings-box strong {
+    color: var(--color-success);
+    font-size: 16px;
+  }
+
+  /* Targets Banner */
+  .targets-banner-section {
+    padding: 24px 0 48px 0;
+    background: var(--color-canvas);
+  }
+  .targets-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(19, 19, 22, 0.8) 100%);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    padding: clamp(24px, 4vw, 32px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .targets-info {
+    max-width: 680px;
+  }
+  .targets-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 8px 0 8px 0;
+    color: #fff;
+  }
+  .targets-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-ink-secondary);
+    margin: 0;
+  }
+
+  /* Core Tables & Layout */
+  .section-container {
+    padding: 64px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .section-desc {
+    color: var(--color-ink-muted);
+    font-size: 15px;
+    margin: 4px 0 0 0;
+  }
+  .link-view-all {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  /* Dual Spotlight Cards */
+  .dual-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .spotlight-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   }
   .featured-gold {
-    border-top: 4px solid #f59e0b;
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.15);
   }
   .featured-purple {
-    border-top: 4px solid #8b5cf6;
+    border: 1px solid #8b5cf6;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
   }
   .spotlight-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
+    margin-bottom: 12px;
   }
   .badge-rank {
-    background: #fef3c7;
-    color: #92400e;
-    font-weight: 700;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.6rem;
-    border-radius: 6px;
+    background: var(--color-primary);
+    color: #000;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
   }
   .badge-mcp {
-    background: #ede9fe;
-    color: #5b21b6;
-    font-weight: 700;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.6rem;
-    border-radius: 6px;
+    background: #8b5cf6;
+    color: #fff;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
   }
   .score-pill {
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: #059669;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    color: var(--color-ink);
+    font-size: 14px;
   }
   .spotlight-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+    color: #fff;
   }
   .spotlight-tagline {
-    font-size: 0.92rem;
-    color: var(--color-text-muted);
+    font-size: 14px;
+    color: var(--color-ink-secondary);
     line-height: 1.5;
-    margin-bottom: 1.25rem;
+    margin-bottom: 20px;
   }
   .spotlight-specs {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    padding: 1rem;
-    background: var(--color-bg-secondary, #f8fafc);
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    background: var(--color-canvas-subtle);
+    padding: 14px;
+    border-radius: var(--radius-md);
+    margin-bottom: 24px;
+    border: 1px solid var(--color-border);
   }
   .spec-item {
     display: flex;
     flex-direction: column;
   }
   .spec-label {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
+    font-size: 11px;
+    color: var(--color-ink-muted);
     text-transform: uppercase;
-    font-weight: 600;
   }
   .spec-val {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--color-text);
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--color-ink);
   }
   .highlight-green {
-    color: #059669;
+    color: var(--color-success);
   }
   .spotlight-actions {
     display: flex;
-    gap: 0.75rem;
-  }
-  .btn {
-    padding: 0.65rem 1.25rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    text-align: center;
-    transition: all 0.2s ease;
-  }
-  .btn-primary {
-    background: var(--color-primary, #3b82f6);
-    color: #ffffff;
-    flex: 1;
-  }
-  .btn-primary:hover {
-    background: #2563eb;
-  }
-  .btn-outline {
-    background: transparent;
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-  }
-  .btn-outline:hover {
-    background: var(--color-bg-secondary, #f8fafc);
+    gap: 12px;
   }
 
-  .stats-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1.5rem;
-    padding: 2rem 0;
-    margin: 2rem 0;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-    text-align: center;
-  }
-  .stat-num {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: var(--color-primary);
-  }
-  .stat-label {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    margin-top: 0.25rem;
-  }
-
-  .section-container {
-    margin: 3.5rem 0;
-  }
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 1.5rem;
-  }
-  .section-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-  }
-  .section-desc {
-    color: var(--color-text-muted);
-    font-size: 0.95rem;
-  }
-  .link-view-all {
-    color: var(--color-primary);
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  /* Table styling */
+  /* Leaderboard Table */
   .table-responsive {
     overflow-x: auto;
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: 10px;
-    background: var(--color-card-bg, #ffffff);
+    border-radius: var(--radius-md);
   }
-  .leaderboard-table, .comparison-matrix-table {
+  .leaderboard-table {
     width: 100%;
     border-collapse: collapse;
+    font-size: 14px;
+  }
+  .leaderboard-table th {
+    background: var(--color-canvas-subtle);
+    padding: 14px 16px;
     text-align: left;
-    font-size: 0.92rem;
-  }
-  .leaderboard-table th, .comparison-matrix-table th {
-    padding: 1rem 1.25rem;
-    background: var(--color-bg-secondary, #f8fafc);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-ink-muted);
     border-bottom: 1px solid var(--color-border);
-    font-weight: 600;
-    font-size: 0.8rem;
     text-transform: uppercase;
-    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
   }
-  .leaderboard-table td, .comparison-matrix-table td {
-    padding: 1.1rem 1.25rem;
+  .leaderboard-table td {
+    padding: 16px;
     border-bottom: 1px solid var(--color-border);
     vertical-align: middle;
   }
   .row-featured {
-    background: rgba(245, 158, 11, 0.05);
+    background: rgba(245, 158, 11, 0.04);
   }
   .rank-badge {
-    display: inline-block;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    border-radius: 4px;
-    background: #e2e8f0;
-    color: #334155;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--color-ink-muted);
   }
   .rank-1 {
-    background: #fef3c7;
-    color: #b45309;
-  }
-  .rank-2 {
-    background: #e0e7ff;
-    color: #4338ca;
-  }
-  .rank-3 {
-    background: #f1f5f9;
-    color: #0f172a;
+    color: var(--color-primary);
+    font-size: 15px;
   }
   .provider-name {
-    font-weight: 700;
-    font-size: 1.05rem;
-    color: var(--color-text);
+    font-weight: 800;
+    color: #fff;
     text-decoration: none;
+    font-size: 16px;
   }
-  .provider-name:hover {
-    color: var(--color-primary);
+  .provider-summary {
+    font-size: 12px;
+    color: var(--color-ink-muted);
+    margin: 4px 0 0 0;
+    max-width: 320px;
   }
   .badge-mini {
     display: inline-block;
-    padding: 0.15rem 0.45rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    border-radius: 4px;
-    background: #dbeafe;
-    color: #1e40af;
-    margin-left: 0.5rem;
-  }
-  .provider-summary {
-    font-size: 0.82rem;
-    color: var(--color-text-muted);
-    margin: 0.25rem 0 0;
-    line-height: 1.4;
-    max-width: 420px;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-ink);
+    margin-left: 6px;
   }
   .spec-pill-group {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 4px;
   }
   .spec-tag {
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    display: inline-block;
     width: fit-content;
   }
-  .tag-green {
-    background: #d1fae5;
-    color: #065f46;
-  }
-  .tag-gray {
-    background: #f1f5f9;
-    color: #475569;
-  }
-  .tag-blue {
-    background: #eff6ff;
-    color: #1d4ed8;
-  }
+  .tag-green { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+  .tag-blue { background: rgba(14, 165, 233, 0.15); color: #0ea5e9; }
+  .tag-gray { background: rgba(255, 255, 255, 0.06); color: var(--color-ink-muted); }
   .tags-row {
     display: flex;
-    gap: 0.35rem;
+    gap: 4px;
     flex-wrap: wrap;
   }
   .tech-tag {
-    font-size: 0.72rem;
-    background: #f1f5f9;
-    padding: 0.15rem 0.4rem;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    background: var(--color-canvas);
+    border: 1px solid var(--color-border);
+    padding: 2px 6px;
     border-radius: 4px;
-    color: #334155;
-    font-weight: 500;
+    color: var(--color-ink-secondary);
   }
   .price-val {
-    font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    font-family: var(--font-mono);
   }
   .price-model {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
+    font-size: 11px;
+    color: var(--color-ink-muted);
     text-transform: capitalize;
   }
   .score-display {
-    font-weight: 700;
-    color: #059669;
-    font-size: 0.95rem;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    color: var(--color-primary);
   }
   .btn-table {
-    padding: 0.4rem 0.85rem;
-    font-size: 0.82rem;
-    font-weight: 600;
-    background: var(--color-bg-secondary, #f8fafc);
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-ink);
     text-decoration: none;
-    color: var(--color-text);
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--color-canvas-subtle);
   }
   .btn-table:hover {
-    background: var(--color-primary);
-    color: #ffffff;
     border-color: var(--color-primary);
+    color: var(--color-primary);
   }
 
   /* MCP Grid */
   .mcp-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
   }
   .mcp-card {
-    background: var(--color-card-bg, #ffffff);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: 10px;
-    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .mcp-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
   }
   .card-featured {
-    border: 1.5px solid #8b5cf6;
-    background: linear-gradient(to bottom, rgba(139, 92, 246, 0.03), var(--color-card-bg, #ffffff));
+    border: 2px solid #8b5cf6;
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.15);
   }
   .mcp-card-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
   }
   .score-display-sm {
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: #059669;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    color: var(--color-ink);
+    font-size: 13px;
   }
   .mcp-card-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0 0 6px 0;
   }
   .mcp-card-title a {
-    color: var(--color-text);
+    color: #fff;
     text-decoration: none;
   }
-  .mcp-card-title a:hover {
-    color: var(--color-primary);
-  }
   .mcp-card-tagline {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    line-height: 1.4;
-    margin-bottom: 1rem;
+    font-size: 12.5px;
+    color: var(--color-ink-muted);
+    margin: 0 0 12px 0;
+    line-height: 1.5;
   }
   .mcp-code-preview {
-    background: #0f172a;
-    color: #e2e8f0;
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-family: monospace;
+    background: #040406;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
     overflow-x: auto;
-    margin-bottom: 0.75rem;
+  }
+  .mcp-code-preview code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #a1a1aa;
     white-space: nowrap;
   }
   .mcp-features-list {
     display: flex;
-    gap: 0.35rem;
+    gap: 4px;
     flex-wrap: wrap;
-    margin-bottom: 1rem;
+    margin-bottom: 16px;
   }
   .mcp-pill {
-    font-size: 0.72rem;
-    background: var(--color-bg-secondary, #f8fafc);
+    font-size: 10px;
+    background: var(--color-canvas-subtle);
     border: 1px solid var(--color-border);
-    padding: 0.15rem 0.4rem;
+    color: var(--color-ink-muted);
+    padding: 2px 6px;
     border-radius: 4px;
-    color: var(--color-text-muted);
   }
   .mcp-card-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid var(--color-border);
-    padding-top: 0.75rem;
   }
   .btn-subtle {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
     text-decoration: none;
   }
   .link-out {
-    font-size: 0.82rem;
-    color: var(--color-text-muted);
+    font-size: 12px;
+    color: var(--color-ink-muted);
     text-decoration: none;
   }
-  .link-out:hover {
-    color: var(--color-text);
-  }
 
-  /* Matrix table */
+  /* Comparison Matrix */
+  .comparison-matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .comparison-matrix-table th {
+    background: var(--color-canvas-subtle);
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-ink-muted);
+    border-bottom: 1px solid var(--color-border);
+    text-transform: uppercase;
+  }
+  .comparison-matrix-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+  }
   .check-yes {
-    color: #059669;
-    font-weight: 600;
+    color: #10b981;
+    font-weight: 700;
   }
   .check-no {
-    color: #94a3b8;
+    color: var(--color-ink-muted);
   }
 
-  /* FAQ */
-  .hubs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 2rem;
-  }
-  .hub-card {
-    background: var(--color-card-bg, #ffffff);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .hub-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-  }
-  .hub-card h3 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin: 0.5rem 0;
-  }
-  .hub-card h3 a {
-    color: var(--color-text);
-    text-decoration: none;
-  }
-  .hub-card h3 a:hover {
-    color: var(--color-primary);
-  }
-  .hub-card p {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    line-height: 1.45;
-    margin: 0 0 1rem;
-  }
-  .hub-link {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--color-primary);
-    text-decoration: none;
-  }
-
-  /* FAQ */
+  /* FAQ Grid */
   .faq-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
   }
   .faq-card {
-    background: var(--color-card-bg, #ffffff);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: 10px;
-    padding: 1.5rem;
+    padding: 20px;
+    border-radius: var(--radius-md);
   }
   .faq-card h3 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+    color: #fff;
   }
   .faq-card p {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    line-height: 1.5;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--color-ink-secondary);
     margin: 0;
   }
 </style>
