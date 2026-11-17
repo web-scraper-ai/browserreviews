@@ -7,13 +7,13 @@ import { fetchAllBrowsers, fetchBrowserBySlug, fetchMcpToolBySlug } from "../../
 const rawSlug = decodeSlug(Astro.params.slug);
 
 if (!rawSlug) {
-  return Astro.redirect("/404");
+  return Astro.rewrite("/404");
 }
 
 const { browser } = await fetchBrowserBySlug(rawSlug);
 
 if (!browser) {
-  return Astro.redirect("/404");
+  return Astro.rewrite("/404");
 }
 
 const { browsers: allBrowsers } = await fetchAllBrowsers();

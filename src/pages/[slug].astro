@@ -8,7 +8,7 @@ import { LANDING_CLUSTERS } from "../../scripts/data-landing-clusters.mjs";
 const rawSlug = decodeSlug(Astro.params.slug);
 
 if (!rawSlug) {
-  return Astro.redirect("/404");
+  return Astro.rewrite("/404");
 }
 
 // 1. Check if slug matches high-intent search landing cluster
@@ -19,7 +19,7 @@ if (!cluster) {
   const res = await fetchTrustPage(rawSlug);
   page = res.page;
   if (!page) {
-    return Astro.redirect("/404");
+    return Astro.rewrite("/404");
   }
 }
 
