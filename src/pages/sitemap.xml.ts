@@ -9,6 +9,7 @@ export const GET: APIRoute = async ({ request }) => {
   const { tools: mcpTools } = await fetchAllMcpTools();
 
   const staticPages = [
+    { loc: "/tools", changefreq: "weekly", priority: 0.9 },
     { loc: "/", changefreq: "daily", priority: 1.0 },
     { loc: "/browsers", changefreq: "daily", priority: 0.9 },
     { loc: "/mcp", changefreq: "daily", priority: 0.9 },
