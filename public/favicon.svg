@@ -1,9 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="8" fill="#3b82f6"/>
-  <rect x="4" y="5" width="24" height="22" rx="4" fill="#0f172a"/>
-  <circle cx="8" cy="9" r="1.5" fill="#ef4444"/>
-  <circle cx="12" cy="9" r="1.5" fill="#f59e0b"/>
-  <circle cx="16" cy="9" r="1.5" fill="#10b981"/>
-  <path d="M9 16L13 19L9 22" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M15 22H21" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="brGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#brGrad)"/>
+  <!-- Browser Frame -->
+  <rect x="5" y="6" width="22" height="20" rx="3" fill="#09090b" stroke="#818cf8" stroke-width="1.4"/>
+  <!-- Dots -->
+  <circle cx="8.5" cy="9.5" r="1.2" fill="#ef4444"/>
+  <circle cx="12" cy="9.5" r="1.2" fill="#f59e0b"/>
+  <circle cx="15.5" cy="9.5" r="1.2" fill="#10b981"/>
+  <!-- Cursor / Lightning Bolt -->
+  <path d="M16 13L12 19H16L15 24L20 17H16L18 13H16Z" fill="#38bdf8"/>
 </svg>
