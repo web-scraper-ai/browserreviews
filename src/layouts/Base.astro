@@ -88,7 +88,17 @@ const organizationSchema = {
 		{socialImageAlt && <meta property="og:image:alt" content={socialImageAlt} />}
 		{socialImageAlt && <meta name="twitter:image:alt" content={socialImageAlt} />}
 		<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
-	</head>
+			<!-- Theme Init -->
+		<script is:inline>
+			(function() {
+				try {
+					if (localStorage.getItem('theme') === 'light') {
+						document.documentElement.classList.add('light-theme');
+					}
+				} catch (e) {}
+			})();
+		</script>
+</head>
 	<body>
 		<EmDashBodyStart page={pageCtx} />
 
@@ -164,6 +174,10 @@ const organizationSchema = {
 				</nav>
 
 				<div class="header-actions">
+					<button id="themeToggleBtn" type="button" class="theme-toggle-btn" aria-label="Toggle light or dark theme" title="Toggle light or dark theme">
+						<span class="theme-icon-dark" aria-hidden="true">🌙</span>
+						<span class="theme-icon-light" aria-hidden="true">☀️</span>
+					</button>
 					<div class="search-container">
 						<LiveSearch 
 							placeholder="Search browsers & MCP tools..." 
@@ -342,5 +356,19 @@ const organizationSchema = {
 		</script>
 
 		<EmDashBodyEnd page={pageCtx} />
-	</body>
+			<!-- Theme Toggle Script -->
+		<script is:inline>
+			(function() {
+				const btn = document.getElementById('themeToggleBtn');
+				if (btn) {
+					btn.addEventListener('click', function() {
+						const isLight = document.documentElement.classList.toggle('light-theme');
+						try {
+							localStorage.setItem('theme', isLight ? 'light' : 'dark');
+						} catch (e) {}
+					});
+				}
+			})();
+		</script>
+</body>
 </html>
