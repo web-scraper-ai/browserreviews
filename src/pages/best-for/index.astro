@@ -51,38 +51,48 @@ const siteDescription = "Explore the best Cloud Browsers and Browser MCP tools c
 ---
 
 <Base title={siteTitle} description={siteDescription}>
-  <div class="page-header">
-    <div class="breadcrumb">
-      <a href="/">Home</a> <span>/</span> <span>Best By Use-Case</span>
-    </div>
-    <h1 class="page-title">Best Cloud Browsers & MCP Tools by Use-Case</h1>
-    <p class="page-subtitle">
-      Filter cloud browser APIs and Model Context Protocol servers by your exact engineering requirements and anti-bot obstacles.
-    </p>
-  </div>
-
-  <div class="hubs-grid">
-    {HUBS.map((h) => (
-      <div class="hub-card">
-        <div class="hub-top">
-          <span class="hub-badge">{h.badge}</span>
-          <span class="hub-winner">Top Pick: {h.topPick}</span>
-        </div>
-        <h2 class="hub-title">
-          <a href={`/best-for/${h.slug}`}>{h.title}</a>
-        </h2>
-        <p class="hub-desc">{h.desc}</p>
-        <div class="hub-action">
-          <a href={`/best-for/${h.slug}`} class="hub-link">Explore Curated Rankings →</a>
-        </div>
+  <div class="container best-for-page-container">
+    <div class="page-header">
+      <div class="breadcrumb">
+        <a href="/">Home</a> <span>/</span> <span>Best By Use-Case</span>
       </div>
-    ))}
+      <h1 class="page-title">Best Cloud Browsers & MCP Tools by Use-Case</h1>
+      <p class="page-subtitle">
+        Filter cloud browser APIs and Model Context Protocol servers by your exact engineering requirements and anti-bot obstacles.
+      </p>
+    </div>
+
+    <div class="hubs-grid">
+      {HUBS.map((h) => (
+        <div class="hub-card">
+          <div class="hub-top">
+            <span class="hub-badge">{h.badge}</span>
+            <span class="hub-winner">Top Pick: {h.topPick}</span>
+          </div>
+          <h2 class="hub-title">
+            <a href={`/best-for/${h.slug}`}>{h.title}</a>
+          </h2>
+          <p class="hub-desc">{h.desc}</p>
+          <div class="hub-action">
+            <a href={`/best-for/${h.slug}`} class="hub-link">Explore Curated Rankings →</a>
+          </div>
+        </div>
+      ))}
+    </div>
   </div>
 </Base>
 
 <style>
+  .best-for-page-container {
+    width: 100%;
+    max-width: var(--max-w-content, 1200px);
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 5rem;
+    box-sizing: border-box;
+  }
+
   .page-header {
-    padding: 2.5rem 0 1.5rem;
+    padding: 1.5rem 0 1.5rem;
   }
   .breadcrumb {
     font-size: 0.85rem;
@@ -115,7 +125,7 @@ const siteDescription = "Explore the best Cloud Browsers and Browser MCP tools c
     margin-bottom: 4rem;
   }
   .hub-card {
-    background: var(--color-card-bg, #ffffff);
+    background: var(--color-surface, #131316);
     border: 1px solid var(--color-border);
     border-radius: 12px;
     padding: 1.75rem;
