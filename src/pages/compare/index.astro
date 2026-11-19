@@ -100,6 +100,7 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
 ---
 
 <Base title={siteTitle} description={siteDescription}>
+  <div class="container compare-page-container">
   <div class="page-header">
     <div class="breadcrumb">
       <a href="/">Home</a> <span>/</span> <span>Compare</span>
@@ -199,6 +200,7 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
       ))}
     </div>
   </div>
+  </div>
 </Base>
 
 <script>
@@ -220,6 +222,13 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
 </script>
 
 <style>
+  .compare-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 5rem;
+    box-sizing: border-box;
+    width: 100%;
+  }
   .page-header {
     padding: 2.5rem 0 1.5rem;
   }
