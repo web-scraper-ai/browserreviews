@@ -682,7 +682,7 @@ a:hover {
 }
 
 .score-high {
-  background: #ecfdf5;
+  background: rgba(34, 197, 94, 0.08);
   color: #047857;
   border: 1px solid #a7f3d0;
 }
@@ -844,8 +844,8 @@ a:hover {
 }
 
 .pros-box {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.3);
 }
 
 .cons-box {
