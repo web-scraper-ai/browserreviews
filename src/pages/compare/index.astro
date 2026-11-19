@@ -338,7 +338,7 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
   }
   .comparisons-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     gap: 1.5rem;
   }
   .comp-card {
@@ -359,8 +359,7 @@ const siteDescription = "Compare any two Cloud Browsers or Browser MCP Tools sid
     font-size: 0.72rem;
     font-weight: 700;
     padding: 0.15rem 0.45rem;
-    background: #dbeafe;
-    color: #1e40af;
+    background: rgba(14, 165, 233, 0.15); color: #38bdf8;
     border-radius: 4px;
     width: fit-content;
     margin-bottom: 0.6rem;

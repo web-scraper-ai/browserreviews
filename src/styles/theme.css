@@ -68,6 +68,12 @@
   --emdash-search-border-focus: var(--color-primary);
   --emdash-search-hover: var(--color-surface-hover);
   --emdash-search-highlight: var(--color-primary);
+
+  /* Dark Theme Compatibility Aliases */
+  --color-card-bg: var(--color-surface);
+  --color-bg-secondary: var(--color-surface-hover);
+  --color-text: var(--color-ink);
+  --color-text-muted: var(--color-ink-muted);
 }
 
 /* Global Reset & Base */

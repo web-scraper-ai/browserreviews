@@ -94,7 +94,8 @@ const faqSchema = {
       </ul>
 
       <h2>Headful vs Headless Browser Comparison</h2>
-      <table class="spec-table">
+      <div class="table-responsive">
+        <table class="spec-table">
         <thead>
           <tr>
             <th>Characteristic</th>
@@ -130,6 +131,7 @@ const faqSchema = {
           </tr>
         </tbody>
       </table>
+      </div>
 
       <h2>The Evolution of Headless Browsers</h2>
       <p>
@@ -282,10 +284,17 @@ const faqSchema = {
   .article-content li {
     margin-bottom: 0.5rem;
   }
+  .table-responsive {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    margin: 1.5rem 0 2rem 0;
+    scrollbar-width: thin;
+  }
   .spec-table {
     width: 100%;
+    min-width: 580px;
     border-collapse: collapse;
-    margin: 1.5rem 0 2rem 0;
     font-size: 0.95rem;
   }
   .spec-table th, .spec-table td {
