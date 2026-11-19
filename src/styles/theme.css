@@ -688,9 +688,9 @@ a:hover {
 }
 
 .score-med {
-  background: #fffbeb;
+  background: rgba(245, 158, 11, 0.08);
   color: #b45309;
-  border: 1px solid #fde68a;
+  border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
 .score-low {
@@ -1190,3 +1190,88 @@ html:not(.light-theme) .theme-icon-light { display: none !important; }
 html:not(.light-theme) .theme-icon-dark { display: inline-block !important; }
 html.light-theme .theme-icon-dark { display: none !important; }
 html.light-theme .theme-icon-light { display: inline-block !important; }
+
+
+html.light-theme code:not(pre code) {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+html.light-theme pre {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid #1e293b !important;
+}
+
+html.light-theme pre code {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+html.light-theme .card,
+html.light-theme .review-card,
+html.light-theme .tool-card,
+html.light-theme .mcp-card,
+html.light-theme .provider-card,
+html.light-theme .spotlight-card,
+html.light-theme .rankings-kpi {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light-theme .table-responsive,
+html.light-theme .table-container,
+html.light-theme .rankings-table-wrapper {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-theme th,
+html.light-theme .rankings-table th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light-theme td,
+html.light-theme .rankings-table td {
+  border-color: #e2e8f0 !important;
+}
+
+html.light-theme input,
+html.light-theme select,
+html.light-theme textarea,
+html.light-theme .rankings-search-input,
+html.light-theme .rankings-select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light-theme .badge-muted,
+html.light-theme .tag-gray,
+html.light-theme .p-tag,
+html.light-theme .rank-badge {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light-theme .tab-btn {
+  background: #ffffff !important;
+  color: #475569 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light-theme .tab-btn:hover {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html.light-theme .tab-btn.active {
+  background: var(--color-primary, #f59e0b) !important;
+  color: #09090b !important;
+  border-color: var(--color-primary, #f59e0b) !important;
+}
