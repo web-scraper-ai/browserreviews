@@ -29,6 +29,9 @@ try {
 export default defineConfig({
 	site: siteUrl,
 	output: "server",
+	redirects: {
+		"/browser": "/browsers",
+	},
 	adapter: node({
 		mode: "standalone",
 	}),

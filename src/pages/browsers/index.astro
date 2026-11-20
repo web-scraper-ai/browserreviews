@@ -9,6 +9,7 @@ const siteDescription = "Comprehensive directory of 60 Cloud Browsers and Scrapi
 ---
 
 <Base title={siteTitle} description={siteDescription}>
+  <div class="container browsers-page-container">
   <div class="page-header">
     <div class="breadcrumb">
       <a href="/">Home</a> <span>/</span> <span>Cloud Browsers</span>
@@ -96,6 +97,7 @@ const siteDescription = "Comprehensive directory of 60 Cloud Browsers and Scrapi
       </div>
     ))}
   </div>
+  </div>
 </Base>
 
 <script>
@@ -146,8 +148,16 @@ const siteDescription = "Comprehensive directory of 60 Cloud Browsers and Scrapi
 </script>
 
 <style>
+  .browsers-page-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 1.5rem 20px 4rem;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden;
+  }
   .page-header {
-    padding: 2.5rem 0 1.5rem;
+    padding: 1.5rem 0 1.5rem;
   }
   .breadcrumb {
     font-size: 0.85rem;
@@ -187,7 +197,8 @@ const siteDescription = "Comprehensive directory of 60 Cloud Browsers and Scrapi
   }
   .search-box {
     flex: 1;
-    min-width: 280px;
+    min-width: min(100%, 280px);
+    width: 100%;
   }
   .search-box input {
     width: 100%;
