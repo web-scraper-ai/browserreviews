@@ -9,6 +9,13 @@ if (!rawSlug) {
   return Astro.redirect("/best-for");
 }
 
+if (rawSlug === "turnstile" || rawSlug === "cloudflare" || rawSlug === "cloudflare-turnstile") {
+  return Astro.redirect("/best-for/turnstile-bypass", 301);
+}
+if (rawSlug === "claude") {
+  return Astro.redirect("/best-for/claude-desktop", 301);
+}
+
 const { browsers } = await fetchAllBrowsers();
 const { tools: mcpTools } = await fetchAllMcpTools();
 

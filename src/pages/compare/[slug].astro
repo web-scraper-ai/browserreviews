@@ -10,8 +10,17 @@ if (!rawSlug || !rawSlug.includes("-vs-")) {
 }
 
 const parts = rawSlug.split("-vs-");
-const slugA = parts[0];
-const slugB = parts[1];
+const normalizeSlug = (s: string) => {
+  if (s === "2captcha" || s === "2captcha-cloud" || s === "2captcha-browser") return "2captcha-browser-api";
+  return s;
+};
+const normA = normalizeSlug(parts[0]);
+const normB = normalizeSlug(parts[1]);
+if (rawSlug !== `${normA}-vs-${normB}`) {
+  return Astro.redirect(`/compare/${normA}-vs-${normB}`, 301);
+}
+const slugA = normA;
+const slugB = normB;
 
 // Try resolving as browsers first
 let itemA: any = null;

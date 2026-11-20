@@ -10,6 +10,10 @@ if (!rawSlug) {
   return Astro.rewrite("/404");
 }
 
+if (rawSlug === "2captcha" || rawSlug === "2captcha-cloud" || rawSlug === "2captcha-browser") {
+  return Astro.redirect("/reviews/2captcha-browser-api", 301);
+}
+
 const { browser } = await fetchBrowserBySlug(rawSlug);
 
 if (!browser) {
