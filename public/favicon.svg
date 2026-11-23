@@ -1,17 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <defs>
-    <linearGradient id="brGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#6366f1"/>
-      <stop offset="1" stop-color="#3b82f6"/>
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="8" fill="url(#brGrad)"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none">
+  <rect width="32" height="32" rx="7" fill="#090c12"/>
+  <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" stroke="#212c40" stroke-width="1"/>
   <!-- Browser Frame -->
-  <rect x="5" y="6" width="22" height="20" rx="3" fill="#09090b" stroke="#818cf8" stroke-width="1.4"/>
-  <!-- Dots -->
-  <circle cx="8.5" cy="9.5" r="1.2" fill="#ef4444"/>
-  <circle cx="12" cy="9.5" r="1.2" fill="#f59e0b"/>
-  <circle cx="15.5" cy="9.5" r="1.2" fill="#10b981"/>
-  <!-- Cursor / Lightning Bolt -->
-  <path d="M16 13L12 19H16L15 24L20 17H16L18 13H16Z" fill="#38bdf8"/>
+  <rect x="4" y="5" width="24" height="22" rx="3.5" fill="#141b27" stroke="#22c55e" stroke-width="1.6"/>
+  <!-- Header Line -->
+  <line x1="4" y1="11" x2="28" y2="11" stroke="#212c40" stroke-width="1.2"/>
+  <!-- Window Controls -->
+  <circle cx="7.5" cy="8" r="1.2" fill="#ff3b30"/>
+  <circle cx="11" cy="8" r="1.2" fill="#f59e0b"/>
+  <circle cx="14.5" cy="8" r="1.2" fill="#22c55e"/>
+  <!-- Terminal Prompt >_ -->
+  <path d="M9 16L13.5 19L9 22" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="16" y1="21" x2="22" y2="21" stroke="#4ade80" stroke-width="2.4" stroke-linecap="round"/>
 </svg>
