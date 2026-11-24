@@ -9,12 +9,12 @@
 
   /* Typography / Ink (High Contrast on Dark) */
   --color-ink: #f4f4f5;
-  --color-ink-secondary: #d4d4d8;
-  --color-ink-muted: #a1a1aa;
+  --color-ink-secondary: #cbd5e1;
+  --color-ink-muted: #94a3b8;
   --color-ink-subtle: #52525b;
 
   /* Hairlines & Tech Borders */
-  --color-border: #212c40;
+  --color-border: rgba(255, 255, 255, 0.12);
   --color-border-strong: #22c55e;
   --color-border-focus: #22c55e;
 
@@ -615,8 +615,10 @@ a:hover {
 }
 
 .btn-primary {
-  background: var(--color-primary);
-  color: #fff;
+  background: #22c55e !important;
+  border: 1px solid #22c55e !important;
+  color: #052e16 !important;
+  font-weight: 700 !important;
 }
 
 .btn-primary:hover {
