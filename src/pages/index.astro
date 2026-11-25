@@ -1226,32 +1226,36 @@ curl -X GET "https://api.2captcha.com/browser/v1/health" \\
     line-height: 1.5;
     margin-bottom: 20px;
   }
-  .spotlight-specs {
+    .spotlight-specs {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    background: var(--color-canvas-subtle);
-    padding: 14px;
-    border-radius: var(--radius-md);
+    background: #11161d !important;
+    padding: 16px !important;
+    border-radius: var(--radius-md) !important;
     margin-bottom: 24px;
-    border: 1px solid var(--color-border);
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
   }
   .spec-item {
     display: flex;
     flex-direction: column;
   }
   .spec-label {
-    font-size: 11px;
-    color: var(--color-ink-muted);
-    text-transform: uppercase;
+    font-size: 11px !important;
+    color: #94a3b8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    font-weight: 700 !important;
   }
   .spec-val {
-    font-size: 13.5px;
-    font-weight: 700;
-    color: var(--color-ink);
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    font-family: var(--font-mono) !important;
   }
   .highlight-green {
-    color: var(--color-success);
+    color: #4ade80 !important;
+    font-weight: 800 !important;
   }
   .spotlight-actions {
     display: flex;
